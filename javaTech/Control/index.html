@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="">
+  <head>
+    <meta charset="utf-8" />
+    <title>java核心技术（二） 流程控制 &#8212; 胖虎的技术栈  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+  
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="java">
+<h1>java核心技术（二） 流程控制<a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>运算符<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id2">
+<h2>算术运算符<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>算术运算符 <cite>+、-、*、 /</cite>, 整除被0除会产生一个异常。而浮点数被0除将会得到无穷大或NaN结果.</p>
+</div>
+<div class="section" id="id3">
+<h2>强制类型转换<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>在必要的时候，int类型的值将会自动地转换为double类型，有时也需要将double转换为int,
+这种可能损失信息的转换要通过强制转换来完成。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">9.997</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">nx</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="n">x</span><span class="o">;</span> <span class="c1">// 9</span>
+<span class="c1">// 相对浮点数进行舍入运算</span>
+<span class="kt">int</span> <span class="n">nx</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">x</span><span class="o">);</span> <span class="c1">// 10</span>
+<span class="c1">// 调用rand的时候，仍然需要使用强制类型转换，因为rand方法返回的结果为long类型</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>将一个数值从一种类型强制转换为另一种类型, 超出了目标类型的表示范围。如(byte) 300 实际值为44.</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>赋值和运算符<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>x += 4; 等价于 x = x + 4;</p>
+</div>
+<div class="section" id="id5">
+<h2>自增自减<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>自增：n++ 将变量n的当前值加1</p>
+<p>自减：n– 将n的值减1</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">12</span><span class="o">;</span>
+<span class="n">n</span><span class="o">++;</span> <span class="c1">// 13</span>
+</pre></div>
+</div>
+<p>不能用于数值本身，4++不是一个合法语句</p>
+</div>
+<div class="section" id="id6">
+<h2>流程控制<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>java使用条件语句和循环结构确定控制流程。</p>
+</div>
+<div class="section" id="id7">
+<h2>条件语句<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>条件语句形式:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>if (condition) statement
+
+执行多条语句时需要使用 `{}` 块
+if (condition)
+{
+    statement1
+    statement2
+}
+
+if (condition) statement1 else statement2
+
+if (condition)
+    statement1
+else if (condition)
+    statement2
+else if (condition)
+    statement3
+else
+    statement4
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>循环<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>当条件语句为true，while循环执行语句, 形式如下:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="p">(</span><span class="n">condition</span><span class="p">)</span> <span class="n">statement</span>
+
+<span class="n">do</span>
+<span class="p">{</span>
+    <span class="n">statement</span>
+<span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for 循环语句是支持迭代的一种通用结构。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>在循环中，检测两个浮点数是否相等需要格外小心。
+for (double x = 0; x != 10; x += 0.1)
+因为0.1无法精确地用二进制表示，所以x将从9.9999999998 跳到10.9999999998</p>
+</div>
+</div>
+<div class="section" id="switch">
+<h2>switch<a class="headerlink" href="#switch" title="Permalink to this headline">¶</a></h2>
+<p>switch 处理多个选项时</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Select an option (1, 2, 3, 4)&quot;</span><span class="o">);</span>
+<span class="kt">int</span> <span class="n">choice</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+<span class="k">switch</span> <span class="o">(</span><span class="n">choice</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+        <span class="o">...</span>
+        <span class="k">break</span><span class="o">;</span>
+    <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+        <span class="o">...</span>
+        <span class="k">break</span><span class="o">;</span>
+    <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+        <span class="o">...</span>
+        <span class="k">break</span><span class="o">;</span>
+    <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+        <span class="o">...</span>
+        <span class="k">break</span><span class="o">;</span>
+    <span class="k">default</span><span class="o">:</span>
+        <span class="o">...</span>
+        <span class="k">break</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+  <div class="section">
+  
+    
+
+
+<div class="section">
+  <span style="float: left;">
+  
+  Previous: 
+  <a href="../../algorithms/algoSort/">
+    
+    算法 - 排序
+  </a>
+  
+  </span>
+  <span>&nbsp;</span>
+  <span style="float: right;">
+  
+  </span>
+</div>
+
+  
+  
+  </div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">胖虎的技术栈</a></h1>
+
+
+
+
+
+
+
+
+
+  
+  
+  <h2>
+  
+  
+    10 三月 2020
+  
+  </h2>
+
+  <ul>
+    
+
+  
+  <li id="author"><span>Author:</span>
+    
+      
+      <a href="../../blog/author/胖虎/">胖虎</a>
+      
+    </li>
+  
+
+  
+
+  
+
+  
+  <li id="category"><span>Category:</span>
+    
+      
+      <a href="../../blog/category/java/">java</a>,
+      
+    
+      
+      <a href="../../blog/category/基础/">基础</a>
+      
+    </li>
+  
+
+  
+  <li id="tags"><span>Tags:
+      </span>
+    
+      
+      <a href="../../blog/tag/java/">java</a>
+      
+    
+      
+      <a href="../../blog/tag/基础/">基础</a>
+      
+    
+      
+      <a href="../../blog/tag/流程控制位运算/">流程控制，位运算</a>
+      
+    </li>
+  
+  
+  </ul>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">胖虎</a></li>
+</ul>
+
+
+  <h3><a href="../../blog/">Recent Posts</a></h3>
+  <ul>
+    
+    
+      <li><a href="../../algorithms/algoSort/">04 三月 - 算法 - 排序</a></li>
+    
+      <li><a href="../BaseStructJava/">04 三月 - java核心技术（一） 基本数据类型</a></li>
+    
+      <li><a href="../../algorithms/bag_queue_stack/">26 二月 - 背包、队列和栈</a></li>
+    
+  </ul>
+
+  <h3><a href="../../blog/tag/">Tags</a></h3>
+  <style type="text/css">
+    ul.ablog-cloud {list-style: none; overflow: auto;}
+    ul.ablog-cloud li {float: left; height: 20pt; line-height: 18pt; margin-right: 5px;}
+    ul.ablog-cloud a {text-decoration: none; vertical-align: middle;}
+    li.ablog-cloud-1{font-size: 80%;}
+    li.ablog-cloud-2{font-size: 95%;}
+    li.ablog-cloud-3{font-size: 110%;}
+    li.ablog-cloud-4{font-size: 125%;}
+    li.ablog-cloud-5{font-size: 140%;}
+  </style>
+  <ul class="ablog-cloud">
+    
+      
+      <li class="ablog-cloud ablog-cloud-5">
+        <a href="../../blog/tag/java/">java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-5">
+        <a href="../../blog/tag/基础/">基础</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/流程控制位运算/">流程控制，位运算</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-2">
+        <a href="../../blog/tag/算法/">算法</a></li>
+      
+    
+  </ul>
+
+  <h3><a href="../../blog/category/">Categories</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/category/java/">java (4)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/基础/">基础 (4)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/算法/">算法 (2)</a></li>
+    
+  
+  </ul>
+
+  <h3><a href="../../blog/archive/">Archives</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/2020/">2020 (4)</a></li>
+    
+  
+  </ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, 胖虎.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/javaTech/Control.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

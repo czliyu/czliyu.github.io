@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="">
+  <head>
+    <meta charset="utf-8" />
+    <title>java核心技术（一） 基本数据类型 &#8212; 胖虎的技术栈  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+  
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="java">
+<h1>java核心技术（一） 基本数据类型<a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>第一个java程序<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FirstSample</span> <span class="o">{</span>
+     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;We will not use &#39;hello, world!&#39;&quot;</span><span class="o">);</span>
+     <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>将文件保存为`FirstSample.java`, 文件名称需要与类一致，</p>
+<p>类名是以大写字母开头的名词，如果名字由多个单词组成，每个单词的第一个字母都应该大写，这种在
+一个单词中间使用大写字母的方式称为驼峰法。</p>
+<p>编译代码 <cite>javac FirstSample.java</cite></p>
+<p>运行程序 <cite>java FirstSample</cite></p>
+<p>运行已编译的程序时，java虚拟机总是从指定类中的main方法的代码开始执行，因此在类文件中必须包含一个`main`方法</p>
+</div>
+<div class="section" id="id2">
+<h2>数据类型<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Java是一种强类型语言，这就意味着必须为每一个变量声明一种类型:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>8种基本类型，4种整型，2种浮点型，1种字符型
+</pre></div>
+</div>
+<p><strong>整型</strong></p>
+<p>在java中，整型的范围与运行java代码的机器无关，这就解决了软件从一个平台移植到另外一个平台，
+或者在同一个平台中的不同操作系统之间进行移植给程序员带来的诸多问题</p>
+<p>java中的4种整型:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>int   4字节   -2147483648 ～ 2147483647 (最常用)
+short 2个字节 -32768 ～32767
+long  8个字节 -9223372036854775808 ～9223372036854775807 (会有个后缀L或l,如4000000L)
+byte  1个字节 -128 ~ 127
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>浮点类型<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>java中有2种浮点类型:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>float  4字节  有效为6～7位
+double 8字节  有效位15位
+</pre></div>
+</div>
+<p><cite>double</cite> 表示这种类型的数值精度是float类型的2倍（双精度数值）</p>
+<p><cite>Double.POSITIVE_INFINITY</cite> ** 正无穷大 **
+<cite>Double.NEGATIVE_INFINITY</cite> ** 负无穷大 **
+<cite>Double.NaN</cite> (不是一个数)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>if (x == Double.NaN) // is never true
+所有非数值的值都认为是不相同的
+if (Double.NaN(x)) // check whether x is not a number</p>
+</div>
+</div>
+<div class="section" id="char">
+<h2>char 类型<a class="headerlink" href="#char" title="Permalink to this headline">¶</a></h2>
+<p>char类型原本用来表示单个字符。现在有些Unicode字符可以用一个char值描述，另外一些Unicode
+字符则需要两个char值。</p>
+</div>
+<div class="section" id="boolean">
+<h2>boolean 类型<a class="headerlink" href="#boolean" title="Permalink to this headline">¶</a></h2>
+<p>只有2个值 <cite>true</cite> <cite>fasle</cite> 整数型和布尔值不鞥进行相互转换,</p>
+</div>
+<div class="section" id="id4">
+<h2>变量与常量<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p><strong>声明变量</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">salary</span><span class="o">;</span>
+
+<span class="kt">int</span> <span class="n">vacationDays</span><span class="o">;</span>
+
+<span class="kt">long</span> <span class="n">earthPopulation</span><span class="o">;</span>
+
+<span class="kt">boolean</span> <span class="n">done</span><span class="o">;</span>
+</pre></div>
+</div>
+<p><strong>变量初始化</strong></p>
+<p>声明一个变量后，必须用赋值语句对变量进行显示初始化，千万不要使用未初始化的变量的值,
+如果不，java会编译报错</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">vacationDays</span><span class="o">;</span>
+<span class="n">vacationDays</span> <span class="o">=</span> <span class="mi">12</span><span class="o">;</span>
+<span class="n">或者</span>
+<span class="kt">int</span> <span class="n">vacationDays</span> <span class="o">=</span> <span class="mi">12</span><span class="o">;</span>
+</pre></div>
+</div>
+<p><strong>常量</strong></p>
+<p>利用关键词 <cite>final</cite> 指示常量</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Constants</span>
+<span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="c1">// 常量</span>
+        <span class="kd">final</span> <span class="kt">double</span> <span class="n">CM_PER_INCH</span> <span class="o">=</span> <span class="mf">2.54</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>关键词 <cite>final</cite> 表示这个变量只能被赋值一次，一旦被赋值之后，就不能再更改了</p>
+<p>通常这些常量称为**类常量**</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Constants2</span>
+<span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">CM_PER_INCH</span> <span class="o">=</span> <span class="mf">2.54</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="n">Sytem</span><span class="o">,</span><span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">CM_PER_INCH</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>枚举类型</strong></p>
+<p>变量的取值只在一个有限的集合内，可以自定义 <cite>枚举类型</cite></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">enum</span> <span class="n">Size</span> <span class="o">{</span> <span class="n">SMALL</span><span class="o">,</span> <span class="n">MEDIUM</span><span class="o">,</span> <span class="n">LARGE</span><span class="o">,</span> <span class="n">EXTRA_LARGE</span> <span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+  <div class="section">
+  
+    
+
+
+<div class="section">
+  <span style="float: left;">
+  
+  Previous: 
+  <a href="../../algorithms/bag_queue_stack/">
+    
+    背包、队列和栈
+  </a>
+  
+  </span>
+  <span>&nbsp;</span>
+  <span style="float: right;">
+  
+  Next: 
+  <a href="../../algorithms/algoSort/">
+    算法 - 排序
+    
+  </a>
+  
+  </span>
+</div>
+
+  
+  
+  </div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">胖虎的技术栈</a></h1>
+
+
+
+
+
+
+
+
+
+  
+  
+  <h2>
+  
+  
+    04 三月 2020
+  
+  </h2>
+
+  <ul>
+    
+
+  
+  <li id="author"><span>Author:</span>
+    
+      
+      <a href="../../blog/author/胖虎/">胖虎</a>
+      
+    </li>
+  
+
+  
+
+  
+
+  
+  <li id="category"><span>Category:</span>
+    
+      
+      <a href="../../blog/category/java/">java</a>,
+      
+    
+      
+      <a href="../../blog/category/基础/">基础</a>
+      
+    </li>
+  
+
+  
+  <li id="tags"><span>Tags:
+      </span>
+    
+      
+      <a href="../../blog/tag/java/">java</a>
+      
+    
+      
+      <a href="../../blog/tag/基础/">基础</a>
+      
+    </li>
+  
+  
+  </ul>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">胖虎</a></li>
+</ul>
+
+
+  <h3><a href="../../blog/">Recent Posts</a></h3>
+  <ul>
+    
+    
+      <li><a href="../Control/">10 三月 - java核心技术（二） 流程控制</a></li>
+    
+      <li><a href="../../algorithms/algoSort/">04 三月 - 算法 - 排序</a></li>
+    
+      <li><a href="../../algorithms/bag_queue_stack/">26 二月 - 背包、队列和栈</a></li>
+    
+  </ul>
+
+  <h3><a href="../../blog/tag/">Tags</a></h3>
+  <style type="text/css">
+    ul.ablog-cloud {list-style: none; overflow: auto;}
+    ul.ablog-cloud li {float: left; height: 20pt; line-height: 18pt; margin-right: 5px;}
+    ul.ablog-cloud a {text-decoration: none; vertical-align: middle;}
+    li.ablog-cloud-1{font-size: 80%;}
+    li.ablog-cloud-2{font-size: 95%;}
+    li.ablog-cloud-3{font-size: 110%;}
+    li.ablog-cloud-4{font-size: 125%;}
+    li.ablog-cloud-5{font-size: 140%;}
+  </style>
+  <ul class="ablog-cloud">
+    
+      
+      <li class="ablog-cloud ablog-cloud-5">
+        <a href="../../blog/tag/java/">java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-5">
+        <a href="../../blog/tag/基础/">基础</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/流程控制位运算/">流程控制，位运算</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-2">
+        <a href="../../blog/tag/算法/">算法</a></li>
+      
+    
+  </ul>
+
+  <h3><a href="../../blog/category/">Categories</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/category/java/">java (4)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/基础/">基础 (4)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/算法/">算法 (2)</a></li>
+    
+  
+  </ul>
+
+  <h3><a href="../../blog/archive/">Archives</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/2020/">2020 (4)</a></li>
+    
+  
+  </ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, 胖虎.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/javaTech/BaseStructJava.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

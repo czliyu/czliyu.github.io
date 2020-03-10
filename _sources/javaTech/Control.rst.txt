@@ -1,0 +1,139 @@
+java核心技术（二） 流程控制
+==================================
+
+.. post:: 10 Mar 2020
+   :tags: java, 基础, 流程控制，位运算
+   :category: java, 基础
+   :author: me
+
+
+运算符
+------------
+
+算术运算符
+------------
+
+算术运算符 `+、-、*、 /`, 整除被0除会产生一个异常。而浮点数被0除将会得到无穷大或NaN结果.
+
+强制类型转换
+--------------
+
+在必要的时候，int类型的值将会自动地转换为double类型，有时也需要将double转换为int,
+这种可能损失信息的转换要通过强制转换来完成。
+
+.. code-block:: java
+
+    double x = 9.997;
+    int nx = (int) x; // 9
+    // 相对浮点数进行舍入运算
+    int nx = (int) Math.round(x); // 10
+    // 调用rand的时候，仍然需要使用强制类型转换，因为rand方法返回的结果为long类型
+
+.. note::
+
+    将一个数值从一种类型强制转换为另一种类型, 超出了目标类型的表示范围。如(byte) 300 实际值为44.
+
+赋值和运算符
+--------------
+
+x += 4; 等价于 x = x + 4;
+
+自增自减
+------------
+
+自增：n++ 将变量n的当前值加1
+
+自减：n-- 将n的值减1
+
+.. code-block:: java
+
+    int n = 12;
+    n++; // 13
+
+不能用于数值本身，4++不是一个合法语句
+
+
+流程控制
+------------
+
+java使用条件语句和循环结构确定控制流程。
+
+条件语句
+-----------
+
+条件语句形式::
+
+    if (condition) statement
+
+    执行多条语句时需要使用 `{}` 块
+    if (condition)
+    {
+        statement1
+        statement2
+    }
+
+    if (condition) statement1 else statement2
+
+    if (condition) 
+        statement1
+    else if (condition)    
+        statement2
+    else if (condition)
+        statement3
+    else    
+        statement4
+
+循环
+---------
+
+当条件语句为true，while循环执行语句, 形式如下::
+
+    while (condition) statement
+
+    do
+    { 
+        statement
+    } while(condition)
+
+for 循环语句是支持迭代的一种通用结构。
+
+.. code-block:: java
+
+    for (int i = 1; i <= 10; i++)
+        System.out.println(i);
+
+.. note::
+
+    在循环中，检测两个浮点数是否相等需要格外小心。
+    for (double x = 0; x != 10; x += 0.1)
+    因为0.1无法精确地用二进制表示，所以x将从9.9999999998 跳到10.9999999998
+
+switch
+----------
+
+switch 处理多个选项时
+
+.. code-block:: java
+
+    Scanner in = new Scanner(System.in);
+    System.out.print("Select an option (1, 2, 3, 4)");
+    int choice = in.nextInt();
+    switch (choice)
+    {
+        case 1:
+            ...
+            break;
+        case 2:
+            ...
+            break;
+        case 3:
+            ...
+            break;
+        case 4:
+            ...
+            break;
+        default:
+            ...
+            break;
+    }
+

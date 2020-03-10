@@ -1,0 +1,149 @@
+java核心技术（一） 基本数据类型
+====================================
+
+.. post:: 4 Mar 2020
+   :tags: java, 基础
+   :category: java, 基础
+   :author: me
+
+第一个java程序
+-------------------
+
+.. code-block:: java
+
+   public class FirstSample {
+        public static void main(String[] args) {
+            System.out.println("We will not use 'hello, world!'"); 
+        }
+   }
+
+将文件保存为`FirstSample.java`, 文件名称需要与类一致，
+
+类名是以大写字母开头的名词，如果名字由多个单词组成，每个单词的第一个字母都应该大写，这种在
+一个单词中间使用大写字母的方式称为驼峰法。
+
+编译代码 `javac FirstSample.java`
+
+运行程序 `java FirstSample`
+
+运行已编译的程序时，java虚拟机总是从指定类中的main方法的代码开始执行，因此在类文件中必须包含一个`main`方法
+
+数据类型
+------------------
+
+Java是一种强类型语言，这就意味着必须为每一个变量声明一种类型::
+
+    8种基本类型，4种整型，2种浮点型，1种字符型
+
+
+**整型**
+
+在java中，整型的范围与运行java代码的机器无关，这就解决了软件从一个平台移植到另外一个平台，
+或者在同一个平台中的不同操作系统之间进行移植给程序员带来的诸多问题
+
+java中的4种整型::
+
+    int   4字节   -2147483648 ～ 2147483647 (最常用)
+    short 2个字节 -32768 ～32767
+    long  8个字节 -9223372036854775808 ～9223372036854775807 (会有个后缀L或l,如4000000L)
+    byte  1个字节 -128 ~ 127
+
+浮点类型
+--------------
+
+java中有2种浮点类型::
+
+    float  4字节  有效为6～7位
+    double 8字节  有效位15位
+
+`double` 表示这种类型的数值精度是float类型的2倍（双精度数值）
+
+`Double.POSITIVE_INFINITY` ** 正无穷大 **
+`Double.NEGATIVE_INFINITY` ** 负无穷大 **
+`Double.NaN` (不是一个数)
+
+.. note::
+
+    if (x == Double.NaN) // is never true
+    所有非数值的值都认为是不相同的
+    if (Double.NaN(x)) // check whether x is not a number
+
+char 类型
+------------
+
+char类型原本用来表示单个字符。现在有些Unicode字符可以用一个char值描述，另外一些Unicode
+字符则需要两个char值。
+
+boolean 类型
+--------------
+
+只有2个值 `true` `fasle` 整数型和布尔值不鞥进行相互转换, 
+
+
+变量与常量
+------------
+
+**声明变量**
+
+.. code-block:: java
+
+    double salary;
+
+    int vacationDays;
+
+    long earthPopulation;
+
+    boolean done;
+
+**变量初始化**
+
+声明一个变量后，必须用赋值语句对变量进行显示初始化，千万不要使用未初始化的变量的值,
+如果不，java会编译报错
+
+.. code-block:: java
+
+    int vacationDays;
+    vacationDays = 12;
+    或者
+    int vacationDays = 12;
+
+**常量**
+
+利用关键词 `final` 指示常量
+
+.. code-block:: java
+
+    public class Constants
+    {
+        public static void main(String[] args) 
+        {
+            // 常量
+            final double CM_PER_INCH = 2.54; 
+        }
+    }
+
+关键词 `final` 表示这个变量只能被赋值一次，一旦被赋值之后，就不能再更改了
+
+通常这些常量称为**类常量**
+
+.. code-block:: java
+
+    public class Constants2
+    {
+        public static final double CM_PER_INCH = 2.54; 
+
+        public static void main(String[] args)
+        {
+            Sytem,out.println(CM_PER_INCH); 
+        }
+    }
+
+**枚举类型**
+
+变量的取值只在一个有限的集合内，可以自定义 `枚举类型`
+
+.. code-block:: java
+
+    enum Size { SMALL, MEDIUM, LARGE, EXTRA_LARGE }
+
+
