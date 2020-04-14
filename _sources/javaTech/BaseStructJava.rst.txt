@@ -147,3 +147,26 @@ boolean 类型
     enum Size { SMALL, MEDIUM, LARGE, EXTRA_LARGE }
 
 
+数组
+------------
+
+数组是一种数据结构，用来存储同一类型值的集合。通过下标(index,索引)可以访问
+数组中的每一个值.如：a[i]
+
+声明数组 `int[] a;`
+
+声明并初始化 `int a = new int[100]; // var a = new int[100];`
+
+java中，提供了一种创建数组对象并同时提供初始化的简写 `int[] smallPrimes = {1, 3, 5, 7, 11, 13};`
+
+匿名数组 `new int[] {17, 19, 23, 29, 31, 37};`
+
+访问数组元素::
+
+    int[] a = new int[100];
+    for (int i = 0; i < 100; i++)
+        a[i] = i;
+    for(int j = 0; j < a.length; j++)
+        System.out.println(a[j]);
+
+
