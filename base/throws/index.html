@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="">
   <head>
     <meta charset="utf-8" />
-    <title>oop设计技巧 &#8212; 胖虎的技术栈  documentation</title>
+    <title>使用异常的技巧 &#8212; 胖虎的技术栈  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -43,54 +43,43 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="oop">
-<h1>oop设计技巧<a class="headerlink" href="#oop" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2>类的设计技巧<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>1、一定要保证数据私有</p>
-<p>这是 <strong>最重要</strong> 的：绝对不要破环封装性。可以编写一个访问器方法或更改器方法，但是最好
-还是保持实例的私有性。当数据保持私有时，表示形式的变化不会对类的使用者产生影响，
-而且更容易检测bug</p>
-<p>2、一定要对数据进行初始化</p>
-<p>Java不会为你初始化局部变量，但是会对对象的实例字段进行初始化。最好不要依赖于系统的默认值，
-而是应该显式地初始化所有的数据。</p>
-<p>3、不要在类中使用过多的基本类型</p>
-<p>用其他的类替换使用多个相关的基本类型。这样使类易于理解，也更易于修改。
-比如：用一个名为Address的新类替换一个Customer类中以下的实例字段:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">private</span> <span class="n">String</span> <span class="n">steet</span><span class="p">;</span>
-<span class="n">private</span> <span class="n">String</span> <span class="n">city</span><span class="p">;</span>
-<span class="n">private</span> <span class="n">String</span> <span class="n">state</span><span class="p">;</span>
-<span class="n">private</span> <span class="nb">int</span> <span class="nb">zip</span><span class="p">;</span>
+  <div class="section" id="id1">
+<h1>使用异常的技巧<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>如何适当使用异常有很大的争议，有些程序员认为所有的检查型异常都令人厌烦，有些程序员认为抛出的异常还不够多。</p>
+<p>使用异常的一些技巧</p>
+<p>1、异常处理不能代替简单的测试</p>
+<p>作为一个示例，试着讲一个空栈弹出10000000次，首先，在弹栈之前先查看栈是否为空。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">(!</span><span class="n">s</span><span class="o">.</span><span class="na">empty</span><span class="o">())</span> <span class="n">s</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+
+<span class="k">try</span>
+<span class="o">{</span>
+     <span class="n">s</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+<span class="o">}</span>
+<span class="k">catch</span> <span class="o">(</span><span class="n">EmptyStackException</span> <span class="n">e</span><span class="o">)</span>
+<span class="o">{</span>
+<span class="o">}</span>
 </pre></div>
 </div>
-<p>可能需要处理国际地址。</p>
-<p>4、不是所有的字段都需要单独的字段访问器和字段更改器</p>
-<p>可能需要获得或设置员工的工资，而一旦构造了员工对象，肯定不需要更改雇用日期。另外，在对象中，常常包含一些不希望别人获得或设置的实例字段。</p>
-<p>5、分解有过多职责的类</p>
-<p>如果明显地可以将一个复杂的类分解成两个更为简单的类。</p>
-<p>6、类名和方法名要能够提现它们的职责</p>
-<p>变量应该有一个能够反映其含义的名字一样，类也应该如此。</p>
-<p>有一个很好的惯例：类名应当是一个名词。或者前面有形容词修饰的名词。或者是有动名词修饰的名词</p>
-<p>方法标准惯例：访问器方法用小写get开头(getSalary),更改方法用小写的set开头(setSalary)</p>
-<p>7、优先使用不可变的类</p>
-<p>没有方法能修改对象的状态，如果类是不可变的，就可以安全地在多个线程间共享其对象。
-因此尽可能让类不可变的，这是一个很好的想法，如一个字符串或一个时间点，计算会生成新值，而不是更新原来的值。
-并不是所有类都应当是不可变的，如果员工加薪时让raiseSalary方法返回一个Employee对象。这就很奇。</p>
-</div>
-<div class="section" id="id2">
-<h2>继承的设计技巧<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<p>1、将公共操作和字段放在超类中</p>
-<p>2、不要使用受保护的字段</p>
-<p><cite>protected</cite> 机制并不能够带来更多的保护，第一，子类集合是无限制的，任何一个人都能够由你的类派生一个子类，
-然后编写代码直接访问 <cite>protected</cite> 字段，从而破坏了封装性，第二，在java中，在同一个包中的所有类都可以访问 <cite>protected</cite> 实例字段,
-而不管它们是否为这个类的子类</p>
-<p>3、使用继承实现 “is-a” 关系</p>
-<p>使用继承很容易达到节省代码量的目的，</p>
-<p>4、除非所有继承的方法都有意义，否则不要使用继承</p>
-<p>5、在覆盖方法时，不要改变预期的行为</p>
-<p>6、使用多态、而不要使用类型信息</p>
-<p>7、不要滥用反射</p>
-</div>
+<p>调用isEmpty的版本运行时间为646ms，捕获EmptyStackException的版本运行时间为21739ms</p>
+<p>因此使用异常的基本原则: <em>只在异常情况下使用异常</em></p>
+<p>2、不要过分细化异常</p>
+<p>很多程序员习惯将每一条语句都分装在一个独立的try语句块中</p>
+<p>异常处理的一个承诺: <em>将正常处理与错误处理分开</em></p>
+<ol class="arabic simple" start="3">
+<li><p>充分利用异常层次结构</p></li>
+</ol>
+<p>不要只抛出RuntimeException异常，应该寻找一个适合的子类或创建自己的异常类</p>
+<p>不要只捕获Throwable异常，否则会使你的代码难读、更难维护。</p>
+<p>考虑检查型异常和非检查型异常的区别，检查型异常本来就很庞大，不要为逻辑错误抛出这些异常。</p>
+<p>如果能够将一种异常转换成另一种更加适合的异常，例如，在解析某个文件中的一个整数时，可以捕获NumberFormatException异常，然后转换成IOException的一个子类或MySubSystemException</p>
+<p>4、不要压制异常</p>
+<p>在java中，往往非常希望关闭异常，如果编写了一个方法要调用另外一个方法，而那个方法可能100年才抛出一个异常，但是，如果没有在你的方法的throws列表中声明这个异常，编译器就会报错。不想把它放在throws列表中，因为这样一来，编译器会对调用了你的方法的所有方法报错，因此，你会将这个异常关闭</p>
+<p>5、在检测错误时，“苛刻”要比放任更好</p>
+<p>当检测到错误的时候，程序员对抛出的异常很担心。在用无效的参数调用一个方法时，返回一个虚拟值是否比抛出一个异常更好？例如，当栈为空时，Stack.pop()是该返回一个null，还是要抛出一个异常？</p>
+<p>最好在出错地方抛出一个EmptyStackException异常。</p>
+<p>6、不要羞于传递异常</p>
+<p>程序员都感觉应该捕获抛出的全部异常，如果调用了一个抛出异常的方法，例如，FileInputStream构造器或readline方法，它们会本能地捕获这些可能产生的异常。最好继续传递这个异常，而不是自己捕获。</p>
+<p>&gt; 5、6 可以归纳为“早抛出，晚捕获”</p>
 </div>
 
   <div class="section">
@@ -102,20 +91,14 @@
   <span style="float: left;">
   
   Previous: 
-  <a href="../../javaTech/Control/">
+  <a href="../oop/">
     
-    java核心技术（二） 流程控制
+    oop设计技巧
   </a>
   
   </span>
   <span>&nbsp;</span>
   <span style="float: right;">
-  
-  Next: 
-  <a href="../throws/">
-    使用异常的技巧
-    
-  </a>
   
   </span>
 </div>
@@ -145,7 +128,7 @@
   <h2>
   
   
-    22 三月 2020
+    14 四月 2020
   
   </h2>
 
@@ -169,15 +152,11 @@
   <li id="category"><span>Category:</span>
     
       
-      <a href="../../blog/category/oop/">oop</a>,
+      <a href="../../blog/category/base/">base</a>,
       
     
       
-      <a href="../../blog/category/类/">类</a>,
-      
-    
-      
-      <a href="../../blog/category/基础/">基础</a>,
+      <a href="../../blog/category/异常/">异常</a>,
       
     
       
@@ -191,19 +170,15 @@
       </span>
     
       
-      <a href="../../blog/tag/oop/">oop</a>
+      <a href="../../blog/tag/base/">base</a>
       
     
       
-      <a href="../../blog/tag/类/">类</a>
+      <a href="../../blog/tag/exception/">Exception</a>
       
     
       
-      <a href="../../blog/tag/基础/">基础</a>
-      
-    
-      
-      <a href="../../blog/tag/面向对象/">面向对象</a>
+      <a href="../../blog/tag/java/">java</a>
       
     </li>
   
@@ -221,7 +196,7 @@
   <ul>
     
     
-      <li><a href="../throws/">14 四月 - 使用异常的技巧</a></li>
+      <li><a href="../oop/">22 三月 - oop设计技巧</a></li>
     
       <li><a href="../../javaTech/Control/">10 三月 - java核心技术（二） 流程控制</a></li>
     
@@ -361,7 +336,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/base/oop.rst.txt"
+      <a href="../../_sources/base/throws.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
