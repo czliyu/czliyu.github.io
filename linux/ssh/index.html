@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="">
   <head>
     <meta charset="utf-8" />
-    <title>使用异常的技巧 &#8212; 胖虎的技术栈  documentation</title>
+    <title>ssh 端口转发 &#8212; 胖虎的技术栈  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -43,43 +43,75 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="id1">
-<h1>使用异常的技巧<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>如何适当使用异常有很大的争议，有些程序员认为所有的检查型异常都令人厌烦，有些程序员认为抛出的异常还不够多。</p>
-<p>使用异常的一些技巧</p>
-<p>1、异常处理不能代替简单的测试</p>
-<p>作为一个示例，试着讲一个空栈弹出10000000次，首先，在弹栈之前先查看栈是否为空。</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">(!</span><span class="n">s</span><span class="o">.</span><span class="na">empty</span><span class="o">())</span> <span class="n">s</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
-
-<span class="k">try</span>
-<span class="o">{</span>
-     <span class="n">s</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
-<span class="o">}</span>
-<span class="k">catch</span> <span class="o">(</span><span class="n">EmptyStackException</span> <span class="n">e</span><span class="o">)</span>
-<span class="o">{</span>
-<span class="o">}</span>
+  <div class="section" id="ssh">
+<h1>ssh 端口转发<a class="headerlink" href="#ssh" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>端口转发<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>ssh会自动加密和解密所有ssh客户端与服务器之间的网络数据。
+ssh 同时还提供了一个非常有用的功能，就是端口转发。
+将TCP端口的网络数据通过ssh链接来转发，并且自动提供了相应的加密及解密服务。 这一过程叫 <strong>顺道</strong></p>
+<p>例如Telnet、SMTP、LDAP 这些TCP应用均能够从中得益.</p>
+<p>ssh 端口转发能够提供两大功能:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>加密ssh client 至 ssh server 之间的通讯数据</p></li>
+<li><p>突破防火墙的限制完成一些之间无法建立的TCP连接。</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id2">
+<h2>本地转发<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>远程服务器运行一个服务，端口为3000，本地访问这个服务</p>
+</div>
+<div class="highlight-javaScript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">response</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span>
+    <span class="p">});</span>
+    <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>调用isEmpty的版本运行时间为646ms，捕获EmptyStackException的版本运行时间为21739ms</p>
-<p>因此使用异常的基本原则: <em>只在异常情况下使用异常</em></p>
-<p>2、不要过分细化异常</p>
-<p>很多程序员习惯将每一条语句都分装在一个独立的try语句块中</p>
-<p>异常处理的一个承诺: <em>将正常处理与错误处理分开</em></p>
-<ol class="arabic simple" start="3">
-<li><p>充分利用异常层次结构</p></li>
-</ol>
-<p>不要只抛出RuntimeException异常，应该寻找一个适合的子类或创建自己的异常类</p>
-<p>不要只捕获Throwable异常，否则会使你的代码难读、更难维护。</p>
-<p>考虑检查型异常和非检查型异常的区别，检查型异常本来就很庞大，不要为逻辑错误抛出这些异常。</p>
-<p>如果能够将一种异常转换成另一种更加适合的异常，例如，在解析某个文件中的一个整数时，可以捕获NumberFormatException异常，然后转换成IOException的一个子类或MySubSystemException</p>
-<p>4、不要压制异常</p>
-<p>在java中，往往非常希望关闭异常，如果编写了一个方法要调用另外一个方法，而那个方法可能100年才抛出一个异常，但是，如果没有在你的方法的throws列表中声明这个异常，编译器就会报错。不想把它放在throws列表中，因为这样一来，编译器会对调用了你的方法的所有方法报错，因此，你会将这个异常关闭</p>
-<p>5、在检测错误时，“苛刻”要比放任更好</p>
-<p>当检测到错误的时候，程序员对抛出的异常很担心。在用无效的参数调用一个方法时，返回一个虚拟值是否比抛出一个异常更好？例如，当栈为空时，Stack.pop()是该返回一个null，还是要抛出一个异常？</p>
-<p>最好在出错地方抛出一个EmptyStackException异常。</p>
-<p>6、不要羞于传递异常</p>
-<p>程序员都感觉应该捕获抛出的全部异常，如果调用了一个抛出异常的方法，例如，FileInputStream构造器或readline方法，它们会本能地捕获这些可能产生的异常。最好继续传递这个异常，而不是自己捕获。</p>
-<p>&gt; 5、6 可以归纳为“早抛出，晚捕获”</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>为什么本地端口转发
+一般来讲，云主机的防火墙默认只打开了22端口，如果需要访问3000端口的话，需要修改防火墙，
+为了保证安全。防火墙需要配置允许访问的ip地址，但是本地公网ip通常是网路提供商动态分配的。这样一直改很麻烦</p>
+</div>
+<p>命令格式</p>
+<p><cite>ssh -L &lt;Local port&gt;:&lt;remote host&gt;:&lt;remote port&gt; &lt;SSH hostname&gt;</cite></p>
+<p>根据具体实例说明：
+<cite>ssh -L localhost:2000:localhost:3000 root&#64;ip</cite></p>
+<p><cite>localhost:2000</cite> 表示本地的服务器
+<cite>localhost:3000</cite> 这里的localhost表示ssh的服务器</p>
+<p>访问远程服务器
+<cite>curl http://localhost:2000</cite></p>
+<p>注意:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* ssh 连接建立起来，我们必须保持这个ssh连接以使端口转发保持生效。一旦关闭了此连接，相应端口转发也会关闭
+* 不能给一个已经存在的ssh 连接增加转发
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>远程端口转发<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>本地运行node服务，端口为3000， 远程服务器访问这个服务</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>为什么远程端口转发
+本地主机没有独立的公网IP，它与同一网络中的主机共享一个IP，没有公网IP，云主机
+是无法访问本地主机上的服务。比如做微信/小程序的开发</p>
+</div>
+<p>命令格式：
+<cite>ssh -R &lt;local port&gt;:&lt;remote host&gt;:&lt;remote port&gt; &lt;SSH root&#64;ip&gt;</cite></p>
+<p>实例说明：
+<cite>ssh -R localhost:2000:localhost:3000 root&#64;ip</cite></p>
+</div>
 </div>
 
   <div class="section">
@@ -91,20 +123,14 @@
   <span style="float: left;">
   
   Previous: 
-  <a href="../oop/">
+  <a href="../../http/http01/">
     
-    oop设计技巧
+    HTTP 基础
   </a>
   
   </span>
   <span>&nbsp;</span>
   <span style="float: right;">
-  
-  Next: 
-  <a href="../../http/http01/">
-    HTTP 基础
-    
-  </a>
   
   </span>
 </div>
@@ -134,7 +160,7 @@
   <h2>
   
   
-    14 四月 2020
+    26 五月 2020
   
   </h2>
 
@@ -162,11 +188,7 @@
       
     
       
-      <a href="../../blog/category/异常/">异常</a>,
-      
-    
-      
-      <a href="../../blog/category/面向对象/">面向对象</a>
+      <a href="../../blog/category/ssh/">ssh</a>
       
     </li>
   
@@ -180,11 +202,7 @@
       
     
       
-      <a href="../../blog/tag/exception/">Exception</a>
-      
-    
-      
-      <a href="../../blog/tag/java/">java</a>
+      <a href="../../blog/tag/ssh/">ssh</a>
       
     </li>
   
@@ -204,13 +222,13 @@
     
       <li><a href="../../http/http01/">19 五月 - HTTP 基础</a></li>
     
-      <li><a href="../oop/">22 三月 - oop设计技巧</a></li>
+      <li><a href="../../base/throws/">14 四月 - 使用异常的技巧</a></li>
+    
+      <li><a href="../../base/oop/">22 三月 - oop设计技巧</a></li>
     
       <li><a href="../../javaTech/Control/">10 三月 - java核心技术（二） 流程控制</a></li>
     
       <li><a href="../../algorithms/algoSort/">04 三月 - 算法 - 排序</a></li>
-    
-      <li><a href="../../javaTech/BaseStructJava/">04 三月 - java核心技术（一） 基本数据类型</a></li>
     
   </ul>
 
@@ -233,7 +251,7 @@
       
     
       
-      <li class="ablog-cloud ablog-cloud-2">
+      <li class="ablog-cloud ablog-cloud-3">
         <a href="../../blog/tag/base/">base</a></li>
       
     
@@ -250,6 +268,11 @@
       
       <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/oop/">oop</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/ssh/">ssh</a></li>
       
     
       
@@ -288,7 +311,7 @@
   <ul>
   
     
-    <li><a href="../../blog/category/base/">base (2)</a></li>
+    <li><a href="../../blog/category/base/">base (3)</a></li>
     
   
     
@@ -301,6 +324,10 @@
   
     
     <li><a href="../../blog/category/oop/">oop (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/ssh/">ssh (1)</a></li>
     
   
     
@@ -329,7 +356,7 @@
   <ul>
   
     
-    <li><a href="../../blog/2020/">2020 (7)</a></li>
+    <li><a href="../../blog/2020/">2020 (8)</a></li>
     
   
   </ul>
@@ -356,7 +383,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/base/throws.rst.txt"
+      <a href="../../_sources/linux/ssh.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

@@ -1,0 +1,81 @@
+ssh 端口转发
+================
+
+.. post:: 26 May 2020
+   :tags: base, ssh
+   :category: base, ssh
+   :author: me
+
+端口转发
+------------
+
+ssh会自动加密和解密所有ssh客户端与服务器之间的网络数据。
+ssh 同时还提供了一个非常有用的功能，就是端口转发。
+将TCP端口的网络数据通过ssh链接来转发，并且自动提供了相应的加密及解密服务。 这一过程叫 **顺道**
+
+例如Telnet、SMTP、LDAP 这些TCP应用均能够从中得益.
+
+ssh 端口转发能够提供两大功能:
+
+    * 加密ssh client 至 ssh server 之间的通讯数据
+    * 突破防火墙的限制完成一些之间无法建立的TCP连接。
+
+
+本地转发
+---------------
+
+
+
+.. note:: 远程服务器运行一个服务，端口为3000，本地访问这个服务
+
+
+.. code-block:: javaScript
+
+    var http = require('http');
+    var server = http.createServer(function(request, response) {
+        response.writeHead(200, {
+            "Content-Type": "text/plain"
+        });
+        response.end("Hello world");
+    });
+    server.listen(3000);
+
+
+.. note:: 为什么本地端口转发
+    一般来讲，云主机的防火墙默认只打开了22端口，如果需要访问3000端口的话，需要修改防火墙，
+    为了保证安全。防火墙需要配置允许访问的ip地址，但是本地公网ip通常是网路提供商动态分配的。这样一直改很麻烦
+
+
+命令格式
+
+`ssh -L <Local port>:<remote host>:<remote port> <SSH hostname>`
+
+根据具体实例说明：
+`ssh -L localhost:2000:localhost:3000 root@ip`
+
+`localhost:2000` 表示本地的服务器
+`localhost:3000` 这里的localhost表示ssh的服务器
+
+访问远程服务器
+`curl http://localhost:2000`
+
+注意::
+
+    * ssh 连接建立起来，我们必须保持这个ssh连接以使端口转发保持生效。一旦关闭了此连接，相应端口转发也会关闭
+    * 不能给一个已经存在的ssh 连接增加转发
+
+远程端口转发
+-------------------
+
+.. note:: 本地运行node服务，端口为3000， 远程服务器访问这个服务
+
+.. note:: 为什么远程端口转发
+    本地主机没有独立的公网IP，它与同一网络中的主机共享一个IP，没有公网IP，云主机
+    是无法访问本地主机上的服务。比如做微信/小程序的开发
+
+
+命令格式：
+`ssh -R <local port>:<remote host>:<remote port> <SSH root@ip>`
+
+实例说明：
+`ssh -R localhost:2000:localhost:3000 root@ip`

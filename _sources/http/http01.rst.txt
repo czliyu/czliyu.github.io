@@ -1,0 +1,14 @@
+HTTP 基础
+=============
+
+.. post:: 19 May 2020
+   :tags: base, http, tcp/ip
+   :category: base, http
+   :author: me
+
+
+HTTP定义
+--------------
+
+超文本传输协议(`HTTP <https://developer.mozilla.org/zh-CN/docs/Web/HTTP>`_)是用于传输超媒体文档（如html）的应用层协议。
+HTTP 是无状态协议，在请求和数据直接不会保留数据 (状态)。该协议虽然通常基于TCP/IP层，可以在任何可靠的传输层上使用。
