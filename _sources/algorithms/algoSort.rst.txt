@@ -1,7 +1,7 @@
-算法 - 排序
+初级排序算法
 ===================
 
-.. post:: 4 Mar 2020
+.. post:: 4 july 2020
    :tags: java,算法,基础
    :category: java, 算法, 基础
    :author: me
@@ -10,16 +10,12 @@
 
 排序就是将一组对象按照某种逻辑顺序重新排列的过程。
 
-学习排序3大实际意义::
+学习排序3大实际意义
 
    * 对排序算法的分析将有助于你全面理解本书中比较算法性能的方法
    * 类似的技术也能有效解决其他类型问题
    * 排序算法常常是我们解决其他问题的第一步 
 
-排序算法需要2个方法操作数据::
-
-   * less() 对元素进行比较
-   * exch() 将元素交换位置 
    
 排序模版
 ------------
@@ -28,70 +24,242 @@
    :language: java
 
 
-排序算法的额外内存开销和运行时间同样重要。排序算法可以分为两类::
-
-   * 除了函数调用所需的栈和国定数目的实例变量之外无需额外内存的原地址排序
-   * 需要额外内存空间来存储另一份数组副本的其他排序算法
-
 数据类型
-------------
-
-该排序算法模版适用于任何实现了`comparable`接口的数据类型，在创建自己的数据类型时，我们只要实现Comparable 接口就能保证用例代码可以
-讲其排序。只需要实现一个`compareTo()`方法来定义目标类型对象的自然次序。
-
-入下面的`Date`数据类型
-
-.. literalinclude:: code/Date.java
-   :language: java
-
-选择排序
-------------
-
-首先，找到数组中最小的那个元素，其次将它和数组中第一个元素交换位置，再次在剩余元素中找到最小元素，将它与第二个元素交换位置。
-如此往复，直到将整个数组排序，这种方法叫选择排序。
-
-.. seealso::
-
-   对于长度为N的数据，选择排序需要大约N^2/2次比较和N次交换。
-
-.. code-block:: java
-
-   public class Selection {
-        public static void sort(Comparable[] a) {
-            int N = a.length;
-            for (int i = 0; i< N; i++) {
-                int min = i;
-                for (int j = i+1; i < N; j++)
-                    if (less(a[j], a[min])) min = j; 
-                exch(a, i, min);
-            } 
-        }
-        // less()、exch()、isSorted()和main()方法见"排序算法类模版"
-   }
-
-
-插入排序
 -------------
 
-通常人们整理桥牌的方法是一张一张的来，插入到其他已经有序的牌中的适当位置，为了给要插入的元素腾出空间
-，我们需要将其余所有元素都向右移动一位，这种算法叫插入排序。
+排序算法适用于任何实现了 `Comparable <https://devdocs.io/openjdk~8/java/lang/comparable>`_ 接口的数据类型。
+Integer、Double、String、File、URL 都实现是 `Comparable <https://devdocs.io/openjdk~8/java/lang/comparable>`_ 接口
 
-.. seealso::
+选择排序
+-------------
+O(N^2)
 
-   对于随机排列的长度为N且主键不重复的数组，平均情况下插入排序需要~N^2/4次比较以及～N^2/4次交换，最坏情况下需要～N^2/2次比较和
-   ～N^2/2次交换，最好的情况下需要N-1次比较和0次交换。
+选择排序：从元素中知道最小的那个元素，之后的元素与最小元素比较交换，如此往复。这种方法叫 **选择排序**。
+
+::
+
+   对于长度为N的数组，选择排序需要N^2/2次比较和N次交换。
+
+算法：选择排序
 
 .. code-block:: java
 
-   public class Insertion {
-        public static void sort(Comparable[] a) {
-            int N = a.length;
-            for (int i = 1; i < N; i++)  {
-                for (int j = i; j > 0 && less(a[j], a[j-1]); j--) 
-                    exch(a, j, j-1);
-            }
-        }
-        // less() exch() isSorted()
+   public class Selection
+   {
+      public static void sort(Comparable[] a)
+      {
+         int N = a.length;
+         for (int i = 0; i < N; i++)
+         {
+            int min = i;
+            for (int j = i + 1; j < N; j++)
+               if (less(a[j], a[min])) min = j;
+            exch(a, i, j);
+         }
+      }
    }
 
-未完待续
+插入排序
+---------------
+O(N^2)
+
+插入排序： 为了给要插入的元素腾出空间，需要将其余所有元素在插入之前都向右移动一位，这种方法叫做 **插入排序**。
+
+::
+
+   对于随机排列的长度为N且主键不重复的数组，平均情况下插入排序需要 ～ N^2/4次比较以及 ～ N^2/4次交换。最坏的情况下需要 ～ N^2/2
+   次比较和 ～ N^2/2次交换，最好情况下需要N-1次比较和0次交换。
+
+算法：插入排序
+
+.. code-block:: java
+
+   public class Insertion
+   {
+      public static void sort(Comparable[] a)
+      {
+         int N = a.length;
+         for (int i = 1; i < N; i++)
+         {
+            for (int j = i; j > 0 && less(a[j], a[j-1]); j--)
+               exch(a, j, j-1);
+         }
+      }
+   }
+   
+
+希尔排序
+-----------   
+
+希尔排序：一种基于插入排序的快速的排序算法。
+对于大规模乱序数组插入排序很慢，因为它只会交换相邻的元素，因此元素只能一点一点地从
+数组的一端移动到另一端。例如: 如果主键最小的元素正好在数组的尽头，要将它挪到正确的位置就需要
+N-1次移动。希尔排序为了加快速度简单地改进了插入排序，交换不相邻的元素以对数组局部进行排序。
+
+::
+
+   希尔排序的思想是使数组中任意间隔为h的元素都有序。这样的数组被称为h有序数组。
+
+算法：希尔排序
+
+.. code-block:: java
+
+   public class Shell
+   {
+      public static void sort(Comparable[] a)
+      {
+         int N = a.length;
+         int h = 1;
+         while (h < N/3) h = 3*h+1;
+         while (h >= 1)
+         {
+            // 将数组变为h有序
+            for (int i = h; i < h; i++) 
+            {
+               for (int j = i; j >= h && less(a[j], a[j-h]); j -= h)
+                  exch(a, j, j-h);
+            }
+            h = h/3;
+         }
+      }
+   }
+   
+
+归并排序
+------------   
+
+O(NlgN)
+
+归并排序：将一个数组排序，可以先（递归地）将它分成两半分别排序，然后将结果归并起来。
+归并排序最吸引人的性质是它能够保证将任意长度为N的数组排序所需时间和NlgN成正比。
+
+
+当用归并将一个大数组排序时，我们需要进行很多次归并，因此在每次归并时都创建一个新数组来存储排序结果会
+带来问题。更希望有一种能够在原地归并的方法，这样就可以先将前半部分排序，再将后半部分排序。
+
+
+原地归并的抽象方法
+-------------------
+
+.. code-block:: java
+
+   public static void merge(Comparable[] a, int lo, int mid, int hi)
+   {
+      int i = lo, j = mid + 1;
+
+      for (int k = lo; k <= hi; k++)
+         aux[k] = a[k];
+
+      for (int k = lo; k <= hi; k++)   
+      {
+         if (i > mid) a[k] = aux[j++];
+         else if (j > hi) a[k] = aux[i++];
+         else if (less(aux[j], aux[i])) a[k] = aux[j++];
+         else a[k] = aux[i++];
+      }
+   }
+
+自顶向下的归并排序
+---------------------
+
+.. code-block:: java
+
+   public class Merge
+   {
+      private static Comparable[] aux;
+
+      public static void sort(Comparable[] a)
+      {
+         aux = new Comparable[a.length];
+         sort(a, 0, a.length - 1);
+      }
+
+      pirvate static void sort(Comparable[] a, int lo, int hi)
+      {
+         if (hi <= lo)  return;
+         int mid = lo + (hi - lo) / 2;
+
+         sort(a, lo, mid); // 左半边排序
+         sort(a, mid + 1, hi); // 右半边排序
+         merge(a, lo, mid, hi); // 归并结果
+      }
+   }
+
+::
+
+   对于长度为N的任意数组，自顶向下的归并排序需要1/2NlgN ~ NlgN
+
+自底向上的归并排序
+----------------------
+
+.. code-block:: java
+
+   public class MergeBU
+   {
+      private static Comparable[] aux;
+
+      public static void sort(Comparable[] a)
+      {
+         int N = a.length;
+         aux = new Comparable[N];
+
+         for (int sz = 1; sz < N; sz++)
+            for (int lo = 0; lo < N-sz; lo += sz+sz)
+               merge(a, lo, lo+sz-1, Math.min(lo+sz-1, N-1));
+      }
+   }
+
+快速排序
+----------
+
+快速排序是一种分治的排序算法。它将一个数组分成两个子数组，将两部分独立地排序。
+快速排序和归并排序是互补的：归并排序将数组分成两个子数组分别排序，并将有序的子数组归并以将整个数组排序；
+而快速排序将数组排序的方式则是当两个自数组都有序时这个数组也就自然有序了。
+
+
+.. code-block:: java
+
+   public class Quick
+   {
+      public static void sort(Comparable[] a)
+      {
+         StdRandom.shuffle(a);
+         sort(a, 0, a.length - 1);
+      }
+
+      private static void sort(comparable[] a, int lo, int hi)
+      {
+         if (hi <= lo) return;
+         int j = partition(a, lo, hi);
+         sort(a, lo, j - 1);
+         sort(a, j + 1, hi);
+      }
+   }
+
+快速排序的关键在于切分，这个过程使得数组满足以下3个条件
+
+* 对于某个j，a[j] 已经排定;
+* a[lo] 到 a[j - 1] 中的所有元素都不大于a[j];
+* a[j+1] 到 a[hi] 中的所有元素都不小于a[j];
+
+
+快速排序切分
+
+.. code-block:: java
+
+   private static int partition(Comparable[] a, int lo, int hi)
+   {
+      int i = lo, j = hi + i;
+      Comparable v = a[lo];
+      while (true)
+      {
+         while (less(a[++i], v)) if (i == hi) break;
+         while (less(v, a[--j])) if (j == lo) break;
+         if (i >= j) break;
+         exch(a, i, j);
+      }
+      exch(a, lo, j);
+      return j;
+   }
+
+

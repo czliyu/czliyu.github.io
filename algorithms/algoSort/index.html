@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="">
   <head>
     <meta charset="utf-8" />
-    <title>算法 - 排序 &#8212; 胖虎的技术栈  documentation</title>
+    <title>初级排序算法 &#8212; 胖虎的技术栈  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -44,19 +44,16 @@
           <div class="body" role="main">
             
   <div class="section" id="id1">
-<h1>算法 - 排序<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<h1>初级排序算法<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>排序就是将一组对象按照某种逻辑顺序重新排列的过程。</p>
-<p>学习排序3大实际意义:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">对排序算法的分析将有助于你全面理解本书中比较算法性能的方法</span>
-<span class="o">*</span> <span class="n">类似的技术也能有效解决其他类型问题</span>
-<span class="o">*</span> <span class="n">排序算法常常是我们解决其他问题的第一步</span>
-</pre></div>
-</div>
-<p>排序算法需要2个方法操作数据:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">less</span><span class="p">()</span> <span class="n">对元素进行比较</span>
-<span class="o">*</span> <span class="n">exch</span><span class="p">()</span> <span class="n">将元素交换位置</span>
-</pre></div>
-</div>
+<p>学习排序3大实际意义</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>对排序算法的分析将有助于你全面理解本书中比较算法性能的方法</p></li>
+<li><p>类似的技术也能有效解决其他类型问题</p></li>
+<li><p>排序算法常常是我们解决其他问题的第一步</p></li>
+</ul>
+</div></blockquote>
 <div class="section" id="id2">
 <h2>排序模版<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="cm">/**************************************************</span>
@@ -93,98 +90,214 @@
 <span class="o">}</span>
 </pre></div>
 </div>
-<p>排序算法的额外内存开销和运行时间同样重要。排序算法可以分为两类:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">除了函数调用所需的栈和国定数目的实例变量之外无需额外内存的原地址排序</span>
-<span class="o">*</span> <span class="n">需要额外内存空间来存储另一份数组副本的其他排序算法</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="id3">
 <h2>数据类型<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p>该排序算法模版适用于任何实现了`comparable`接口的数据类型，在创建自己的数据类型时，我们只要实现Comparable 接口就能保证用例代码可以
-讲其排序。只需要实现一个`compareTo()`方法来定义目标类型对象的自然次序。</p>
-<p>入下面的`Date`数据类型</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="cm">/**************************************************</span>
-<span class="cm">* File Name: docs/algorithms/code/Date.java</span>
-<span class="cm">* Author: panghu</span>
-<span class="cm">* Mail: panghuvpn@gamil.com</span>
-<span class="cm">* Created Time: 2020-03-05/21:16:14</span>
-<span class="cm">**************************************************/</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Date</span> <span class="kd">implements</span> <span class="n">Comparable</span><span class="o">&lt;</span><span class="n">Date</span><span class="o">&gt;</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">day</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">month</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">year</span><span class="o">;</span>
-    <span class="kd">public</span> <span class="nf">Date</span><span class="o">(</span><span class="kt">int</span> <span class="n">d</span><span class="o">,</span> <span class="kt">int</span> <span class="n">m</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">day</span> <span class="o">=</span> <span class="n">d</span><span class="o">;</span>
-        <span class="n">manth</span> <span class="o">=</span> <span class="n">m</span><span class="o">;</span>
-        <span class="n">year</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span> 
-    <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">day</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">day</span><span class="o">;</span> <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">month</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">month</span><span class="o">;</span> <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">year</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">year</span><span class="o">;</span> <span class="o">}</span>
-
-    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="n">Date</span> <span class="n">that</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">year</span> <span class="o">&gt;</span> <span class="n">that</span><span class="o">.</span><span class="na">year</span><span class="o">)</span> <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">year</span> <span class="o">&lt;</span> <span class="n">that</span><span class="o">.</span><span class="na">year</span><span class="o">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
-        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">month</span> <span class="o">&gt;</span> <span class="n">that</span><span class="o">.</span><span class="na">month</span><span class="o">)</span> <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">month</span> <span class="o">&lt;</span> <span class="n">that</span><span class="o">.</span><span class="na">month</span><span class="o">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
-        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">day</span> <span class="o">&gt;</span> <span class="n">that</span><span class="o">.</span><span class="na">day</span><span class="o">)</span> <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">day</span> <span class="o">&lt;</span> <span class="n">that</span><span class="o">.</span><span class="na">day</span><span class="o">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
-        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="n">month</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span> <span class="o">+</span> <span class="n">day</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span> <span class="o">+</span> <span class="n">year</span><span class="o">;</span> 
-    <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="id4">
-<h2>选择排序<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<p>首先，找到数组中最小的那个元素，其次将它和数组中第一个元素交换位置，再次在剩余元素中找到最小元素，将它与第二个元素交换位置。
-如此往复，直到将整个数组排序，这种方法叫选择排序。</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p>对于长度为N的数据，选择排序需要大约N^2/2次比较和N次交换。</p>
-</div>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Selection</span> <span class="o">{</span>
-     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
-         <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
-         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-             <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
-             <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
-                 <span class="k">if</span> <span class="o">(</span><span class="n">less</span><span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">a</span><span class="o">[</span><span class="n">min</span><span class="o">]))</span> <span class="n">min</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
-             <span class="n">exch</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">min</span><span class="o">);</span>
-         <span class="o">}</span>
-     <span class="o">}</span>
-     <span class="c1">// less()、exch()、isSorted()和main()方法见&quot;排序算法类模版&quot;</span>
-<span class="o">}</span>
-</pre></div>
-</div>
+<p>排序算法适用于任何实现了 <a class="reference external" href="https://devdocs.io/openjdk~8/java/lang/comparable">Comparable</a> 接口的数据类型。
+Integer、Double、String、File、URL 都实现是 <a class="reference external" href="https://devdocs.io/openjdk~8/java/lang/comparable">Comparable</a> 接口</p>
 </div>
 <div class="section" id="id5">
-<h2>插入排序<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<p>通常人们整理桥牌的方法是一张一张的来，插入到其他已经有序的牌中的适当位置，为了给要插入的元素腾出空间
-，我们需要将其余所有元素都向右移动一位，这种算法叫插入排序。</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p>对于随机排列的长度为N且主键不重复的数组，平均情况下插入排序需要~N^2/4次比较以及～N^2/4次交换，最坏情况下需要～N^2/2次比较和
-～N^2/2次交换，最好的情况下需要N-1次比较和0次交换。</p>
+<h2>选择排序<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>O(N^2)</p>
+<p>选择排序：从元素中知道最小的那个元素，之后的元素与最小元素比较交换，如此往复。这种方法叫 <strong>选择排序</strong>。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>对于长度为N的数组，选择排序需要N^2/2次比较和N次交换。
+</pre></div>
 </div>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Insertion</span> <span class="o">{</span>
-     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
-         <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
-         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>  <span class="o">{</span>
-             <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">less</span><span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span> <span class="n">j</span><span class="o">--)</span>
-                 <span class="n">exch</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
-         <span class="o">}</span>
-     <span class="o">}</span>
-     <span class="c1">// less() exch() isSorted()</span>
+<p>算法：选择排序</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Selection</span>
+<span class="o">{</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+      <span class="o">{</span>
+         <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">less</span><span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">a</span><span class="o">[</span><span class="n">min</span><span class="o">]))</span> <span class="n">min</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
+         <span class="n">exch</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
 </div>
-<p>未完待续</p>
+</div>
+<div class="section" id="id6">
+<h2>插入排序<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>O(N^2)</p>
+<p>插入排序： 为了给要插入的元素腾出空间，需要将其余所有元素在插入之前都向右移动一位，这种方法叫做 <strong>插入排序</strong>。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>对于随机排列的长度为N且主键不重复的数组，平均情况下插入排序需要 ～ N^2/4次比较以及 ～ N^2/4次交换。最坏的情况下需要 ～ N^2/2
+次比较和 ～ N^2/2次交换，最好情况下需要N-1次比较和0次交换。
+</pre></div>
+</div>
+<p>算法：插入排序</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Insertion</span>
+<span class="o">{</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+      <span class="o">{</span>
+         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">less</span><span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span> <span class="n">j</span><span class="o">--)</span>
+            <span class="n">exch</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>希尔排序<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>希尔排序：一种基于插入排序的快速的排序算法。
+对于大规模乱序数组插入排序很慢，因为它只会交换相邻的元素，因此元素只能一点一点地从
+数组的一端移动到另一端。例如: 如果主键最小的元素正好在数组的尽头，要将它挪到正确的位置就需要
+N-1次移动。希尔排序为了加快速度简单地改进了插入排序，交换不相邻的元素以对数组局部进行排序。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>希尔排序的思想是使数组中任意间隔为h的元素都有序。这样的数组被称为h有序数组。
+</pre></div>
+</div>
+<p>算法：希尔排序</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Shell</span>
+<span class="o">{</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+      <span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">/</span><span class="mi">3</span><span class="o">)</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">h</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">)</span>
+      <span class="o">{</span>
+         <span class="c1">// 将数组变为h有序</span>
+         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">h</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">h</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+         <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="n">h</span> <span class="o">&amp;&amp;</span> <span class="n">less</span><span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="n">h</span><span class="o">]);</span> <span class="n">j</span> <span class="o">-=</span> <span class="n">h</span><span class="o">)</span>
+               <span class="n">exch</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">j</span><span class="o">-</span><span class="n">h</span><span class="o">);</span>
+         <span class="o">}</span>
+         <span class="n">h</span> <span class="o">=</span> <span class="n">h</span><span class="o">/</span><span class="mi">3</span><span class="o">;</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>归并排序<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>O(NlgN)</p>
+<p>归并排序：将一个数组排序，可以先（递归地）将它分成两半分别排序，然后将结果归并起来。
+归并排序最吸引人的性质是它能够保证将任意长度为N的数组排序所需时间和NlgN成正比。</p>
+<p>当用归并将一个大数组排序时，我们需要进行很多次归并，因此在每次归并时都创建一个新数组来存储排序结果会
+带来问题。更希望有一种能够在原地归并的方法，这样就可以先将前半部分排序，再将后半部分排序。</p>
+</div>
+<div class="section" id="id9">
+<h2>原地归并的抽象方法<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">merge</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="o">,</span> <span class="kt">int</span> <span class="n">mid</span><span class="o">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="o">)</span>
+<span class="o">{</span>
+   <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">lo</span><span class="o">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+
+   <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">lo</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span>
+      <span class="n">aux</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">];</span>
+
+   <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">lo</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span>
+   <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="n">mid</span><span class="o">)</span> <span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">aux</span><span class="o">[</span><span class="n">j</span><span class="o">++];</span>
+      <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="n">hi</span><span class="o">)</span> <span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">aux</span><span class="o">[</span><span class="n">i</span><span class="o">++];</span>
+      <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">less</span><span class="o">(</span><span class="n">aux</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">aux</span><span class="o">[</span><span class="n">i</span><span class="o">]))</span> <span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">aux</span><span class="o">[</span><span class="n">j</span><span class="o">++];</span>
+      <span class="k">else</span> <span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">aux</span><span class="o">[</span><span class="n">i</span><span class="o">++];</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id10">
+<h2>自顶向下的归并排序<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Merge</span>
+<span class="o">{</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="n">Comparable</span><span class="o">[]</span> <span class="n">aux</span><span class="o">;</span>
+
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="n">aux</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Comparable</span><span class="o">[</span><span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+      <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="n">pirvate</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="o">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">hi</span> <span class="o">&lt;=</span> <span class="n">lo</span><span class="o">)</span>  <span class="k">return</span><span class="o">;</span>
+      <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">lo</span> <span class="o">+</span> <span class="o">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+
+      <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">mid</span><span class="o">);</span> <span class="c1">// 左半边排序</span>
+      <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">hi</span><span class="o">);</span> <span class="c1">// 右半边排序</span>
+      <span class="n">merge</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">mid</span><span class="o">,</span> <span class="n">hi</span><span class="o">);</span> <span class="c1">// 归并结果</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>对于长度为N的任意数组，自顶向下的归并排序需要1/2NlgN ~ NlgN
+</pre></div>
+</div>
+</div>
+<div class="section" id="id11">
+<h2>自底向上的归并排序<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MergeBU</span>
+<span class="o">{</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="n">Comparable</span><span class="o">[]</span> <span class="n">aux</span><span class="o">;</span>
+
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+      <span class="n">aux</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Comparable</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">sz</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">sz</span><span class="o">++)</span>
+         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">lo</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">lo</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">-</span><span class="n">sz</span><span class="o">;</span> <span class="n">lo</span> <span class="o">+=</span> <span class="n">sz</span><span class="o">+</span><span class="n">sz</span><span class="o">)</span>
+            <span class="n">merge</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">lo</span><span class="o">+</span><span class="n">sz</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">lo</span><span class="o">+</span><span class="n">sz</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="o">));</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id12">
+<h2>快速排序<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<p>快速排序是一种分治的排序算法。它将一个数组分成两个子数组，将两部分独立地排序。
+快速排序和归并排序是互补的：归并排序将数组分成两个子数组分别排序，并将有序的子数组归并以将整个数组排序；
+而快速排序将数组排序的方式则是当两个自数组都有序时这个数组也就自然有序了。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Quick</span>
+<span class="o">{</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="n">StdRandom</span><span class="o">.</span><span class="na">shuffle</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
+      <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="o">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">hi</span> <span class="o">&lt;=</span> <span class="n">lo</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+      <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">partition</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">hi</span><span class="o">);</span>
+      <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+      <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">hi</span><span class="o">);</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>快速排序的关键在于切分，这个过程使得数组满足以下3个条件</p>
+<ul class="simple">
+<li><p>对于某个j，a[j] 已经排定;</p></li>
+<li><p>a[lo] 到 a[j - 1] 中的所有元素都不大于a[j];</p></li>
+<li><p>a[j+1] 到 a[hi] 中的所有元素都不小于a[j];</p></li>
+</ul>
+<p>快速排序切分</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">partition</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="o">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="o">)</span>
+<span class="o">{</span>
+   <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">lo</span><span class="o">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">hi</span> <span class="o">+</span> <span class="n">i</span><span class="o">;</span>
+   <span class="n">Comparable</span> <span class="n">v</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">lo</span><span class="o">];</span>
+   <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">less</span><span class="o">(</span><span class="n">a</span><span class="o">[++</span><span class="n">i</span><span class="o">],</span> <span class="n">v</span><span class="o">))</span> <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">hi</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">less</span><span class="o">(</span><span class="n">v</span><span class="o">,</span> <span class="n">a</span><span class="o">[--</span><span class="n">j</span><span class="o">]))</span> <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">lo</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+      <span class="n">exch</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+   <span class="o">}</span>
+   <span class="n">exch</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+   <span class="k">return</span> <span class="n">j</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -197,20 +310,14 @@
   <span style="float: left;">
   
   Previous: 
-  <a href="../../javaTech/BaseStructJava/">
+  <a href="../../base/throws/">
     
-    java核心技术（一） 基本数据类型
+    使用异常的技巧
   </a>
   
   </span>
   <span>&nbsp;</span>
   <span style="float: right;">
-  
-  Next: 
-  <a href="../../javaTech/Control/">
-    java核心技术（二） 流程控制
-    
-  </a>
   
   </span>
 </div>
@@ -240,7 +347,7 @@
   <h2>
   
   
-    04 三月 2020
+    04 七月 2020
   
   </h2>
 
@@ -308,8 +415,6 @@
   <ul>
     
     
-      <li><a href="../../http/http01/">19 五月 - HTTP 基础</a></li>
-    
       <li><a href="../../base/throws/">14 四月 - 使用异常的技巧</a></li>
     
       <li><a href="../../base/oop/">22 三月 - oop设计技巧</a></li>
@@ -317,6 +422,8 @@
       <li><a href="../../javaTech/Control/">10 三月 - java核心技术（二） 流程控制</a></li>
     
       <li><a href="../../javaTech/BaseStructJava/">04 三月 - java核心技术（一） 基本数据类型</a></li>
+    
+      <li><a href="../bag_queue_stack/">26 二月 - 背包、队列和栈</a></li>
     
   </ul>
 
@@ -339,13 +446,8 @@
       
     
       
-      <li class="ablog-cloud ablog-cloud-2">
-        <a href="../../blog/tag/base/">base</a></li>
-      
-    
-      
       <li class="ablog-cloud ablog-cloud-1">
-        <a href="../../blog/tag/http/">http</a></li>
+        <a href="../../blog/tag/base/">base</a></li>
       
     
       
@@ -356,11 +458,6 @@
       
       <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/oop/">oop</a></li>
-      
-    
-      
-      <li class="ablog-cloud ablog-cloud-1">
-        <a href="../../blog/tag/tcpip/">tcp/ip</a></li>
       
     
       
@@ -394,11 +491,7 @@
   <ul>
   
     
-    <li><a href="../../blog/category/base/">base (2)</a></li>
-    
-  
-    
-    <li><a href="../../blog/category/http/">http (1)</a></li>
+    <li><a href="../../blog/category/base/">base (1)</a></li>
     
   
     
@@ -435,7 +528,7 @@
   <ul>
   
     
-    <li><a href="../../blog/2020/">2020 (7)</a></li>
+    <li><a href="../../blog/2020/">2020 (6)</a></li>
     
   
   </ul>
