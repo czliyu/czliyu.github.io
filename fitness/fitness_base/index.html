@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="">
   <head>
     <meta charset="utf-8" />
-    <title>使用异常的技巧 &#8212; 胖虎的技术栈  documentation</title>
+    <title>健身笔记（一）| 健身基础知识 &#8212; 胖虎的技术栈  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -44,42 +44,43 @@
           <div class="body" role="main">
             
   <div class="section" id="id1">
-<h1>使用异常的技巧<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>如何适当使用异常有很大的争议，有些程序员认为所有的检查型异常都令人厌烦，有些程序员认为抛出的异常还不够多。</p>
-<p>使用异常的一些技巧</p>
-<p>1、异常处理不能代替简单的测试</p>
-<p>作为一个示例，试着讲一个空栈弹出10000000次，首先，在弹栈之前先查看栈是否为空。</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">(!</span><span class="n">s</span><span class="o">.</span><span class="na">empty</span><span class="o">())</span> <span class="n">s</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
-
-<span class="k">try</span>
-<span class="o">{</span>
-     <span class="n">s</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
-<span class="o">}</span>
-<span class="k">catch</span> <span class="o">(</span><span class="n">EmptyStackException</span> <span class="n">e</span><span class="o">)</span>
-<span class="o">{</span>
-<span class="o">}</span>
-</pre></div>
+<h1>健身笔记（一）| 健身基础知识<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>所有内容来自于</p>
+<a class="reference internal image-reference" href="https://img9.doubanio.com/view/subject/l/public/s7030209.jpg"><img alt="施瓦辛格健身全书" src="https://img9.doubanio.com/view/subject/l/public/s7030209.jpg" style="width: 300px;" /></a>
+<div class="section" id="id2">
+<h2>健身训练如何有效<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>收缩和放松纤维肌</p>
+<p>你能够举起的重量取决于三个因素</p>
+<blockquote>
+<div><p>1、 你能够征用的肌纤维数量
+2、 单根纤维的强度
+3、 你所使用的技巧</p>
+</div></blockquote>
+<p>让肌肉最大化发展的方式，就是单次能举起的最大重量的75%进行训练，使用这种重量，可以针对上半身做8-12次反复动作，针对腿部做
+12-15次反复动作。</p>
+<p>肌肉还需要休息和营养（饮食）</p>
 </div>
-<p>调用isEmpty的版本运行时间为646ms，捕获EmptyStackException的版本运行时间为21739ms</p>
-<p>因此使用异常的基本原则: <em>只在异常情况下使用异常</em></p>
-<p>2、不要过分细化异常</p>
-<p>很多程序员习惯将每一条语句都分装在一个独立的try语句块中</p>
-<p>异常处理的一个承诺: <em>将正常处理与错误处理分开</em></p>
-<ol class="arabic simple" start="3">
-<li><p>充分利用异常层次结构</p></li>
-</ol>
-<p>不要只抛出RuntimeException异常，应该寻找一个适合的子类或创建自己的异常类</p>
-<p>不要只捕获Throwable异常，否则会使你的代码难读、更难维护。</p>
-<p>考虑检查型异常和非检查型异常的区别，检查型异常本来就很庞大，不要为逻辑错误抛出这些异常。</p>
-<p>如果能够将一种异常转换成另一种更加适合的异常，例如，在解析某个文件中的一个整数时，可以捕获NumberFormatException异常，然后转换成IOException的一个子类或MySubSystemException</p>
-<p>4、不要压制异常</p>
-<p>在java中，往往非常希望关闭异常，如果编写了一个方法要调用另外一个方法，而那个方法可能100年才抛出一个异常，但是，如果没有在你的方法的throws列表中声明这个异常，编译器就会报错。不想把它放在throws列表中，因为这样一来，编译器会对调用了你的方法的所有方法报错，因此，你会将这个异常关闭</p>
-<p>5、在检测错误时，“苛刻”要比放任更好</p>
-<p>当检测到错误的时候，程序员对抛出的异常很担心。在用无效的参数调用一个方法时，返回一个虚拟值是否比抛出一个异常更好？例如，当栈为空时，Stack.pop()是该返回一个null，还是要抛出一个异常？</p>
-<p>最好在出错地方抛出一个EmptyStackException异常。</p>
-<p>6、不要羞于传递异常</p>
-<p>程序员都感觉应该捕获抛出的全部异常，如果调用了一个抛出异常的方法，例如，FileInputStream构造器或readline方法，它们会本能地捕获这些可能产生的异常。最好继续传递这个异常，而不是自己捕获。</p>
-<p>&gt; 5、6 可以归纳为“早抛出，晚捕获”</p>
+<div class="section" id="id3">
+<h2>健身与有氧耐力<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>有氧运动就是让你呼吸急促、心跳加快而你还能保持较长时间的练习。有氧运动你会得到</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>增加肺胀从空气中吸入氧气并将其运送至血液中的能力</p></li>
+<li><p>增加心脏通过循环系统输送大量的血液至肌肉的能力</p></li>
+<li><p>增加运送血液至特定肌肉的毛细血管的数量和大小</p></li>
+<li><p>增加心血管系统从肌肉中带走乳酸的能力</p></li>
+</ul>
+</div></blockquote>
+<p>大量的的肌肉收缩运动，增加肌肉耐力。你将会</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>增加得到锻炼的特定肌肉的毛细血管的大小和数量</p></li>
+<li><p>增加肌肉储存糖原（碳水）的能力，糖原为肌肉收缩准备能量</p></li>
+<li><p>增加肌肉线粒体（能量工厂）的规模，线粒体用糖原制造出ATP（三磷酸腺苷）,后者为肌肉收缩提供动力。</p></li>
+<li><p>增加耐力训练中被经常使用的肌纤维的发展</p></li>
+</ul>
+</div></blockquote>
+</div>
 </div>
 
   <div class="section">
@@ -91,20 +92,14 @@
   <span style="float: left;">
   
   Previous: 
-  <a href="../oop/">
+  <a href="../../algorithms/algoSort/">
     
-    oop设计技巧
+    初级排序算法
   </a>
   
   </span>
   <span>&nbsp;</span>
   <span style="float: right;">
-  
-  Next: 
-  <a href="../../algorithms/algoSort/">
-    初级排序算法
-    
-  </a>
   
   </span>
 </div>
@@ -134,7 +129,7 @@
   <h2>
   
   
-    14 四月 2020
+    08 八月 2020
   
   </h2>
 
@@ -158,33 +153,16 @@
   <li id="category"><span>Category:</span>
     
       
-      <a href="../../blog/category/base/">base</a>,
-      
-    
-      
-      <a href="../../blog/category/异常/">异常</a>,
-      
-    
-      
-      <a href="../../blog/category/面向对象/">面向对象</a>
+      <a href="../../blog/category/健身/">健身</a>
       
     </li>
   
 
   
-  <li id="tags"><span>Tags:
-      </span>
+  <li id="tags"><span>Tag:</span>
     
       
-      <a href="../../blog/tag/base/">base</a>
-      
-    
-      
-      <a href="../../blog/tag/exception/">Exception</a>
-      
-    
-      
-      <a href="../../blog/tag/java/">java</a>
+      <a href="../../blog/tag/健身生活/">健身，生活</a>
       
     </li>
   
@@ -204,13 +182,13 @@
     
       <li><a href="../../algorithms/algoSort/">04 七月 - 初级排序算法</a></li>
     
-      <li><a href="../oop/">22 三月 - oop设计技巧</a></li>
+      <li><a href="../../base/throws/">14 四月 - 使用异常的技巧</a></li>
+    
+      <li><a href="../../base/oop/">22 三月 - oop设计技巧</a></li>
     
       <li><a href="../../javaTech/Control/">10 三月 - java核心技术（二） 流程控制</a></li>
     
       <li><a href="../../javaTech/BaseStructJava/">04 三月 - java核心技术（一） 基本数据类型</a></li>
-    
-      <li><a href="../../algorithms/bag_queue_stack/">26 二月 - 背包、队列和栈</a></li>
     
   </ul>
 
@@ -245,6 +223,11 @@
       
       <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/oop/">oop</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/健身生活/">健身，生活</a></li>
       
     
       
@@ -290,6 +273,10 @@
     
   
     
+    <li><a href="../../blog/category/健身/">健身 (1)</a></li>
+    
+  
+    
     <li><a href="../../blog/category/基础/">基础 (5)</a></li>
     
   
@@ -315,7 +302,7 @@
   <ul>
   
     
-    <li><a href="../../blog/2020/">2020 (6)</a></li>
+    <li><a href="../../blog/2020/">2020 (7)</a></li>
     
   
   </ul>
@@ -342,7 +329,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/base/throws.rst.txt"
+      <a href="../../_sources/fitness/fitness_base.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

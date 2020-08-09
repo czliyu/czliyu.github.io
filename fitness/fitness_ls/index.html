@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="">
   <head>
     <meta charset="utf-8" />
-    <title>使用异常的技巧 &#8212; 胖虎的技术栈  documentation</title>
+    <title>健身笔记（三）| 拉伸练习 &#8212; 胖虎的技术栈  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -44,42 +44,50 @@
           <div class="body" role="main">
             
   <div class="section" id="id1">
-<h1>使用异常的技巧<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>如何适当使用异常有很大的争议，有些程序员认为所有的检查型异常都令人厌烦，有些程序员认为抛出的异常还不够多。</p>
-<p>使用异常的一些技巧</p>
-<p>1、异常处理不能代替简单的测试</p>
-<p>作为一个示例，试着讲一个空栈弹出10000000次，首先，在弹栈之前先查看栈是否为空。</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">(!</span><span class="n">s</span><span class="o">.</span><span class="na">empty</span><span class="o">())</span> <span class="n">s</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
-
-<span class="k">try</span>
-<span class="o">{</span>
-     <span class="n">s</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
-<span class="o">}</span>
-<span class="k">catch</span> <span class="o">(</span><span class="n">EmptyStackException</span> <span class="n">e</span><span class="o">)</span>
-<span class="o">{</span>
-<span class="o">}</span>
-</pre></div>
-</div>
-<p>调用isEmpty的版本运行时间为646ms，捕获EmptyStackException的版本运行时间为21739ms</p>
-<p>因此使用异常的基本原则: <em>只在异常情况下使用异常</em></p>
-<p>2、不要过分细化异常</p>
-<p>很多程序员习惯将每一条语句都分装在一个独立的try语句块中</p>
-<p>异常处理的一个承诺: <em>将正常处理与错误处理分开</em></p>
-<ol class="arabic simple" start="3">
-<li><p>充分利用异常层次结构</p></li>
-</ol>
-<p>不要只抛出RuntimeException异常，应该寻找一个适合的子类或创建自己的异常类</p>
-<p>不要只捕获Throwable异常，否则会使你的代码难读、更难维护。</p>
-<p>考虑检查型异常和非检查型异常的区别，检查型异常本来就很庞大，不要为逻辑错误抛出这些异常。</p>
-<p>如果能够将一种异常转换成另一种更加适合的异常，例如，在解析某个文件中的一个整数时，可以捕获NumberFormatException异常，然后转换成IOException的一个子类或MySubSystemException</p>
-<p>4、不要压制异常</p>
-<p>在java中，往往非常希望关闭异常，如果编写了一个方法要调用另外一个方法，而那个方法可能100年才抛出一个异常，但是，如果没有在你的方法的throws列表中声明这个异常，编译器就会报错。不想把它放在throws列表中，因为这样一来，编译器会对调用了你的方法的所有方法报错，因此，你会将这个异常关闭</p>
-<p>5、在检测错误时，“苛刻”要比放任更好</p>
-<p>当检测到错误的时候，程序员对抛出的异常很担心。在用无效的参数调用一个方法时，返回一个虚拟值是否比抛出一个异常更好？例如，当栈为空时，Stack.pop()是该返回一个null，还是要抛出一个异常？</p>
-<p>最好在出错地方抛出一个EmptyStackException异常。</p>
-<p>6、不要羞于传递异常</p>
-<p>程序员都感觉应该捕获抛出的全部异常，如果调用了一个抛出异常的方法，例如，FileInputStream构造器或readline方法，它们会本能地捕获这些可能产生的异常。最好继续传递这个异常，而不是自己捕获。</p>
-<p>&gt; 5、6 可以归纳为“早抛出，晚捕获”</p>
+<h1>健身笔记（三）| 拉伸练习<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>站姿侧弯</p>
+<p>目标: 拉伸腹外斜肌和躯体侧面的其他肌肉</p>
+<p>动作要领：站直，双腿分开，幅度比肩稍大，双臂下垂。将你的右手举过头，
+然后缓缓地向左边弯曲，左手沿着大腿下垂。身体尽量弯曲，保持该姿势30秒。
+然后回到起始姿势，换另一边弯曲。</p>
+<p>站姿前弯</p>
+<p>目标: 拉伸腘绳肌和下背部</p>
+<p>动作要领: 站直，双腿并拢，身体前屈。用你的双手握住脚的背面，越靠下越好 — 从膝盖、小腿、直到脚踝。
+用手臂轻轻的拉，让你的头尽量考级大腿，以最大限度拉伸腘绳肌和下背。保持该姿势30 - 60秒，然后放松。</p>
+<p>腘绳肌拉伸练习</p>
+<p>目标： 拉伸腘绳肌和下背</p>
+<p>动作要领： 将你的一只脚或者脚踝放在支撑物上，另一条腿站直，身体向抬起的脚弯曲，
+手尽量向腿部前端握—从膝盖、小腿到脚踝或者足部。轻轻用力地拉，让腘绳肌达到最大拉伸状态。
+保持该姿势30s，放松。然后换另一只腿重复上述动作。</p>
+<p>弓步牙腿</p>
+<p>目标: 拉伸大腿内侧，腘绳肌以及臀大肌</p>
+<p>动作要领: (1) 站直，一只脚在前，弯曲膝盖，往下蹲，使你后一条腿的膝盖接触地面。
+将你的双手放在前腿两边，往前倾，最大限度拉伸大腿内侧肌肉。（2）在上面姿势的基础上，伸直前面的腿，锁住
+你的膝盖，拉伸腿后免的腘绳肌。弯曲前腿膝盖，再次下蹲至地面上。重复这个动作：首先伸直腿，然后再下蹲至地面。
+最后站直，另一只脚向前一步，重复相同的拉伸程序。</p>
+<p>分腿坐姿前屈</p>
+<p>目标: 拉伸腘绳肌和下背</p>
+<p>运动要领: （1） 坐在地板上。双腿伸直，大角度张开。身体前屈，用你的双手去碰身体前方尽量远处。
+（2）保持该姿势几秒钟时间，然后将你的双手放在一条腿上，往前“走”，越远越好 — 从膝盖到小腿再到
+脚踝和足部。手臂在腿上轻轻拉，让腘绳肌和下背得到最大程度的拉伸。保持该姿势30s，然后换一条腿</p>
+<p>大腿内侧拉伸练习</p>
+<p>目标: 拉伸大腿内侧肌肉</p>
+<p>动作要领: 坐在地板上。将双脚向你拉近，让鞋底互相接触。握住你的脚，将其尽量朝腹股沟方向拉。
+放松双腿，让膝盖朝地面方向下垂，拉伸大腿内侧。用双肘紧压膝盖，以达到完全拉伸。保持该动作30-60s，然后放松</p>
+<p>股死头肌拉伸练习</p>
+<p>目标: 拉伸大腿正面</p>
+<p>运动要领: 跪坐地上。分开双脚，这样你可以坐在两脚中间。将双手后撑，尽量往后倾斜身体，感觉到股四头肌的拉伸，保持30-60s，然后放松</p>
+<p>跨栏式拉伸</p>
+<p>目标: 拉伸腘绳肌和大腿内侧</p>
+<p>运动要领: 坐在地上，将一条腿向前伸展，另一条腿弯曲在旁侧。身体沿着前伸的脚前屈，你的手臂尽量向前握住腿部–从膝盖到小腿、脚踝或者足部。
+手臂轻轻用力，达到最大的拉伸，保持该动作30s。换另一条腿，重复上述动作。</p>
+<p>脊柱扭转练习</p>
+<p>目标: 增加驱干的旋转范围，拉伸大腿外侧肌肉</p>
+<p>运动要领：坐在地上。双腿前伸，提起右膝盖，扭转身体，你的左肘部可以放在提起的膝盖外侧。将右手放在你身后的地面上，然后尽可能
+往右边扭转，一直达到你的极限幅度。保持该动作30s时间。放下你的右膝，提起你的左膝，换另一边重复该动作。</p>
+<p>垂直拉伸练习</p>
+<p>目标: 拉伸脊柱和上半身</p>
+<p>运动要领: 双手握住单杠，身体悬于其下。保持动作至少30秒，这样你的脊柱和上半身能够得到放松，从而拉伸开来。</p>
 </div>
 
   <div class="section">
@@ -91,20 +99,14 @@
   <span style="float: left;">
   
   Previous: 
-  <a href="../oop/">
+  <a href="../fitness_train1/">
     
-    oop设计技巧
+    健身笔记 (四) | 训练计划 · 阶段1
   </a>
   
   </span>
   <span>&nbsp;</span>
   <span style="float: right;">
-  
-  Next: 
-  <a href="../../algorithms/algoSort/">
-    初级排序算法
-    
-  </a>
   
   </span>
 </div>
@@ -134,7 +136,7 @@
   <h2>
   
   
-    14 四月 2020
+    09 八月 2020
   
   </h2>
 
@@ -158,33 +160,16 @@
   <li id="category"><span>Category:</span>
     
       
-      <a href="../../blog/category/base/">base</a>,
-      
-    
-      
-      <a href="../../blog/category/异常/">异常</a>,
-      
-    
-      
-      <a href="../../blog/category/面向对象/">面向对象</a>
+      <a href="../../blog/category/健身/">健身</a>
       
     </li>
   
 
   
-  <li id="tags"><span>Tags:
-      </span>
+  <li id="tags"><span>Tag:</span>
     
       
-      <a href="../../blog/tag/base/">base</a>
-      
-    
-      
-      <a href="../../blog/tag/exception/">Exception</a>
-      
-    
-      
-      <a href="../../blog/tag/java/">java</a>
+      <a href="../../blog/tag/健身/">健身</a>
       
     </li>
   
@@ -202,15 +187,15 @@
   <ul>
     
     
+      <li><a href="../fitness_train1/">09 八月 - 健身笔记 (四) | 训练计划 · 阶段1</a></li>
+    
+      <li><a href="../fitness_start/">08 八月 - 健身笔记（二）| 训练原则</a></li>
+    
+      <li><a href="../fitness_base/">08 八月 - 健身笔记（一）| 健身基础知识</a></li>
+    
       <li><a href="../../algorithms/algoSort/">04 七月 - 初级排序算法</a></li>
     
-      <li><a href="../oop/">22 三月 - oop设计技巧</a></li>
-    
-      <li><a href="../../javaTech/Control/">10 三月 - java核心技术（二） 流程控制</a></li>
-    
-      <li><a href="../../javaTech/BaseStructJava/">04 三月 - java核心技术（一） 基本数据类型</a></li>
-    
-      <li><a href="../../algorithms/bag_queue_stack/">26 二月 - 背包、队列和栈</a></li>
+      <li><a href="../../base/throws/">14 四月 - 使用异常的技巧</a></li>
     
   </ul>
 
@@ -245,6 +230,16 @@
       
       <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/oop/">oop</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/健身/">健身</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/健身生活/">健身，生活</a></li>
       
     
       
@@ -290,6 +285,10 @@
     
   
     
+    <li><a href="../../blog/category/健身/">健身 (4)</a></li>
+    
+  
+    
     <li><a href="../../blog/category/基础/">基础 (5)</a></li>
     
   
@@ -315,7 +314,7 @@
   <ul>
   
     
-    <li><a href="../../blog/2020/">2020 (6)</a></li>
+    <li><a href="../../blog/2020/">2020 (10)</a></li>
     
   
   </ul>
@@ -342,7 +341,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/base/throws.rst.txt"
+      <a href="../../_sources/fitness/fitness_ls.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
