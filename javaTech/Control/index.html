@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="">
+<html lang="">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>java核心技术（二） 流程控制 &#8212; 胖虎的技术栈  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="author" title="About these documents" href="../../about/" />
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
@@ -56,10 +57,10 @@
 <h2>强制类型转换<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>在必要的时候，int类型的值将会自动地转换为double类型，有时也需要将double转换为int,
 这种可能损失信息的转换要通过强制转换来完成。</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">9.997</span><span class="o">;</span>
-<span class="kt">int</span> <span class="n">nx</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="n">x</span><span class="o">;</span> <span class="c1">// 9</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">9.997</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">nx</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">x</span><span class="p">;</span> <span class="c1">// 9</span>
 <span class="c1">// 相对浮点数进行舍入运算</span>
-<span class="kt">int</span> <span class="n">nx</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">x</span><span class="o">);</span> <span class="c1">// 10</span>
+<span class="kt">int</span> <span class="n">nx</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">Math</span><span class="p">.</span><span class="na">round</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// 10</span>
 <span class="c1">// 调用rand的时候，仍然需要使用强制类型转换，因为rand方法返回的结果为long类型</span>
 </pre></div>
 </div>
@@ -76,8 +77,8 @@
 <h2>自增自减<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <p>自增：n++ 将变量n的当前值加1</p>
 <p>自减：n– 将n的值减1</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">12</span><span class="o">;</span>
-<span class="n">n</span><span class="o">++;</span> <span class="c1">// 13</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+<span class="n">n</span><span class="o">++</span><span class="p">;</span> <span class="c1">// 13</span>
 </pre></div>
 </div>
 <p>不能用于数值本身，4++不是一个合法语句</p>
@@ -123,8 +124,8 @@ else
 </pre></div>
 </div>
 <p>for 循环语句是支持迭代的一种通用结构。</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -137,27 +138,27 @@ for (double x = 0; x != 10; x += 0.1)
 <div class="section" id="switch">
 <h2>switch<a class="headerlink" href="#switch" title="Permalink to this headline">¶</a></h2>
 <p>switch 处理多个选项时</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
-<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Select an option (1, 2, 3, 4)&quot;</span><span class="o">);</span>
-<span class="kt">int</span> <span class="n">choice</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
-<span class="k">switch</span> <span class="o">(</span><span class="n">choice</span><span class="o">)</span>
-<span class="o">{</span>
-    <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
-        <span class="o">...</span>
-        <span class="k">break</span><span class="o">;</span>
-    <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
-        <span class="o">...</span>
-        <span class="k">break</span><span class="o">;</span>
-    <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
-        <span class="o">...</span>
-        <span class="k">break</span><span class="o">;</span>
-    <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
-        <span class="o">...</span>
-        <span class="k">break</span><span class="o">;</span>
-    <span class="k">default</span><span class="o">:</span>
-        <span class="o">...</span>
-        <span class="k">break</span><span class="o">;</span>
-<span class="o">}</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">in</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot;Select an option (1, 2, 3, 4)&quot;</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">choice</span> <span class="o">=</span> <span class="n">in</span><span class="p">.</span><span class="na">nextInt</span><span class="p">();</span>
+<span class="k">switch</span> <span class="p">(</span><span class="n">choice</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="p">...</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="p">...</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="p">...</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="p">...</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">default</span><span class="p">:</span>
+        <span class="p">...</span>
+        <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -279,6 +280,8 @@ for (double x = 0; x != 10; x += 0.1)
   <ul>
     
     
+      <li><a href="../../design/design_rules/">06 九月 - 设计模式 – 设计原则</a></li>
+    
       <li><a href="../../algorithms/algoSort/">04 七月 - 初级排序算法</a></li>
     
       <li><a href="../../base/throws/">14 四月 - 使用异常的技巧</a></li>
@@ -286,8 +289,6 @@ for (double x = 0; x != 10; x += 0.1)
       <li><a href="../../base/oop/">22 三月 - oop设计技巧</a></li>
     
       <li><a href="../BaseStructJava/">04 三月 - java核心技术（一） 基本数据类型</a></li>
-    
-      <li><a href="../../algorithms/bag_queue_stack/">26 二月 - 背包、队列和栈</a></li>
     
   </ul>
 
@@ -315,6 +316,11 @@ for (double x = 0; x != 10; x += 0.1)
       
     
       
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design-patterns/">design patterns</a></li>
+      
+    
+      
       <li class="ablog-cloud ablog-cloud-5">
         <a href="../../blog/tag/java/">java</a></li>
       
@@ -325,7 +331,7 @@ for (double x = 0; x != 10; x += 0.1)
       
     
       
-      <li class="ablog-cloud ablog-cloud-5">
+      <li class="ablog-cloud ablog-cloud-4">
         <a href="../../blog/tag/基础/">基础</a></li>
       
     
@@ -335,13 +341,18 @@ for (double x = 0; x != 10; x += 0.1)
       
     
       
-      <li class="ablog-cloud ablog-cloud-2">
+      <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/算法/">算法</a></li>
       
     
       
       <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/类/">类</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计模式/">设计模式</a></li>
       
     
       
@@ -359,7 +370,11 @@ for (double x = 0; x != 10; x += 0.1)
     
   
     
-    <li><a href="../../blog/category/java/">java (4)</a></li>
+    <li><a href="../../blog/category/design/">design (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">java (5)</a></li>
     
   
     
@@ -383,6 +398,10 @@ for (double x = 0; x != 10; x += 0.1)
     
   
     
+    <li><a href="../../blog/category/设计模式/">设计模式 (1)</a></li>
+    
+  
+    
     <li><a href="../../blog/category/面向对象/">面向对象 (2)</a></li>
     
   
@@ -392,7 +411,7 @@ for (double x = 0; x != 10; x += 0.1)
   <ul>
   
     
-    <li><a href="../../blog/2020/">2020 (6)</a></li>
+    <li><a href="../../blog/2020/">2020 (7)</a></li>
     
   
   </ul>
@@ -406,7 +425,7 @@ for (double x = 0; x != 10; x += 0.1)
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -415,7 +434,7 @@ for (double x = 0; x != 10; x += 0.1)
       &copy;2020, 胖虎.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

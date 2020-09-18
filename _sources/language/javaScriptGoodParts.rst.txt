@@ -1,0 +1,10 @@
+javaScript 精辟
+=======================
+
+.. post:: 18 Sep 2020
+   :tags: javaScript, base
+   :category: javaScript, base
+   :author: me
+
+
+`javaScript精辟 <https://github.com/czliyu/javascript-the-good-parts>`

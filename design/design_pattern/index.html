@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>设计模式 &#8212; 胖虎的技术栈  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+  
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>设计模式<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>策略模式<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>**策略模式** 定义了算法族，分别封装起来，让它们之间可以互相替换，此模式
+让算法的变化独立于使用算法的客户。
+</pre></div>
+</div>
+<p>code …</p>
+</div>
+<div class="section" id="id3">
+<h2>观察者模式<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>::</dt><dd><p><strong>观察者模式</strong> 定义了对象之间一对多的依赖，这样一来，当一个对象改变状态时，
+它的所有依赖都会收到通知并自动更新。</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="id4">
+<h2>装饰者模式<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>**装饰者模式** 动态地将责任附加到对象上。若要扩展功能，装饰者提供了比继承更有弹性de
+替代方案。
+</pre></div>
+</div>
+<p>重点在于，装饰者和被装饰者必须是一样的类型。也就是有共同的超类。</p>
+<p>装饰者通常是用其他类似于工厂或者生成器这样的模式创建的。</p>
+<p>缺点：利用装饰者模式，常常造成设计中有大量的小类。</p>
+</div>
+<div class="section" id="id5">
+<h2>工厂方法模式<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>**工厂方法模式**定义了一个创建对象的接口，但由于类决定要实例化的类是哪一个。工厂方法
+让类把实例化推迟到子类。
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>我们不应该针对实现编程，但是当我们使用new时，不正是在针对实现编程吗？</p>
+</div>
+<p>简单工厂其实不是一种设计模式。反而比较像是一种编程习惯。</p>
+</div>
+<div class="section" id="id6">
+<h2>抽象工厂模式<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>**抽象工厂模式**提供了一个接口，用于创建相关或依赖对象的家族，而不需要明确指定具体类。
+</pre></div>
+</div>
+<p>抽象工厂允许客户使用抽象的接口来创建一组相关的产品，而不需要知道实际产出的具体产品是什么。</p>
+<p>抽象工厂的方法经常以工厂方法的方式实现。</p>
+</div>
+</div>
+
+  <div class="section">
+  
+    
+
+
+<div class="section">
+  <span style="float: left;">
+  
+  Previous: 
+  <a href="../design_rules/">
+    
+    设计模式 – 设计原则
+  </a>
+  
+  </span>
+  <span>&nbsp;</span>
+  <span style="float: right;">
+  
+  Next: 
+  <a href="../../language/javaScriptGoodParts/">
+    javaScript 精辟
+    
+  </a>
+  
+  </span>
+</div>
+
+  
+  
+  </div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">胖虎的技术栈</a></h1>
+
+
+
+
+
+
+
+
+
+  
+  
+  <h2>
+  
+  
+    07 九月 2020
+  
+  </h2>
+
+  <ul>
+    
+
+  
+  <li id="author"><span>Author:</span>
+    
+      
+      <a href="../../blog/author/胖虎/">胖虎</a>
+      
+    </li>
+  
+
+  
+
+  
+
+  
+  <li id="category"><span>Category:</span>
+    
+      
+      <a href="../../blog/category/design/">design</a>,
+      
+    
+      
+      <a href="../../blog/category/设计模式/">设计模式</a>,
+      
+    
+      
+      <a href="../../blog/category/java/">java</a>
+      
+    </li>
+  
+
+  
+  <li id="tags"><span>Tags:
+      </span>
+    
+      
+      <a href="../../blog/tag/design/">design</a>
+      
+    
+      
+      <a href="../../blog/tag/java/">java</a>
+      
+    
+      
+      <a href="../../blog/tag/设计模式/">设计模式</a>
+      
+    
+      
+      <a href="../../blog/tag/base/">base</a>
+      
+    </li>
+  
+  
+  </ul>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">胖虎</a></li>
+</ul>
+
+
+  <h3><a href="../../blog/">Recent Posts</a></h3>
+  <ul>
+    
+    
+      <li><a href="../../language/javaScriptGoodParts/">18 九月 - javaScript 精辟</a></li>
+    
+      <li><a href="../design_rules/">06 九月 - 设计模式 – 设计原则</a></li>
+    
+      <li><a href="../../algorithms/algoSort/">04 七月 - 初级排序算法</a></li>
+    
+      <li><a href="../../base/throws/">14 四月 - 使用异常的技巧</a></li>
+    
+      <li><a href="../../base/oop/">22 三月 - oop设计技巧</a></li>
+    
+  </ul>
+
+  <h3><a href="../../blog/tag/">Tags</a></h3>
+  <style type="text/css">
+    ul.ablog-cloud {list-style: none; overflow: auto;}
+    ul.ablog-cloud li {float: left; height: 20pt; line-height: 18pt; margin-right: 5px;}
+    ul.ablog-cloud a {text-decoration: none; vertical-align: middle;}
+    li.ablog-cloud-1{font-size: 80%;}
+    li.ablog-cloud-2{font-size: 95%;}
+    li.ablog-cloud-3{font-size: 110%;}
+    li.ablog-cloud-4{font-size: 125%;}
+    li.ablog-cloud-5{font-size: 140%;}
+  </style>
+  <ul class="ablog-cloud">
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/exception/">Exception</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/base/">base</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design/">design</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design-patterns/">design patterns</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-5">
+        <a href="../../blog/tag/java/">java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/javascript/">javaScript</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/oop/">oop</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/基础/">基础</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/流程控制位运算/">流程控制，位运算</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/算法/">算法</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/类/">类</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计模式/">设计模式</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/面向对象/">面向对象</a></li>
+      
+    
+  </ul>
+
+  <h3><a href="../../blog/category/">Categories</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/category/base/">base (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/design/">design (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">java (6)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/javascript/">javaScript (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/oop/">oop (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/基础/">基础 (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/异常/">异常 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/算法/">算法 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/类/">类 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/设计模式/">设计模式 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/面向对象/">面向对象 (2)</a></li>
+    
+  
+  </ul>
+
+  <h3><a href="../../blog/archive/">Archives</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/2020/">2020 (9)</a></li>
+    
+  
+  </ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, 胖虎.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/design/design_pattern.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

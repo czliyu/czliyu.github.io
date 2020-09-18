@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="">
+<html lang="">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>java核心技术（一） 基本数据类型 &#8212; 胖虎的技术栈  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="author" title="About these documents" href="../../about/" />
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
@@ -47,11 +48,11 @@
 <h1>java核心技术（一） 基本数据类型<a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
 <h2>第一个java程序<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FirstSample</span> <span class="o">{</span>
-     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;We will not use &#39;hello, world!&#39;&quot;</span><span class="o">);</span>
-     <span class="o">}</span>
-<span class="o">}</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FirstSample</span> <span class="p">{</span>
+     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+         <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;We will not use &#39;hello, world!&#39;&quot;</span><span class="p">);</span>
+     <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>将文件保存为`FirstSample.java`, 文件名称需要与类一致，</p>
@@ -108,52 +109,52 @@ if (Double.NaN(x)) // check whether x is not a number</p>
 <div class="section" id="id4">
 <h2>变量与常量<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p><strong>声明变量</strong></p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">salary</span><span class="o">;</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">salary</span><span class="p">;</span>
 
-<span class="kt">int</span> <span class="n">vacationDays</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">vacationDays</span><span class="p">;</span>
 
-<span class="kt">long</span> <span class="n">earthPopulation</span><span class="o">;</span>
+<span class="kt">long</span> <span class="n">earthPopulation</span><span class="p">;</span>
 
-<span class="kt">boolean</span> <span class="n">done</span><span class="o">;</span>
+<span class="kt">boolean</span> <span class="n">done</span><span class="p">;</span>
 </pre></div>
 </div>
 <p><strong>变量初始化</strong></p>
 <p>声明一个变量后，必须用赋值语句对变量进行显示初始化，千万不要使用未初始化的变量的值,
 如果不，java会编译报错</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">vacationDays</span><span class="o">;</span>
-<span class="n">vacationDays</span> <span class="o">=</span> <span class="mi">12</span><span class="o">;</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">vacationDays</span><span class="p">;</span>
+<span class="n">vacationDays</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
 <span class="n">或者</span>
-<span class="kt">int</span> <span class="n">vacationDays</span> <span class="o">=</span> <span class="mi">12</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">vacationDays</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
 </pre></div>
 </div>
 <p><strong>常量</strong></p>
 <p>利用关键词 <cite>final</cite> 指示常量</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Constants</span>
-<span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
-    <span class="o">{</span>
+<span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
         <span class="c1">// 常量</span>
-        <span class="kd">final</span> <span class="kt">double</span> <span class="n">CM_PER_INCH</span> <span class="o">=</span> <span class="mf">2.54</span><span class="o">;</span>
-    <span class="o">}</span>
-<span class="o">}</span>
+        <span class="kd">final</span> <span class="kt">double</span> <span class="n">CM_PER_INCH</span> <span class="o">=</span> <span class="mf">2.54</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>关键词 <cite>final</cite> 表示这个变量只能被赋值一次，一旦被赋值之后，就不能再更改了</p>
 <p>通常这些常量称为**类常量**</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Constants2</span>
-<span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">CM_PER_INCH</span> <span class="o">=</span> <span class="mf">2.54</span><span class="o">;</span>
+<span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">CM_PER_INCH</span> <span class="o">=</span> <span class="mf">2.54</span><span class="p">;</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
-    <span class="o">{</span>
-        <span class="n">Sytem</span><span class="o">,</span><span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">CM_PER_INCH</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Sytem</span><span class="p">,</span><span class="n">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">CM_PER_INCH</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p><strong>枚举类型</strong></p>
 <p>变量的取值只在一个有限的集合内，可以自定义 <cite>枚举类型</cite></p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">enum</span> <span class="n">Size</span> <span class="o">{</span> <span class="n">SMALL</span><span class="o">,</span> <span class="n">MEDIUM</span><span class="o">,</span> <span class="n">LARGE</span><span class="o">,</span> <span class="n">EXTRA_LARGE</span> <span class="o">}</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">enum</span> <span class="n">Size</span> <span class="p">{</span> <span class="n">SMALL</span><span class="p">,</span> <span class="n">MEDIUM</span><span class="p">,</span> <span class="n">LARGE</span><span class="p">,</span> <span class="n">EXTRA_LARGE</span> <span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -288,6 +289,8 @@ if (Double.NaN(x)) // check whether x is not a number</p>
   <ul>
     
     
+      <li><a href="../../design/design_rules/">06 九月 - 设计模式 – 设计原则</a></li>
+    
       <li><a href="../../algorithms/algoSort/">04 七月 - 初级排序算法</a></li>
     
       <li><a href="../../base/throws/">14 四月 - 使用异常的技巧</a></li>
@@ -295,8 +298,6 @@ if (Double.NaN(x)) // check whether x is not a number</p>
       <li><a href="../../base/oop/">22 三月 - oop设计技巧</a></li>
     
       <li><a href="../Control/">10 三月 - java核心技术（二） 流程控制</a></li>
-    
-      <li><a href="../../algorithms/bag_queue_stack/">26 二月 - 背包、队列和栈</a></li>
     
   </ul>
 
@@ -324,6 +325,11 @@ if (Double.NaN(x)) // check whether x is not a number</p>
       
     
       
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design-patterns/">design patterns</a></li>
+      
+    
+      
       <li class="ablog-cloud ablog-cloud-5">
         <a href="../../blog/tag/java/">java</a></li>
       
@@ -334,7 +340,7 @@ if (Double.NaN(x)) // check whether x is not a number</p>
       
     
       
-      <li class="ablog-cloud ablog-cloud-5">
+      <li class="ablog-cloud ablog-cloud-4">
         <a href="../../blog/tag/基础/">基础</a></li>
       
     
@@ -344,13 +350,18 @@ if (Double.NaN(x)) // check whether x is not a number</p>
       
     
       
-      <li class="ablog-cloud ablog-cloud-2">
+      <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/算法/">算法</a></li>
       
     
       
       <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/类/">类</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计模式/">设计模式</a></li>
       
     
       
@@ -368,7 +379,11 @@ if (Double.NaN(x)) // check whether x is not a number</p>
     
   
     
-    <li><a href="../../blog/category/java/">java (4)</a></li>
+    <li><a href="../../blog/category/design/">design (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">java (5)</a></li>
     
   
     
@@ -392,6 +407,10 @@ if (Double.NaN(x)) // check whether x is not a number</p>
     
   
     
+    <li><a href="../../blog/category/设计模式/">设计模式 (1)</a></li>
+    
+  
+    
     <li><a href="../../blog/category/面向对象/">面向对象 (2)</a></li>
     
   
@@ -401,7 +420,7 @@ if (Double.NaN(x)) // check whether x is not a number</p>
   <ul>
   
     
-    <li><a href="../../blog/2020/">2020 (6)</a></li>
+    <li><a href="../../blog/2020/">2020 (7)</a></li>
     
   
   </ul>
@@ -415,7 +434,7 @@ if (Double.NaN(x)) // check whether x is not a number</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -424,7 +443,7 @@ if (Double.NaN(x)) // check whether x is not a number</p>
       &copy;2020, 胖虎.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

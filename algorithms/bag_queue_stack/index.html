@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="">
+<html lang="">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>背包、队列和栈 &#8212; 胖虎的技术栈  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="author" title="About these documents" href="../../about/" />
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
@@ -62,28 +63,28 @@
 <h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
 <p>背包（Bag）</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Bag</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span>
-             <span class="nf">Bag</span><span class="o">()</span>                        <span class="n">构造一个空背包</span>
-       <span class="kt">void</span>  <span class="nf">add</span><span class="o">(</span><span class="n">Item</span> <span class="n">item</span><span class="o">)</span>               <span class="n">添加一个元素</span>
-    <span class="kt">boolean</span>  <span class="nf">isEmpty</span><span class="o">()</span>                    <span class="n">背包是否为空</span>
-        <span class="kt">int</span>  <span class="nf">size</span><span class="o">()</span>                       <span class="n">背包中的元素数量</span>
+             <span class="nf">Bag</span><span class="p">()</span>                        <span class="n">构造一个空背包</span>
+       <span class="kt">void</span>  <span class="nf">add</span><span class="p">(</span><span class="n">Item</span> <span class="n">item</span><span class="p">)</span>               <span class="n">添加一个元素</span>
+    <span class="kt">boolean</span>  <span class="nf">isEmpty</span><span class="p">()</span>                    <span class="n">背包是否为空</span>
+        <span class="kt">int</span>  <span class="nf">size</span><span class="p">()</span>                       <span class="n">背包中的元素数量</span>
 </pre></div>
 </div>
 <p>先进先出（FIFO）队列</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Queue</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span>
-             <span class="nf">Queue</span><span class="o">()</span>                      <span class="n">创建空队列</span>
-       <span class="kt">void</span>  <span class="nf">enqueue</span><span class="o">(</span><span class="n">Item</span> <span class="n">item</span><span class="o">)</span>           <span class="n">添加一个元素</span>
-       <span class="n">Item</span>  <span class="nf">dequeue</span><span class="o">()</span>                    <span class="n">删除最早添加的元素</span>
-    <span class="kt">boolean</span>  <span class="nf">isEmpty</span><span class="o">()</span>                    <span class="n">队列是否为空</span>
-        <span class="kt">int</span>  <span class="nf">size</span><span class="o">()</span>                       <span class="n">队列中的元素数量</span>
+             <span class="nf">Queue</span><span class="p">()</span>                      <span class="n">创建空队列</span>
+       <span class="kt">void</span>  <span class="nf">enqueue</span><span class="p">(</span><span class="n">Item</span> <span class="n">item</span><span class="p">)</span>           <span class="n">添加一个元素</span>
+       <span class="n">Item</span>  <span class="nf">dequeue</span><span class="p">()</span>                    <span class="n">删除最早添加的元素</span>
+    <span class="kt">boolean</span>  <span class="nf">isEmpty</span><span class="p">()</span>                    <span class="n">队列是否为空</span>
+        <span class="kt">int</span>  <span class="nf">size</span><span class="p">()</span>                       <span class="n">队列中的元素数量</span>
 </pre></div>
 </div>
 <p>下压（后进先出,LIFO）栈</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Stack</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span>
-             <span class="nf">Stack</span><span class="o">()</span>                      <span class="n">创建一个空栈</span>
-       <span class="kt">void</span>  <span class="nf">push</span><span class="o">(</span><span class="n">Item</span> <span class="n">iten</span><span class="o">)</span>              <span class="n">添加一个元素</span>
-       <span class="n">Item</span>  <span class="nf">pop</span><span class="o">()</span>                        <span class="n">删除最近添加的元素</span>
-    <span class="kt">boolean</span>  <span class="nf">isEmpty</span><span class="o">()</span>                    <span class="n">栈是否为空</span>
-        <span class="kt">int</span>  <span class="nf">size</span><span class="o">()</span>                       <span class="n">栈中的元素数量</span>
+             <span class="nf">Stack</span><span class="p">()</span>                      <span class="n">创建一个空栈</span>
+       <span class="kt">void</span>  <span class="nf">push</span><span class="p">(</span><span class="n">Item</span> <span class="n">iten</span><span class="p">)</span>              <span class="n">添加一个元素</span>
+       <span class="n">Item</span>  <span class="nf">pop</span><span class="p">()</span>                        <span class="n">删除最近添加的元素</span>
+    <span class="kt">boolean</span>  <span class="nf">isEmpty</span><span class="p">()</span>                    <span class="n">栈是否为空</span>
+        <span class="kt">int</span>  <span class="nf">size</span><span class="p">()</span>                       <span class="n">栈中的元素数量</span>
 </pre></div>
 </div>
 <p><strong>泛型</strong></p>
@@ -128,31 +129,31 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
 <p>样本标准差为每个值和平均值之差的平方之和除以N-1之后的平方根</p>
 <p>背包典型用例</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Stats</span>
-<span class="o">{</span>
-     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
-     <span class="o">{</span>
-         <span class="n">Bag</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">numbers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bag</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;();</span>
+<span class="p">{</span>
+     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span>
+     <span class="p">{</span>
+         <span class="n">Bag</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">numbers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bag</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="p">();</span>
 
-         <span class="k">while</span> <span class="o">(!</span><span class="n">StdIn</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span>
-             <span class="n">numbers</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">StdIn</span><span class="o">.</span><span class="na">readDouble</span><span class="o">());</span>
-         <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+         <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">StdIn</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span>
+             <span class="n">numbers</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">StdIn</span><span class="p">.</span><span class="na">readDouble</span><span class="p">());</span>
+         <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">numbers</span><span class="p">.</span><span class="na">size</span><span class="p">();</span>
 
-         <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
-         <span class="k">for</span> <span class="o">(</span><span class="kt">double</span> <span class="n">x</span> <span class="o">:</span> <span class="n">numbers</span><span class="o">)</span>
-             <span class="n">sum</span> <span class="o">+=</span> <span class="n">x</span><span class="o">;</span>
-         <span class="kt">double</span> <span class="n">mean</span> <span class="o">=</span> <span class="n">sum</span><span class="o">/</span><span class="n">N</span><span class="o">;</span>
+         <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+         <span class="k">for</span> <span class="p">(</span><span class="kt">double</span> <span class="n">x</span> <span class="p">:</span> <span class="n">numbers</span><span class="p">)</span>
+             <span class="n">sum</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
+         <span class="kt">double</span> <span class="n">mean</span> <span class="o">=</span> <span class="n">sum</span><span class="o">/</span><span class="n">N</span><span class="p">;</span>
 
-         <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
+         <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
 
-         <span class="k">for</span> <span class="o">(</span><span class="kt">double</span> <span class="n">x</span> <span class="o">:</span> <span class="n">numbers</span><span class="o">)</span>
-             <span class="n">sum</span> <span class="o">+=</span> <span class="o">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="o">)</span> <span class="o">*</span> <span class="o">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="o">);</span>
+         <span class="k">for</span> <span class="p">(</span><span class="kt">double</span> <span class="n">x</span> <span class="p">:</span> <span class="n">numbers</span><span class="p">)</span>
+             <span class="n">sum</span> <span class="o">+=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">);</span>
 
-         <span class="kt">double</span> <span class="n">std</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">sum</span><span class="o">/(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="o">));</span>
+         <span class="kt">double</span> <span class="n">std</span> <span class="o">=</span> <span class="n">Math</span><span class="p">.</span><span class="na">sqrt</span><span class="p">(</span><span class="n">sum</span><span class="o">/</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
 
-         <span class="n">StdOut</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Mean: %.2f\n&quot;</span><span class="o">,</span> <span class="n">mean</span><span class="o">);</span>
-         <span class="n">StdOut</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Std dev: %.2f\n&quot;</span><span class="o">,</span> <span class="n">std</span><span class="o">);</span>
-     <span class="o">}</span>
-<span class="o">}</span>
+         <span class="n">StdOut</span><span class="p">.</span><span class="na">printf</span><span class="p">(</span><span class="s">&quot;Mean: %.2f\n&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="p">);</span>
+         <span class="n">StdOut</span><span class="p">.</span><span class="na">printf</span><span class="p">(</span><span class="s">&quot;Std dev: %.2f\n&quot;</span><span class="p">,</span> <span class="n">std</span><span class="p">);</span>
+     <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -164,18 +165,18 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
 </div>
 <p>在应用程序中使用队列的主要原因是在应用集合保存元素的同时保存它们的相对顺序，使它们入列顺序和出列顺序相同。</p>
 <p>队列典型用例</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">readInts</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span>
-<span class="o">{</span>
-     <span class="n">In</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">In</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
-     <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">q</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
-     <span class="k">while</span> <span class="o">(!</span><span class="n">in</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span>
-         <span class="n">q</span><span class="o">.</span><span class="na">enqueue</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">());</span>
-     <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
-     <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Int</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
-     <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-         <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="na">dequeue</span><span class="o">();</span>
-     <span class="k">return</span> <span class="n">a</span><span class="o">;</span>
-<span class="o">}</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">readInts</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="n">In</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">In</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+     <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">q</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="p">();</span>
+     <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">in</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span>
+         <span class="n">q</span><span class="p">.</span><span class="na">enqueue</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="na">readInt</span><span class="p">());</span>
+     <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="na">size</span><span class="p">;</span>
+     <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Int</span><span class="o">[</span><span class="n">N</span><span class="o">]</span><span class="p">;</span>
+     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+         <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="na">dequeue</span><span class="p">();</span>
+     <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -188,63 +189,63 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
 <p>元素的处理顺序和它们被压入的顺序相反。</p>
 <p>Stack 用例</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">function</span> <span class="n">Reverse</span>
-<span class="o">{</span>
-     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
-     <span class="o">{</span>
-         <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">stack</span><span class="o">;</span>
-         <span class="n">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+<span class="p">{</span>
+     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span>
+     <span class="p">{</span>
+         <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">stack</span><span class="p">;</span>
+         <span class="n">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="p">();</span>
 
-         <span class="k">while</span> <span class="o">(!</span><span class="n">StdIn</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span>
-             <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">StdIn</span><span class="o">.</span><span class="na">readInt</span><span class="o">());</span>
-         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">:</span> <span class="n">stack</span><span class="o">)</span>
-             <span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
-     <span class="o">}</span>
-<span class="o">}</span>
+         <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">StdIn</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span>
+             <span class="n">stack</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="n">StdIn</span><span class="p">.</span><span class="na">readInt</span><span class="p">());</span>
+         <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">:</span> <span class="n">stack</span><span class="p">)</span>
+             <span class="n">StdOut</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+     <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="id5">
 <h2>泛型<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FixedCapacityStackOfStrings</span>
-             <span class="nf">FixedCapacityStackOfStrings</span><span class="o">(</span><span class="kt">int</span> <span class="n">cap</span><span class="o">)</span>      <span class="n">创建一个容器为cap的空栈</span>
-       <span class="kt">void</span>  <span class="nf">push</span><span class="o">(</span><span class="n">String</span> <span class="n">item</span><span class="o">)</span>                         <span class="n">添加一个字符串</span>
-     <span class="n">String</span>  <span class="nf">pop</span><span class="o">()</span>                                     <span class="n">删除最近添加的字符串</span>
-    <span class="kt">boolean</span>  <span class="nf">isEmpty</span><span class="o">()</span>                                 <span class="n">栈是否为空</span>
-        <span class="kt">int</span>  <span class="nf">size</span><span class="o">()</span>                                    <span class="n">栈中的字符串数量</span>
+             <span class="nf">FixedCapacityStackOfStrings</span><span class="p">(</span><span class="kt">int</span> <span class="n">cap</span><span class="p">)</span>      <span class="n">创建一个容器为cap的空栈</span>
+       <span class="kt">void</span>  <span class="nf">push</span><span class="p">(</span><span class="n">String</span> <span class="n">item</span><span class="p">)</span>                         <span class="n">添加一个字符串</span>
+     <span class="n">String</span>  <span class="nf">pop</span><span class="p">()</span>                                     <span class="n">删除最近添加的字符串</span>
+    <span class="kt">boolean</span>  <span class="nf">isEmpty</span><span class="p">()</span>                                 <span class="n">栈是否为空</span>
+        <span class="kt">int</span>  <span class="nf">size</span><span class="p">()</span>                                    <span class="n">栈中的字符串数量</span>
 </pre></div>
 </div>
 <p>数据类型实现</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FixedCapacityStackOfStrings</span>
-<span class="o">{</span>
-     <span class="kd">private</span> <span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">;</span>
-     <span class="kd">private</span> <span class="kt">int</span> <span class="n">N</span><span class="o">;</span>
+<span class="p">{</span>
+     <span class="kd">private</span> <span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="p">;</span>
+     <span class="kd">private</span> <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
 
-     <span class="kd">public</span> <span class="nf">FixedCapacityStackOfStrings</span><span class="o">(</span><span class="kt">int</span> <span class="n">cap</span><span class="o">)</span>
-     <span class="o">{</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">cap</span><span class="o">];</span> <span class="o">}</span>
+     <span class="kd">public</span> <span class="nf">FixedCapacityStackOfStrings</span><span class="p">(</span><span class="kt">int</span> <span class="n">cap</span><span class="p">)</span>
+     <span class="p">{</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">cap</span><span class="o">]</span><span class="p">;</span> <span class="p">}</span>
 
-     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">N</span><span class="o">==</span><span class="mi">0</span><span class="o">;</span> <span class="o">}</span>
-     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">N</span><span class="o">;</span> <span class="o">}</span>
-     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span><span class="n">String</span> <span class="n">item</span><span class="o">)</span>
-     <span class="o">{</span> <span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">++]</span> <span class="o">=</span> <span class="n">item</span><span class="o">;</span> <span class="o">}</span>
-     <span class="kd">public</span> <span class="n">String</span> <span class="nf">pop</span><span class="o">()</span>
-     <span class="o">{</span> <span class="k">return</span> <span class="n">a</span><span class="o">[--</span><span class="n">N</span><span class="o">];</span> <span class="o">}</span>
-<span class="o">}</span>
+     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">N</span><span class="o">==</span><span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">N</span><span class="p">;</span> <span class="p">}</span>
+     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">String</span> <span class="n">item</span><span class="p">)</span>
+     <span class="p">{</span> <span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">++]</span> <span class="o">=</span> <span class="n">item</span><span class="p">;</span> <span class="p">}</span>
+     <span class="kd">public</span> <span class="n">String</span> <span class="nf">pop</span><span class="p">()</span>
+     <span class="p">{</span> <span class="k">return</span> <span class="n">a</span><span class="o">[--</span><span class="n">N</span><span class="o">]</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>测试用例</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
-<span class="o">{</span>
-     <span class="n">FixedCapacityStackOfStrings</span> <span class="n">s</span><span class="o">;</span>
-     <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FixedCapacityStackOfStrings</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
-     <span class="k">while</span> <span class="o">(!</span><span class="n">StdIn</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span>
-     <span class="o">{</span>
-         <span class="n">String</span> <span class="n">item</span> <span class="o">=</span> <span class="n">StdIn</span><span class="o">.</span><span class="na">readString</span><span class="o">();</span>
-         <span class="k">if</span> <span class="o">(!</span><span class="n">item</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-&quot;</span><span class="o">))</span>
-             <span class="n">s</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
-         <span class="k">else</span> <span class="k">if</span> <span class="o">(!</span><span class="n">s</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="n">StdOut</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">pop</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
-     <span class="o">}</span>
-     <span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;(&quot;</span> <span class="o">+</span> <span class="n">s</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; left on stack&quot;</span><span class="o">);</span>
-<span class="o">}</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="n">FixedCapacityStackOfStrings</span> <span class="n">s</span><span class="p">;</span>
+     <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FixedCapacityStackOfStrings</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+     <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">StdIn</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span>
+     <span class="p">{</span>
+         <span class="n">String</span> <span class="n">item</span> <span class="o">=</span> <span class="n">StdIn</span><span class="p">.</span><span class="na">readString</span><span class="p">();</span>
+         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">item</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">))</span>
+             <span class="n">s</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="n">item</span><span class="p">);</span>
+         <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span> <span class="n">StdOut</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">pop</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">);</span>
+     <span class="p">}</span>
+     <span class="n">StdOut</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;(&quot;</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="na">size</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot; left on stack&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>使用:</p>
@@ -292,42 +293,42 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
 <p>类型转换</p>
 </div>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FixedCapacityStack</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span>
-             <span class="nf">FixedCapacityStack</span><span class="o">(</span><span class="kt">int</span> <span class="n">cap</span><span class="o">)</span>         <span class="n">创建一个容量为cap的空栈</span>
-       <span class="kt">void</span>  <span class="nf">push</span><span class="o">(</span><span class="n">Item</span> <span class="n">item</span><span class="o">)</span>                     <span class="n">添加一个元素</span>
-       <span class="n">Item</span>  <span class="nf">pop</span><span class="o">()</span>                               <span class="n">删除最近添加的元素</span>
-    <span class="kt">boolean</span>  <span class="nf">isEmpty</span><span class="o">()</span>                           <span class="n">栈是否为空</span>
-        <span class="kt">int</span>  <span class="nf">size</span><span class="o">()</span>                              <span class="n">栈的元素数量</span>
+             <span class="nf">FixedCapacityStack</span><span class="p">(</span><span class="kt">int</span> <span class="n">cap</span><span class="p">)</span>         <span class="n">创建一个容量为cap的空栈</span>
+       <span class="kt">void</span>  <span class="nf">push</span><span class="p">(</span><span class="n">Item</span> <span class="n">item</span><span class="p">)</span>                     <span class="n">添加一个元素</span>
+       <span class="n">Item</span>  <span class="nf">pop</span><span class="p">()</span>                               <span class="n">删除最近添加的元素</span>
+    <span class="kt">boolean</span>  <span class="nf">isEmpty</span><span class="p">()</span>                           <span class="n">栈是否为空</span>
+        <span class="kt">int</span>  <span class="nf">size</span><span class="p">()</span>                              <span class="n">栈的元素数量</span>
 </pre></div>
 </div>
 <p>数据类型的实现</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FixedCapacityStack</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span>
-<span class="o">{</span>
-     <span class="kd">private</span> <span class="n">Item</span><span class="o">[]</span> <span class="n">a</span><span class="o">;</span>
-     <span class="kd">private</span> <span class="kt">int</span> <span class="n">N</span><span class="o">;</span>
-     <span class="kd">public</span> <span class="nf">FixedCapacityStack</span><span class="o">(</span><span class="kt">int</span> <span class="n">cap</span><span class="o">)</span>
-     <span class="o">{</span> <span class="n">a</span> <span class="o">=</span> <span class="o">(</span><span class="n">Item</span><span class="o">[])</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">cap</span><span class="o">];</span> <span class="o">}</span>
-     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span>
-     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">N</span><span class="o">;</span> <span class="o">}</span>
-     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span><span class="n">Item</span> <span class="n">item</span><span class="o">)</span>
-     <span class="o">{</span> <span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">++]</span> <span class="o">=</span> <span class="n">item</span><span class="o">;</span> <span class="o">}</span>
-     <span class="kd">public</span> <span class="n">Item</span> <span class="nf">pop</span><span class="o">()</span>
-     <span class="o">{</span> <span class="k">return</span> <span class="n">a</span><span class="o">[--</span><span class="n">N</span><span class="o">];</span> <span class="o">}</span>
-<span class="o">}</span>
+<span class="p">{</span>
+     <span class="kd">private</span> <span class="n">Item</span><span class="o">[]</span> <span class="n">a</span><span class="p">;</span>
+     <span class="kd">private</span> <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+     <span class="kd">public</span> <span class="nf">FixedCapacityStack</span><span class="p">(</span><span class="kt">int</span> <span class="n">cap</span><span class="p">)</span>
+     <span class="p">{</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">Item</span><span class="o">[]</span><span class="p">)</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">cap</span><span class="o">]</span><span class="p">;</span> <span class="p">}</span>
+     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">N</span><span class="p">;</span> <span class="p">}</span>
+     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">Item</span> <span class="n">item</span><span class="p">)</span>
+     <span class="p">{</span> <span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">++]</span> <span class="o">=</span> <span class="n">item</span><span class="p">;</span> <span class="p">}</span>
+     <span class="kd">public</span> <span class="n">Item</span> <span class="nf">pop</span><span class="p">()</span>
+     <span class="p">{</span> <span class="k">return</span> <span class="n">a</span><span class="o">[--</span><span class="n">N</span><span class="o">]</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>测试用例</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
-<span class="o">{</span>
-     <span class="n">FixedCapacityStack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">s</span><span class="o">;</span>
-     <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FixedCapacityStack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;(</span><span class="mi">100</span><span class="o">);</span>
-     <span class="k">while</span> <span class="o">(!</span><span class="n">StdIn</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
-         <span class="n">String</span> <span class="n">item</span> <span class="o">=</span> <span class="n">StdIn</span><span class="o">.</span><span class="na">readString</span><span class="o">();</span>
-         <span class="k">if</span> <span class="o">(!</span><span class="n">item</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-&quot;</span><span class="o">))</span>
-             <span class="n">s</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
-         <span class="k">else</span> <span class="k">if</span> <span class="o">(!</span><span class="n">s</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="n">StdOut</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">pop</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
-     <span class="o">}</span>
-     <span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;(&quot;</span> <span class="o">+</span> <span class="n">s</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; left on stack)&quot;</span><span class="o">);</span>
-<span class="o">}</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="n">FixedCapacityStack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">;</span>
+     <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FixedCapacityStack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+     <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">StdIn</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">()){</span>
+         <span class="n">String</span> <span class="n">item</span> <span class="o">=</span> <span class="n">StdIn</span><span class="p">.</span><span class="na">readString</span><span class="p">();</span>
+         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">item</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">))</span>
+             <span class="n">s</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="n">item</span><span class="p">);</span>
+         <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span> <span class="n">StdOut</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">pop</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">);</span>
+     <span class="p">}</span>
+     <span class="n">StdOut</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;(&quot;</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="na">size</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot; left on stack)&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>使用方法:</p>
@@ -345,33 +346,33 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
 <p>比如：一个交易系统可能会涉及数十亿笔交易和数千个交易集合。即使这种系统一般会限制每笔交易只能出现在一个集合中，但用例必须
 保证所有集合都有能力保存所有的交易，另一方面，如果集合变得比数组更大那么用例有可能溢出。</p>
 <p>实现一个方法将栈移动到另一个大小不同的数组中</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">resize</span><span class="o">(</span><span class="kt">int</span> <span class="n">max</span><span class="o">)</span>
-<span class="o">{</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">resize</span><span class="p">(</span><span class="kt">int</span> <span class="n">max</span><span class="p">)</span>
+<span class="p">{</span>
      <span class="c1">// 将大小为N &lt;= max 的栈移动到一个新的大小为max的数组中</span>
-     <span class="n">Item</span><span class="o">[]</span> <span class="n">temp</span> <span class="o">=</span> <span class="o">(</span><span class="n">Item</span><span class="o">[])</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">max</span><span class="o">];</span>
-     <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-         <span class="n">temp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
-     <span class="n">a</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
-<span class="o">}</span>
+     <span class="n">Item</span><span class="o">[]</span> <span class="n">temp</span> <span class="o">=</span> <span class="p">(</span><span class="n">Item</span><span class="o">[]</span><span class="p">)</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">max</span><span class="o">]</span><span class="p">;</span>
+     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+         <span class="n">temp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+     <span class="n">a</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>修改push方法，检查数组是否太小</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span><span class="n">Item</span> <span class="n">item</span><span class="o">)</span>
-<span class="o">{</span>
-     <span class="k">if</span> <span class="o">(</span><span class="n">N</span> <span class="o">==</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="n">resize</span><span class="o">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
-     <span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">++]</span> <span class="o">=</span> <span class="n">item</span><span class="o">;</span>
-<span class="o">}</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">Item</span> <span class="n">item</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">N</span> <span class="o">==</span> <span class="n">a</span><span class="p">.</span><span class="na">length</span><span class="p">)</span> <span class="n">resize</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">.</span><span class="na">length</span><span class="p">);</span>
+     <span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">++]</span> <span class="o">=</span> <span class="n">item</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>修改pop方法，如果数组太大将它长度减半, 栈大小是否小于数组的1/4</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">Item</span> <span class="nf">pop</span><span class="o">()</span>
-<span class="o">{</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">Item</span> <span class="nf">pop</span><span class="p">()</span>
+<span class="p">{</span>
     <span class="c1">// 从栈顶删除元素</span>
-    <span class="n">Item</span> <span class="n">item</span> <span class="o">=</span> <span class="n">a</span><span class="o">[--</span><span class="n">N</span><span class="o">];</span>
-    <span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span> <span class="c1">// 对象游离</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">===</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">/</span><span class="mi">4</span><span class="o">)</span>  <span class="n">resize</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">*</span> <span class="mi">2</span><span class="o">);</span>
-    <span class="k">return</span> <span class="n">item</span><span class="o">;</span>
-<span class="o">}</span>
+    <span class="n">Item</span> <span class="n">item</span> <span class="o">=</span> <span class="n">a</span><span class="o">[--</span><span class="n">N</span><span class="o">]</span><span class="p">;</span>
+    <span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// 对象游离</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">===</span> <span class="n">a</span><span class="p">.</span><span class="na">length</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>  <span class="n">resize</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="na">length</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">item</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -410,11 +411,11 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
 <h2>迭代<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
 <p>集合数据类型的基本操作之一是，能够使用java的foreach语句通过迭代遍历并处理集合中的每一个元素。</p>
 <p>打印出一个字符串集合中的所有元素的用例</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">collection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
-<span class="o">...</span>
-<span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">s</span> <span class="o">:</span> <span class="n">collection</span><span class="o">)</span>
-    <span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
-<span class="o">...</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">collection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="p">...</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">String</span> <span class="n">s</span> <span class="p">:</span> <span class="n">collection</span><span class="p">)</span>
+    <span class="n">StdOut</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<span class="p">...</span>
 </pre></div>
 </div>
 <p>任意可迭代的集合数据类型中我们需要实现</p>
@@ -424,78 +425,78 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
 </ul>
 <p>对应的接口（即java.lang.Iterable）</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Iterable</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span>
-<span class="o">{</span>
-     <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="nf">iterator</span><span class="o">();</span>
-<span class="o">}</span>
+<span class="p">{</span>
+     <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="nf">iterator</span><span class="p">();</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>然后在类中添加一个iterator()并返回一个迭代器Iterator&lt;Item&gt;,迭代器都是泛型的，
 因此我们可以使用参数类型Item来帮助用例遍历它们指定的任意类型的对象。</p>
 <p>我们将迭代器命名为``ReverseArrayIterator`` 并添加以下方法</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="nf">iterator</span><span class="o">()</span>
-<span class="o">{</span>
-     <span class="k">return</span> <span class="k">new</span> <span class="n">ReverseArrayIterator</span><span class="o">();</span>
-<span class="o">}</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="nf">iterator</span><span class="p">()</span>
+<span class="p">{</span>
+     <span class="k">return</span> <span class="k">new</span> <span class="n">ReverseArrayIterator</span><span class="p">();</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>迭代器是什么？它是实现了hasNext()和next()方法的类的对象，即java.util.Iterator</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Iterator</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span>
-<span class="o">{</span>
-     <span class="kd">private</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span>
-     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">()</span> <span class="o">{</span> <span class="o">}</span>
-<span class="o">}</span>
+<span class="p">{</span>
+     <span class="kd">private</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>下压栈—动态调整数组大小的实现</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.util.Iterator</span><span class="o">;</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.util.Iterator</span><span class="p">;</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ResizingArrayStack</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span>
-<span class="o">{</span>
-     <span class="kd">private</span> <span class="n">Item</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="o">(</span><span class="n">Item</span><span class="o">[])</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+<span class="p">{</span>
+     <span class="kd">private</span> <span class="n">Item</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">Item</span><span class="o">[]</span><span class="p">)</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">;</span>
 
-     <span class="kd">private</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span>
-     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">N</span><span class="o">;</span> <span class="o">}</span>
+     <span class="kd">private</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">N</span><span class="p">;</span> <span class="p">}</span>
 
-     <span class="kd">private</span> <span class="kt">void</span> <span class="nf">resize</span><span class="o">(</span><span class="kt">int</span> <span class="n">max</span><span class="o">)</span>
-     <span class="o">{</span>
+     <span class="kd">private</span> <span class="kt">void</span> <span class="nf">resize</span><span class="p">(</span><span class="kt">int</span> <span class="n">max</span><span class="p">)</span>
+     <span class="p">{</span>
          <span class="c1">// 将栈移动到一个大小为max的数组</span>
-         <span class="n">Item</span><span class="o">[]</span> <span class="n">temp</span> <span class="o">=</span> <span class="o">(</span><span class="n">Item</span><span class="o">[])</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">max</span><span class="o">];</span>
-         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-             <span class="n">temp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
-         <span class="n">a</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
-     <span class="o">}</span>
+         <span class="n">Item</span><span class="o">[]</span> <span class="n">temp</span> <span class="o">=</span> <span class="p">(</span><span class="n">Item</span><span class="o">[]</span><span class="p">)</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">max</span><span class="o">]</span><span class="p">;</span>
+         <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+             <span class="n">temp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+         <span class="n">a</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+     <span class="p">}</span>
 
-     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span><span class="n">Item</span> <span class="n">item</span><span class="o">)</span>
-     <span class="o">{</span>
+     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">Item</span> <span class="n">item</span><span class="p">)</span>
+     <span class="p">{</span>
          <span class="c1">// 将元素添加到栈</span>
-         <span class="k">if</span> <span class="o">(</span><span class="n">N</span> <span class="o">==</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="n">resize</span><span class="o">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
-         <span class="n">d</span><span class="o">[</span><span class="n">N</span><span class="o">++]</span> <span class="o">=</span> <span class="n">item</span><span class="o">;</span>
-     <span class="o">}</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">N</span> <span class="o">==</span> <span class="n">a</span><span class="p">.</span><span class="na">length</span><span class="p">)</span> <span class="n">resize</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">.</span><span class="na">length</span><span class="p">);</span>
+         <span class="n">d</span><span class="o">[</span><span class="n">N</span><span class="o">++]</span> <span class="o">=</span> <span class="n">item</span><span class="p">;</span>
+     <span class="p">}</span>
 
-     <span class="kd">public</span> <span class="n">Item</span> <span class="nf">pop</span><span class="o">()</span>
-     <span class="o">{</span>
+     <span class="kd">public</span> <span class="n">Item</span> <span class="nf">pop</span><span class="p">()</span>
+     <span class="p">{</span>
          <span class="c1">// 从栈顶删除</span>
-         <span class="n">Item</span> <span class="n">item</span> <span class="o">=</span> <span class="n">a</span><span class="o">[--</span><span class="n">N</span><span class="o">];</span>
-         <span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-         <span class="k">if</span> <span class="o">(</span><span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">==</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">/</span><span class="mi">4</span><span class="o">)</span> <span class="n">resize</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">/</span><span class="mi">2</span><span class="o">);</span>
-         <span class="k">return</span> <span class="n">item</span><span class="o">;</span>
-     <span class="o">}</span>
+         <span class="n">Item</span> <span class="n">item</span> <span class="o">=</span> <span class="n">a</span><span class="o">[--</span><span class="n">N</span><span class="o">]</span><span class="p">;</span>
+         <span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">==</span> <span class="n">a</span><span class="p">.</span><span class="na">length</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="n">resize</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="na">length</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+         <span class="k">return</span> <span class="n">item</span><span class="p">;</span>
+     <span class="p">}</span>
 
-     <span class="kd">public</span> <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="nf">iterator</span><span class="o">()</span>
-     <span class="o">{</span>
-         <span class="k">return</span> <span class="k">new</span> <span class="n">ReverseArrayIterator</span><span class="o">();</span>
-     <span class="o">}</span>
+     <span class="kd">public</span> <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="nf">iterator</span><span class="p">()</span>
+     <span class="p">{</span>
+         <span class="k">return</span> <span class="k">new</span> <span class="n">ReverseArrayIterator</span><span class="p">();</span>
+     <span class="p">}</span>
 
      <span class="kd">private</span> <span class="kd">class</span> <span class="nc">ReverseArrayIterator</span> <span class="kd">implements</span> <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span>
-     <span class="o">{</span>
+     <span class="p">{</span>
          <span class="c1">// 支持后进先出的迭代</span>
-         <span class="kd">private</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">N</span><span class="o">;</span>
-         <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span>
-         <span class="kd">public</span> <span class="kt">void</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">a</span><span class="o">[--</span><span class="n">i</span><span class="o">];</span> <span class="o">}</span>
-         <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">()</span> <span class="o">{}</span>
-     <span class="o">}</span>
-<span class="o">}</span>
+         <span class="kd">private</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">N</span><span class="p">;</span>
+         <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+         <span class="kd">public</span> <span class="kt">void</span> <span class="nf">next</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">a</span><span class="o">[--</span><span class="n">i</span><span class="o">]</span><span class="p">;</span> <span class="p">}</span>
+         <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="p">()</span> <span class="p">{}</span>
+     <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>这份范型的可迭代的Stack API的实现是所有集合类抽象数据类型实现的模版</p>
@@ -513,10 +514,10 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
 <h2>结点记录<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <p>用一个嵌套类来定义结点的抽象数据类型</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="kd">class</span> <span class="nc">Node</span>
-<span class="o">{</span>
-     <span class="n">Item</span> <span class="n">item</span><span class="o">;</span>
-     <span class="n">Node</span> <span class="n">next</span><span class="o">;</span>
-<span class="o">}</span>
+<span class="p">{</span>
+     <span class="n">Item</span> <span class="n">item</span><span class="p">;</span>
+     <span class="n">Node</span> <span class="n">next</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Node对象包含两个实例变量，类型分别为Item（参数类型）和Node</p>
@@ -562,9 +563,9 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
 </div>
 <div class="section" id="id17">
 <h2>遍历<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">(</span><span class="n">Node</span> <span class="n">x</span> <span class="o">=</span> <span class="n">first</span><span class="o">;</span> <span class="n">x</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">next</span><span class="o">)</span> <span class="o">{</span>
-     <span class="n">x</span><span class="o">.</span><span class="na">item</span><span class="o">;</span>
-<span class="o">}</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">Node</span> <span class="n">x</span> <span class="o">=</span> <span class="n">first</span><span class="p">;</span> <span class="n">x</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="na">next</span><span class="p">)</span> <span class="p">{</span>
+     <span class="n">x</span><span class="p">.</span><span class="na">item</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -684,6 +685,8 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
   <ul>
     
     
+      <li><a href="../../design/design_rules/">06 九月 - 设计模式 – 设计原则</a></li>
+    
       <li><a href="../algoSort/">04 七月 - 初级排序算法</a></li>
     
       <li><a href="../../base/throws/">14 四月 - 使用异常的技巧</a></li>
@@ -691,8 +694,6 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
       <li><a href="../../base/oop/">22 三月 - oop设计技巧</a></li>
     
       <li><a href="../../javaTech/Control/">10 三月 - java核心技术（二） 流程控制</a></li>
-    
-      <li><a href="../../javaTech/BaseStructJava/">04 三月 - java核心技术（一） 基本数据类型</a></li>
     
   </ul>
 
@@ -720,6 +721,11 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
       
     
       
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design-patterns/">design patterns</a></li>
+      
+    
+      
       <li class="ablog-cloud ablog-cloud-5">
         <a href="../../blog/tag/java/">java</a></li>
       
@@ -730,7 +736,7 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
       
     
       
-      <li class="ablog-cloud ablog-cloud-5">
+      <li class="ablog-cloud ablog-cloud-4">
         <a href="../../blog/tag/基础/">基础</a></li>
       
     
@@ -740,13 +746,18 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
       
     
       
-      <li class="ablog-cloud ablog-cloud-2">
+      <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/算法/">算法</a></li>
       
     
       
       <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/类/">类</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计模式/">设计模式</a></li>
       
     
       
@@ -764,7 +775,11 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
     
   
     
-    <li><a href="../../blog/category/java/">java (4)</a></li>
+    <li><a href="../../blog/category/design/">design (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">java (5)</a></li>
     
   
     
@@ -788,6 +803,10 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
     
   
     
+    <li><a href="../../blog/category/设计模式/">设计模式 (1)</a></li>
+    
+  
+    
     <li><a href="../../blog/category/面向对象/">面向对象 (2)</a></li>
     
   
@@ -797,7 +816,7 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
   <ul>
   
     
-    <li><a href="../../blog/2020/">2020 (6)</a></li>
+    <li><a href="../../blog/2020/">2020 (7)</a></li>
     
   
   </ul>
@@ -811,7 +830,7 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -820,7 +839,7 @@ java在将它赋予变量i之前将它的类型自动转换（自动拆箱）为
       &copy;2020, 胖虎.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
