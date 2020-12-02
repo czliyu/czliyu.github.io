@@ -1,0 +1,151 @@
+泛型设计
+================
+
+
+.. post:: 26 Sep 2020
+   :tags: 泛型, 设计, java, base
+   :category: 泛型, java, base
+   :author: me
+
+**泛型程序设计** 意味着编写的代码可以对多种不同类型的对象重用。
+
+
+泛型类
+--------------
+
+**泛型类** 就是有一个或多个类型变量的类。
+
+我们只关注泛型
+
+.. code-block:: java
+
+   public class Pair<T>
+   {
+       private T first;
+       private T second;
+       public Pair() { first = null; second = null }
+       public Pair(T first, T second) {
+           this.first = first;
+           this.second = second;
+       }
+
+       public T getFirst() {
+           return first;
+       }
+
+       public T getSecond() {
+           return second;
+       }
+
+       public void setFirst(T newValue) { first = newValue; }
+
+       public void setSecond(T newValue) { second = newValue; }
+   }
+
+.. note::
+
+    常见的做法是类型变量使用大写字母。而且很简短。java库使用变量E表示集合的元素类型, K和V分别表示
+    表的键和值的类型。T（必要时可以使用U和S）表示“任意类型”
+
+使用方法:
+
+.. code-block:: java
+
+   // 实例化泛型类型
+   Pair<String>
+   Pair<String>()
+   Pair<String>(String String)
+
+程序清单
+
+.. literalinclude:: code/PairTest1.java
+   :language: java
+
+泛型方法
+---------------
+
+定义一个带有类型参数的方法:
+
+.. code-block: java
+
+   class ArrayAlg {
+       public static <T> T getMiddle(T... a) {
+           return a[a.length / 2];
+       }
+   }
+
+调用泛型方法:
+string middle = ArrayAlg.<String>getMiddle("john", "Q.", "Public");
+or
+String middle = ArrayAlg.getMiddle("john", "Q.", "Public")
+方法调用中可以省略<String>类型参数，编译器有足够的信息推断出你想要的方法。它将
+参数的类型与泛型类型T进行匹配。
+
+类型变量限定
+----------------
+
+.. code-block:: java
+
+   class ArrayAlg {
+       public static <T> T min(T[] a) {
+           if (a == null || a.length == 0) return null;
+           T smallest = a[0];
+           for (int i = 1; i < a.length; i++) {
+               if (smallest.compareTo(a[i]) > 0) smallest = a[i];
+           }
+           return smallest;
+       }
+   }
+
+变量smallest的类型为T，这意味着它可以是任何一个类的对象。如何知道T所属的类有一个compareTo方法呢？
+
+限制T只能是实现了Comparable接口的类。
+
+`public static <T extends Comparable> T min(T[] a)`
+
+一个类型变量或通配符可以有多个限定，
+
+`T extends Comparable & Serializable`
+
+
+程序清单:
+
+.. literalinclude:: code/PairTest2.java
+   :language: java
+
+
+类型檫除
+-----------
+
+无论何时定义一个泛型，都会自动提供一个相应的原始类型，原型类型的名字就是去掉类型参数后的
+泛型类型名。类型变量会变量会被檫除，并替换为其限定类型（对于无限定的变量则替换为Object）
+
+.. code-block:: java
+
+   public class Pair
+   {
+       private Object first;
+       private Object second;
+
+       public Pair(Object first, Object second)
+       {
+           this.first = first;
+           this.second = second;
+       }
+
+       public Object getFirst() {
+           return first;
+       }
+       public Obejct getSecond() {
+           return second;
+       }
+
+       public Object setFirst(Object newValue) {
+           this.first = newValue;
+       }
+
+       public Object setSecond(Object newValue) {
+           this.second = newValue;
+       }
+   }
+

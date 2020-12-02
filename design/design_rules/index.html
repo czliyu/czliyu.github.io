@@ -113,6 +113,41 @@
 <li><p>不要覆盖基类中已实现的方法。</p></li>
 </ul>
 </div>
+<div class="section" id="id8">
+<h2>设计原则7: 最少知识原则<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">只和你的密友谈话</span>
+</pre></div>
+</div>
+<p>这个原则希望我们在设计中，不要让太多的类耦合在一起，免得修改系统中一部分，会影响
+到其他部分。如果许多类之间相互依赖，那么这个系统就会变成一个易碎的系统，它需要花许多
+成本维护，也会因为台复杂而不容易被其他人了解。</p>
+<p>在该对象的方法内，我们只应该调用属于以下范围的方法。</p>
+<ul class="simple">
+<li><p>该对象本身</p></li>
+<li><p>被当做方法的参数而传递进来的对象</p></li>
+<li><p>此方法所创建或实例化的任何对象</p></li>
+<li><p>对象的任何组件</p></li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h2>设计原则8: 好莱坞原则<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>别调用（打电话给）我们，我们会调用（打电话给）你。
+</pre></div>
+</div>
+<p>好莱坞原则可以给我们一种防止“依赖腐败”的方法。当高层组件依赖低层组件。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>依赖倒置原则更加注重如何在设计中避免依赖。
+好莱坞原则教我们一个技巧，创建一个有弹性的设计，允许低层结构能够互相操作，而又
+防止其他类太过依赖它们。</p>
+</div>
+</div>
+<div class="section" id="id10">
+<h2>设计原则9: 单一责任<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>一个类应该只有一个引起变化的原因。
+</pre></div>
+</div>
+</div>
 </div>
 
   <div class="section">
@@ -239,6 +274,8 @@
   <ul>
     
     
+      <li><a href="../../base/generic/">26 九月 - 泛型设计</a></li>
+    
       <li><a href="../../language/javaScriptGoodParts/">18 九月 - javaScript 精辟</a></li>
     
       <li><a href="../design_pattern/">07 九月 - 设计模式</a></li>
@@ -246,8 +283,6 @@
       <li><a href="../../algorithms/algoSort/">04 七月 - 初级排序算法</a></li>
     
       <li><a href="../../base/throws/">14 四月 - 使用异常的技巧</a></li>
-    
-      <li><a href="../../base/oop/">22 三月 - oop设计技巧</a></li>
     
   </ul>
 
@@ -306,6 +341,11 @@
     
       
       <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/泛型/">泛型</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/流程控制位运算/">流程控制，位运算</a></li>
       
     
@@ -317,6 +357,11 @@
       
       <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/类/">类</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计/">设计</a></li>
       
     
       
@@ -335,7 +380,7 @@
   <ul>
   
     
-    <li><a href="../../blog/category/base/">base (2)</a></li>
+    <li><a href="../../blog/category/base/">base (3)</a></li>
     
   
     
@@ -343,7 +388,7 @@
     
   
     
-    <li><a href="../../blog/category/java/">java (6)</a></li>
+    <li><a href="../../blog/category/java/">java (7)</a></li>
     
   
     
@@ -360,6 +405,10 @@
   
     
     <li><a href="../../blog/category/异常/">异常 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/泛型/">泛型 (1)</a></li>
     
   
     
@@ -384,7 +433,7 @@
   <ul>
   
     
-    <li><a href="../../blog/2020/">2020 (9)</a></li>
+    <li><a href="../../blog/2020/">2020 (10)</a></li>
     
   
   </ul>
