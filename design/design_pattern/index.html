@@ -52,12 +52,24 @@
 让算法的变化独立于使用算法的客户。
 </pre></div>
 </div>
+<img alt="../../_images/Duck.jpg" src="../../_images/Duck.jpg" />
+<p>设计原则:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>找出应用中可能需要变化之处，把它们独立出来，不要和哪些不需要变化的代码放在一起。
+针对接口编程，而不是针对实现编程。
+多用组合，少用继承。
+</pre></div>
+</div>
 <p><a class="reference external" href="https://github.com/czliyu/head-first/tree/main/example/duck">策略模式</a></p>
 </div>
 <div class="section" id="id4">
 <h2>观察者模式<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>观察者模式定义了对象之间一对多的依赖，这样一来，当一个对象改变状态时，
 它的所有依赖都会收到通知并自动更新。
+</pre></div>
+</div>
+<img alt="../../_images/Observer.jpg" src="../../_images/Observer.jpg" />
+<p>设计原则:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>为了交互对象之间的松耦合设计而努力。
 </pre></div>
 </div>
 </div>
@@ -203,6 +215,30 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>迭代器模式提供一种方法顺序访问一个聚合对象中的各个元素，而又不暴露其内部的表示。
 </pre></div>
 </div>
+</div>
+<div class="section" id="id15">
+<h2>组合模式<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>组合模式允许你将对象组合成树形结构来表现“整体/部分”层次结构。组合能让客户以一致的方式处理个别对象
+以及对象组合。
+</pre></div>
+</div>
+<p>组合模式以单一责任设计原则换取透明性。</p>
+</div>
+<div class="section" id="id16">
+<h2>状态模式<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。
+</pre></div>
+</div>
+<img alt="../../_images/State.jpg" src="../../_images/State.jpg" />
+</div>
+<div class="section" id="id17">
+<h2>代理模式<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>代理模式为另一个对象提供一个替身或占位符以控制对这个对象的访问。
+</pre></div>
+</div>
+<p>使用代理模式创建代表（representative）对象，让代表对象控制某对象的访问，被代理的对象
+可以是远程对象、创建开销大的对象或需要安全控制的对象。</p>
+<img alt="../../_images/Proxy.jpg" src="../../_images/Proxy.jpg" />
 </div>
 </div>
 
