@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Effective Java 泛型 &#8212; 胖虎的技术栈  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+  
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="effective-java">
+<h1>Effective Java 泛型<a class="headerlink" href="#effective-java" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>26、请不要使用原生态类型<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>泛型定义:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>声明中具有一个或者多个类型参数的类或者接口，就是泛型类或者接口。例如：List接口只有单个类型参数E，表示列表的元素类型。
+这个接口全称是``List&lt;E&gt;``(读作“E的列表”)。
+</pre></div>
+</div>
+<p>原生态类型定义:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>每一种泛型都定义一个原生态类型，既不带任何实际参数的泛型名称。例如： 与``List&lt;E&gt;``相对应的原生态类型是``List``。
+</pre></div>
+</div>
+<p>使用原生态类型是合法的，但是永远不应该这么做。<strong>如果使用原生态类型，就失掉了泛型在安全性和描述性方面的所有优势</strong>。</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>如果要使用泛型，但不确定或者不关心实际的类型参数，就可以用一个``？<code class="docutils literal notranslate"><span class="pre">代替。这被称为**无限制的通配符类型**。例如泛型</span>
+<span class="pre">``Set&lt;E&gt;``的无限制通配符类型为``Set&lt;?&gt;</span></code></p>
+</div>
+<p>这条规则的一个例外与``instanceof``操作符有关。由于泛型信息可以在运行时被檫除，因此在参数化类型而非无限制通配符类型上使用``instanceof``操作符是
+非法的。</p>
+<p>利用泛型来使用``instanceof``操作符的首选方法：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">o</span> <span class="k">instanceof</span> <span class="n">Set</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 一旦确定这个o是Set，就必须将它转换成通配符类型Set&lt;?&gt;,而不是转换成原生态类型Set，这是个受检的转换，因此不会导致编译时警告</span>
+    <span class="n">Set</span><span class="o">&lt;?&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">Set</span><span class="o">&lt;?&gt;</span><span class="p">)</span> <span class="n">o</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>27、消除非受检的警告<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>如果无法消除警告，同时可以证明引起的警告的代码是类型安全的，(只有这种情况下）才可以用一个``&#64;SuppressWarnings(“unchecked”)``注释来禁止这个
+警告。</p>
+<p>应该始终在尽可能小的范围内使用``&#64;SuppressWarnings``注释。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span><span class="o">[]</span> <span class="nf">toArray</span><span class="p">(</span><span class="n">T</span><span class="o">[]</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="na">length</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nd">@SuppressWarnings</span><span class="p">(</span><span class="s">&quot;unchecked&quot;</span><span class="p">)</span> <span class="n">T</span><span class="o">[]</span> <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">T</span><span class="o">[]</span><span class="p">)</span> <span class="n">Arrays</span><span class="p">.</span><span class="na">copyOf</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="na">getClass</span><span class="p">());</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">arraycopy</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="n">size</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">[</span><span class="n">size</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>28、列表优于数组<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>数组只有在运行时才会发现错误。</p>
+</div>
+<div class="section" id="id4">
+<h2>29、优先考虑泛型<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>如何编写泛型：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Stack</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="n">E</span><span class="o">[]</span> <span class="n">elements</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">DEFAULT_INITIAL_CAPACITY</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+
+    <span class="nd">@SuppressWarnings</span><span class="p">(</span><span class="s">&quot;unchecked&quot;</span><span class="p">)</span>
+    <span class="kd">public</span> <span class="nf">Stack</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// elements = new E[DEFAULT_INITIAL_CAPACITY];</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="p">(</span><span class="n">E</span><span class="o">[]</span><span class="p">)</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">DEFAULT_INITIAL_CAPACITY</span><span class="o">]</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">E</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ensureCapacity</span><span class="p">();</span>
+        <span class="n">elements</span><span class="o">[</span><span class="n">size</span><span class="o">++]</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">E</span> <span class="nf">pop</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">EmptyStackException</span><span class="p">();</span>
+
+        <span class="c1">// E result = elements[--size];</span>
+        <span class="nd">@SuppressWarnings</span><span class="p">(</span><span class="s">&quot;unchecked&quot;</span><span class="p">)</span> <span class="n">E</span> <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="n">elements</span><span class="o">[--</span><span class="n">size</span><span class="o">]</span><span class="p">;</span>
+        <span class="n">elements</span><span class="o">[</span><span class="n">size</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>使用泛型比使用需要在客户端代码中进行转换的类型来得更加安全全，也更加容易。</p>
+</div>
+<div class="section" id="id5">
+<h2>30、优先考虑泛型方法<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm">* 类型参数列表为&lt;E&gt;, 返回类型为Set&lt;E&gt;</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="nf">union</span><span class="p">(</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">s1</span><span class="p">,</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">s2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Set</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">s1</span><span class="p">);</span>
+    <span class="n">result</span><span class="p">.</span><span class="na">addAll</span><span class="p">(</span><span class="n">s2</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>类型限制``&lt;E extends Comparable&lt;E&gt;&gt;``,可以读作“针对可以与自身进行比较的每个类型E”</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">staitc</span> <span class="o">&lt;</span><span class="n">E</span> <span class="kd">extends</span> <span class="n">Comparable</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;&gt;</span> <span class="n">E</span> <span class="nf">max</span><span class="p">(</span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="p">(</span><span class="s">&quot;Empty collection&quot;</span><span class="p">);</span> <span class="c1">// 更好使用Optional&lt;E&gt;</span>
+
+    <span class="n">E</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">E</span> <span class="n">e</span> <span class="p">:</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">e</span><span class="p">.</span><span class="na">compareTo</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">Objects</span><span class="p">.</span><span class="na">requireNonNull</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="api">
+<h2>31、利用有限制通配符来提升API灵活性<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<p>Java提供了一种特殊的参数化类型，称作有限制的通配符类型。例如：通配符类型``Iterable&lt; ? extends E&gt;``E的某个子类型的Iterable接口。
+Iterable&lt;Integer&gt;、Iterable&lt;Number&gt;</p>
+<p><strong>为了获得更大的灵活性，要在表示生产者或者消费者的输入参数上使用通配符类型</strong>。<code class="docutils literal notranslate"><span class="pre">Collection&lt;?</span> <span class="pre">super</span> <span class="pre">E&gt;</span></code></p>
+<p>如果参数化类型表示一个生产者T(提供者)，就使用``&lt;? extends T&gt;``；如果它表示一个消费者T（接收者），就使用``&lt;? super T&gt;``</p>
+<p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">static</span> <span class="pre">&lt;E&gt;</span> <span class="pre">Set&lt;E&gt;</span> <span class="pre">union(Set&lt;?</span> <span class="pre">extends</span> <span class="pre">E&gt;</span> <span class="pre">s1,</span> <span class="pre">Set&lt;?</span> <span class="pre">extends</span> <span class="pre">E&gt;</span> <span class="pre">s2)</span></code>
+注意返回类型仍然是``Set&lt;E&gt;``。<strong>不要用通配符类型作为返回类型</strong>。</p>
+<p>总而言之，在API中使用通配符类型虽然比较需要技巧，但是会使API变得灵活得多。如果编写的是将广泛使用的类库，则一定要适当地
+利用通配符类型。基本原则：PECS,所有的comparable和comparator都是消费者。</p>
+</div>
+<div class="section" id="id6">
+<h2>32、谨慎并用泛型和可变参数<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id7">
+<h2>33、优先考虑类型安全的异构容器<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Favorites</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="nf">putFavorite</span><span class="p">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">type</span><span class="p">,</span> <span class="n">T</span> <span class="k">instanceof</span><span class="p">);</span>
+
+    <span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="nf">getFavorite</span><span class="p">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">type</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Favorites</span> <span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Favorites</span><span class="p">();</span>
+
+    <span class="n">f</span><span class="p">.</span><span class="na">putFavorite</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">class</span><span class="p">,</span> <span class="s">&quot;Java&quot;</span><span class="p">);</span>
+    <span class="n">f</span><span class="p">.</span><span class="na">putFavorite</span><span class="p">(</span><span class="n">Integer</span><span class="p">.</span><span class="na">class</span><span class="p">,</span> <span class="mi">123</span><span class="p">);</span>
+    <span class="n">f</span><span class="p">.</span><span class="na">putFavorite</span><span class="p">(</span><span class="n">Class</span><span class="p">.</span><span class="na">class</span><span class="p">,</span> <span class="n">Favorites</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">favoriteInteger</span> <span class="o">=</span><span class="n">f</span><span class="p">.</span><span class="na">getFavorite</span><span class="p">(</span><span class="n">Integer</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+    <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">FavoriteClass</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="na">getFavorite</span><span class="p">(</span><span class="n">Class</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+  <div class="section">
+  
+    
+
+
+<div class="section">
+  <span style="float: left;">
+  
+  Previous: 
+  <a href="../classinterface/">
+    
+    Effective Java 类和接口
+  </a>
+  
+  </span>
+  <span>&nbsp;</span>
+  <span style="float: right;">
+  
+  Next: 
+  <a href="../enumAnnotation/">
+    Effective Java 枚举和注释
+    
+  </a>
+  
+  </span>
+</div>
+
+  
+  
+  </div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">胖虎的技术栈</a></h1>
+
+
+
+
+
+
+
+
+
+  
+  
+  <h2>
+  
+  
+    08 三月 2021
+  
+  </h2>
+
+  <ul>
+    
+
+  
+  <li id="author"><span>Author:</span>
+    
+      
+      <a href="../../blog/author/胖虎/">胖虎</a>
+      
+    </li>
+  
+
+  
+
+  
+
+  
+  <li id="category"><span>Category:</span>
+    
+      
+      <a href="../../blog/category/java/">Java</a>,
+      
+    
+      
+      <a href="../../blog/category/java基础/">Java基础</a>,
+      
+    
+      
+      <a href="../../blog/category/effective-java/">Effective-java</a>
+      
+    </li>
+  
+
+  
+  <li id="tags"><span>Tags:
+      </span>
+    
+      
+      <a href="../../blog/tag/java/">Java</a>
+      
+    
+      
+      <a href="../../blog/tag/effective-java/">Effective-java</a>
+      
+    
+      
+      <a href="../../blog/tag/generic/">generic</a>
+      
+    </li>
+  
+  
+  </ul>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">胖虎</a></li>
+</ul>
+
+
+  <h3><a href="../../blog/">Recent Posts</a></h3>
+  <ul>
+    
+    
+      <li><a href="../enumAnnotation/">11 三月 - Effective Java 枚举和注释</a></li>
+    
+      <li><a href="../classinterface/">06 三月 - Effective Java 类和接口</a></li>
+    
+      <li><a href="../objects/">05 三月 - Effective Java 对于所有对象都通用的方法</a></li>
+    
+      <li><a href="../createDestory/">21 二月 - Effective Java 创建和销毁对象</a></li>
+    
+      <li><a href="../../base/generic/">26 九月 - 泛型设计</a></li>
+    
+  </ul>
+
+  <h3><a href="../../blog/tag/">Tags</a></h3>
+  <style type="text/css">
+    ul.ablog-cloud {list-style: none; overflow: auto;}
+    ul.ablog-cloud li {float: left; height: 20pt; line-height: 18pt; margin-right: 5px;}
+    ul.ablog-cloud a {text-decoration: none; vertical-align: middle;}
+    li.ablog-cloud-1{font-size: 80%;}
+    li.ablog-cloud-2{font-size: 95%;}
+    li.ablog-cloud-3{font-size: 110%;}
+    li.ablog-cloud-4{font-size: 125%;}
+    li.ablog-cloud-5{font-size: 140%;}
+  </style>
+  <ul class="ablog-cloud">
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/effective-java/">Effective-java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/exception/">Exception</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/java/">Java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/annotation/">annotation</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/base/">base</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/class/">class</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design/">design</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design-patterns/">design patterns</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/enum/">enum</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/generic/">generic</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/interface/">interface</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-5">
+        <a href="../../blog/tag/java/">java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/javascript/">javaScript</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/oop/">oop</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/基础/">基础</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/泛型/">泛型</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/流程控制位运算/">流程控制，位运算</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/算法/">算法</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/类/">类</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计/">设计</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计模式/">设计模式</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/面向对象/">面向对象</a></li>
+      
+    
+  </ul>
+
+  <h3><a href="../../blog/category/">Categories</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/category/effective-java/">Effective-java (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">Java (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java基础/">Java基础 (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/base/">base (3)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/design/">design (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">java (7)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/javascript/">javaScript (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/oop/">oop (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/基础/">基础 (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/异常/">异常 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/泛型/">泛型 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/算法/">算法 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/类/">类 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/设计模式/">设计模式 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/面向对象/">面向对象 (2)</a></li>
+    
+  
+  </ul>
+
+  <h3><a href="../../blog/archive/">Archives</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/2021/">2021 (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/2020/">2020 (10)</a></li>
+    
+  
+  </ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, 胖虎.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/effective-java/generic.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

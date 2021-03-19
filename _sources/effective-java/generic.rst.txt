@@ -1,0 +1,175 @@
+Effective Java 泛型
+=========================
+
+.. post:: 8 Mar 2021
+   :category: Java, Java基础, Effective-java
+   :tags: Java, Effective-java, generic
+   :author: me
+
+26、请不要使用原生态类型
+---------------------------
+
+泛型定义::
+
+    声明中具有一个或者多个类型参数的类或者接口，就是泛型类或者接口。例如：List接口只有单个类型参数E，表示列表的元素类型。
+    这个接口全称是``List<E>``(读作“E的列表”)。
+
+原生态类型定义::
+
+    每一种泛型都定义一个原生态类型，既不带任何实际参数的泛型名称。例如： 与``List<E>``相对应的原生态类型是``List``。
+
+使用原生态类型是合法的，但是永远不应该这么做。**如果使用原生态类型，就失掉了泛型在安全性和描述性方面的所有优势**。
+
+.. seealso::
+
+    如果要使用泛型，但不确定或者不关心实际的类型参数，就可以用一个``？``代替。这被称为**无限制的通配符类型**。例如泛型
+    ``Set<E>``的无限制通配符类型为``Set<?>``
+
+这条规则的一个例外与``instanceof``操作符有关。由于泛型信息可以在运行时被檫除，因此在参数化类型而非无限制通配符类型上使用``instanceof``操作符是
+非法的。
+
+利用泛型来使用``instanceof``操作符的首选方法：
+
+.. code-block:: java
+
+    if (o instanceof Set) {
+        // 一旦确定这个o是Set，就必须将它转换成通配符类型Set<?>,而不是转换成原生态类型Set，这是个受检的转换，因此不会导致编译时警告
+        Set<?> s = (Set<?>) o;
+    }
+
+27、消除非受检的警告
+--------------------
+
+如果无法消除警告，同时可以证明引起的警告的代码是类型安全的，(只有这种情况下）才可以用一个``@SuppressWarnings("unchecked")``注释来禁止这个
+警告。
+
+应该始终在尽可能小的范围内使用``@SuppressWarnings``注释。
+
+.. code-block:: java
+
+    public <T> T[] toArray(T[] a) {
+        if (a.length < size) {
+            @SuppressWarnings("unchecked") T[] result = (T[]) Arrays.copyOf(elements, size, a.getClass());
+            return result;
+        }
+        System.arraycopy(elements, 0, a, 0, size);
+        if (a.length > size) 
+            a[size] = null;
+        return a;
+    }
+
+28、列表优于数组
+--------------------
+
+数组只有在运行时才会发现错误。
+
+29、优先考虑泛型
+------------------
+
+如何编写泛型：
+
+.. code-block:: java
+
+    public class Stack<E> {
+        private E[] elements;
+        private int size = 0;
+        private static final int DEFAULT_INITIAL_CAPACITY = 16;
+
+        @SuppressWarnings("unchecked")
+        public Stack() {
+            // elements = new E[DEFAULT_INITIAL_CAPACITY];
+            elements = (E[]) new Object[DEFAULT_INITIAL_CAPACITY];
+        }
+
+        public void push(E e) {
+            ensureCapacity();
+            elements[size++] = e;
+        }
+
+        public E pop() {
+            if (size == 0)
+                throw new EmptyStackException();
+            
+            // E result = elements[--size];
+            @SuppressWarnings("unchecked") E result = (E) elements[--size];
+            elements[size] = null;
+            return result;
+        }
+    }
+
+使用泛型比使用需要在客户端代码中进行转换的类型来得更加安全全，也更加容易。
+
+30、优先考虑泛型方法
+-------------------------
+
+.. code-block:: java
+
+    /**
+    * 类型参数列表为<E>, 返回类型为Set<E>
+    */
+    public static <E> Set<E> union(Set<E> s1, Set<E> s2) {
+        Set<E> result = new HashSet<>(s1);
+        result.addAll(s2);
+        return result;
+    }
+
+类型限制``<E extends Comparable<E>>``,可以读作“针对可以与自身进行比较的每个类型E”
+
+.. code-block:: java
+
+    public staitc <E extends Comparable<E>> E max(Collection<E> c) {
+        if (c.isEmpty())
+            throw new IllegalArgumentException("Empty collection"); // 更好使用Optional<E>
+
+        E result = null;
+        for (E e : c) {
+            if (result == null || e.compareTo(result) > 0)
+                result = Objects.requireNonNull(e);
+        }
+        return result;
+    }
+
+31、利用有限制通配符来提升API灵活性
+---------------------------------------
+
+Java提供了一种特殊的参数化类型，称作有限制的通配符类型。例如：通配符类型``Iterable< ? extends E>``E的某个子类型的Iterable接口。
+Iterable<Integer>、Iterable<Number>
+
+**为了获得更大的灵活性，要在表示生产者或者消费者的输入参数上使用通配符类型**。``Collection<? super E>``
+
+如果参数化类型表示一个生产者T(提供者)，就使用``<? extends T>``；如果它表示一个消费者T（接收者），就使用``<? super T>``
+
+``public static <E> Set<E> union(Set<? extends E> s1, Set<? extends E> s2)``
+注意返回类型仍然是``Set<E>``。**不要用通配符类型作为返回类型**。
+
+总而言之，在API中使用通配符类型虽然比较需要技巧，但是会使API变得灵活得多。如果编写的是将广泛使用的类库，则一定要适当地
+利用通配符类型。基本原则：PECS,所有的comparable和comparator都是消费者。
+
+32、谨慎并用泛型和可变参数
+------------------------------
+
+33、优先考虑类型安全的异构容器
+----------------------------------
+
+
+
+.. code-block:: java
+
+    public class Favorites {
+        public <T> void putFavorite(Class<T> type, T instanceof);
+
+        public <T> T getFavorite(Class<T> type);
+    }
+
+    public static void main(String[] args) {
+        Favorites f = new Favorites();
+
+        f.putFavorite(String.class, "Java");
+        f.putFavorite(Integer.class, 123);
+        f.putFavorite(Class.class, Favorites.class);
+
+        int favoriteInteger =f.getFavorite(Integer.class);
+        Class<?> FavoriteClass = f.getFavorite(Class.class);
+    }
+
+

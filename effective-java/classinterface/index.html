@@ -1,0 +1,679 @@
+
+<!DOCTYPE html>
+
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Effective Java 类和接口 &#8212; 胖虎的技术栈  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+  
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="effective-java">
+<h1>Effective Java 类和接口<a class="headerlink" href="#effective-java" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>15、使类和成员的可访问性最小化<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>设计良好的组件会隐藏所有的实现细节，把API与实现清晰地隔离开来。（封装）</p>
+<p><strong>公有类的实例域(field)不能是公有的</strong>，将final域变成公有的，就等于放弃了对存储在这个域中的值
+进行限制的能力。这意味着，放弃了强制这个域不可变的能力。因此，包含公有可变域的类通常并不是
+线程安全的。</p>
+<p>也适用于静态域，只有一种情况例外。常量构成了类提供的整个抽象的一部分，可以通过公有的静态``final``域来暴露这些常量``public static final int CONST = 100``</p>
+<p>如果final域包含可变对象的引用，它便具有非final域的所有缺点。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Ting</span><span class="o">[]</span> <span class="n">VALUES</span> <span class="o">=</span> <span class="p">{};</span>
+</pre></div>
+</div>
+<p>长度非零的数组总是可变的，所以让类具有公有的静态final数组域或者返回这个域的访问方法，是错误的。</p>
+<p>修正上面问题的方法：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Thing</span><span class="o">[]</span> <span class="n">PRIVATE_VALUES</span> <span class="o">=</span> <span class="p">{...};</span>
+
+<span class="c1">// 添加一个公有的不可变列表。</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Thing</span><span class="o">&gt;</span> <span class="n">VALUES</span> <span class="o">=</span> <span class="n">Collections</span><span class="p">.</span><span class="na">unmodifiableList</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span><span class="n">PRIVATE_VALUES</span><span class="p">));</span>
+<span class="c1">// 或者</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Thing</span><span class="o">[]</span> <span class="nf">values</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">PRIVATE_VALUES</span><span class="p">.</span><span class="na">clone</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>16、要在公有类而非公有域中使用访问方法<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>如果类是包级私有的，或者是私有的嵌套类，直接暴露它的数据域并没有本质的错误。</p>
+<p>简而言之，公有类永远都不应该暴露可变的域。</p>
+</div>
+<div class="section" id="id3">
+<h2>17、使可变性最小化<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><strong>不可变类</strong> 是指其实例不能被修改的类。每个实例中包含的所有信息都必须在创建该实例的时候就提供，并在对象的整个生命周期内固定不变。</p>
+<p>为了使类成为不可变，遵循下面规则：</p>
+<ul class="simple">
+<li><p>不要提供任何会修改对象状态的方法（setter方法）。</p></li>
+<li><p>保证类不会被扩展（可以防止粗心或者恶意子类假装对象的状态已经改变，从而破坏该类的不可变行为。为了防止被子类化，一般声明这个类成为final）。</p></li>
+<li><p>声明所有域都是final。</p></li>
+<li><p>声明所有的域都是私有的。</p></li>
+<li><p>确保对于任何可变组件的互斥访问。如果类具有指向可变对象的域，则必须确保该类的客户端无法获得指向这些对象的引用。并且，永远不要用客户端提供的对象引用来初始化这样的域，也不要从任何访问方法中返回该对象引用。在构造器、访问方法和readObject方法中使用保护性拷贝技术。</p></li>
+</ul>
+<p>不可变对象示例：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Complex</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">re</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">im</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="nf">Complex</span><span class="p">(</span><span class="kt">double</span> <span class="n">re</span><span class="p">,</span> <span class="kt">double</span> <span class="n">im</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">re</span> <span class="o">=</span> <span class="n">re</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">im</span> <span class="o">=</span> <span class="n">im</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">realPart</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">re</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">imaginaryPart</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">im</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">Complex</span> <span class="nf">plus</span><span class="p">(</span><span class="n">Complex</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Complex</span><span class="p">(</span><span class="n">re</span> <span class="o">+</span> <span class="n">c</span><span class="p">.</span><span class="na">re</span><span class="p">,</span> <span class="n">im</span> <span class="o">+</span> <span class="n">c</span><span class="p">.</span><span class="na">im</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">Complex</span> <span class="nf">minus</span><span class="p">(</span><span class="n">Complex</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Complex</span><span class="p">(</span><span class="n">re</span> <span class="o">-</span> <span class="n">c</span><span class="p">.</span><span class="na">re</span><span class="p">,</span> <span class="n">im</span> <span class="o">-</span> <span class="n">c</span><span class="p">.</span><span class="na">im</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">Complex</span> <span class="nf">times</span><span class="p">(</span><span class="n">Complex</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Complex</span><span class="p">(</span><span class="n">re</span> <span class="o">*</span> <span class="n">c</span><span class="p">.</span><span class="na">re</span> <span class="o">-</span> <span class="n">im</span> <span class="o">*</span> <span class="n">c</span><span class="p">.</span><span class="na">im</span><span class="p">,</span> <span class="n">re</span> <span class="o">*</span> <span class="n">c</span><span class="p">.</span><span class="na">im</span> <span class="o">+</span> <span class="n">im</span><span class="p">.</span><span class="na">c</span><span class="p">.</span><span class="na">re</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">Complex</span> <span class="nf">dividedBy</span><span class="p">(</span><span class="n">Complex</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">double</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">c</span><span class="p">.</span><span class="na">re</span> <span class="o">*</span> <span class="n">c</span><span class="p">.</span><span class="na">re</span> <span class="o">+</span> <span class="n">c</span><span class="p">.</span><span class="na">im</span> <span class="o">*</span> <span class="n">c</span><span class="p">.</span><span class="na">im</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Complex</span><span class="p">((</span><span class="n">re</span> <span class="o">*</span> <span class="n">c</span><span class="p">.</span><span class="na">re</span> <span class="o">+</span> <span class="n">im</span> <span class="o">*</span> <span class="n">c</span><span class="p">.</span><span class="na">im</span><span class="p">)</span> <span class="o">/</span> <span class="n">tmp</span><span class="p">,</span> <span class="p">(</span><span class="n">im</span> <span class="o">*</span> <span class="n">c</span><span class="p">.</span><span class="na">re</span> <span class="o">-</span> <span class="n">re</span> <span class="o">*</span> <span class="n">c</span><span class="p">.</span><span class="na">im</span><span class="p">)</span> <span class="o">/</span> <span class="n">tmp</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="p">(</span><span class="n">Object</span> <span class="n">o</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">o</span> <span class="o">==</span> <span class="k">this</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">o</span> <span class="k">instanceof</span> <span class="n">Complex</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="n">Complex</span> <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">Complex</span><span class="p">)</span> <span class="n">o</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="n">Double</span><span class="p">.</span><span class="na">compare</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">re</span><span class="p">,</span> <span class="n">re</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">Double</span><span class="p">.</span><span class="na">compare</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">im</span><span class="p">,</span> <span class="n">im</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">31</span> <span class="o">*</span> <span class="n">Double</span><span class="p">.</span><span class="na">hashCode</span><span class="p">(</span><span class="n">re</span><span class="p">)</span> <span class="o">+</span> <span class="n">Double</span><span class="p">.</span><span class="na">hashCode</span><span class="p">(</span><span class="n">im</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;(&quot;</span> <span class="o">+</span> <span class="n">re</span> <span class="o">+</span> <span class="s">&quot; + &quot;</span> <span class="o">+</span> <span class="n">im</span> <span class="o">+</span> <span class="s">&quot;i)&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这些算术运算如何创建并返回新的Complex实例，而不是修改这个实例。大多数重要的不可变类都使用了这种模式，被称为函数的方法。</p>
+<p><strong>不可变对象本质上是线程安全的，它们不要求同步。</strong>，没有任何线程会注意到其他线程对于不可变对象的影响。所以，<strong>不可变对象可以被自由地共享。</strong></p>
+<p>对于频繁用到的值，为它们提供公有的静态final常量。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Complex</span> <span class="n">ZERO</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Complex</span> <span class="n">ONE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Complex</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">fianl</span> <span class="n">Complex</span> <span class="n">I</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>不可变的类可以提供一个静态工厂，使用这样的静态工厂也使得客户端之间可以共享现有的实例，二不用创建新的实例， 从而降低内存占用和垃圾回收成本。</p>
+<p><strong>不可变变量的唯一缺点就是对于每个不同的值都需要一个单独的对象。</strong></p>
+<p>另一种做到不可变类的方法，让类的所有构造器都变成私有的或者包级私有的，并添加公有静态工厂来替代公有构造器。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Complex</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">re</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">im</span><span class="p">;</span>
+
+    <span class="kd">private</span> <span class="nf">Complex</span><span class="p">(</span><span class="kt">double</span> <span class="n">re</span><span class="p">,</span> <span class="kt">double</span> <span class="n">im</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">re</span> <span class="o">=</span> <span class="n">re</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">im</span> <span class="o">=</span> <span class="n">im</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Complex</span> <span class="nf">valueOf</span><span class="p">(</span><span class="kt">double</span> <span class="n">re</span><span class="p">,</span> <span class="kt">double</span> <span class="n">im</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Complex</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="n">im</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这种方法虽然不常用，但它通常是最好的替代方法。它最灵活，因为它允许实现多个包级私有实现类。</p>
+</div>
+<div class="section" id="id4">
+<h2>18、复合（组合）优于继承<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p><strong>与方法调用不同的是，继承打破了封装性。</strong></p>
+<p>在新的类中添加一个私有域，它引用现有类的一个实例，这种设计被称为“<strong>复合（组合）</strong>”。</p>
+</div>
+<div class="section" id="id5">
+<h2>19、要么设计继承并提供文档说明，要么禁止继承<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>对于专门为了继承而设计并且具有良好的文档说明的类而言，这意味着？</p>
+<p>该类必须有文档说明它可覆盖的方法的自用性。即类必须在文档中说明，在哪些情况下它会调用可覆盖的方法。例如，后台的线程或者静态的初始化器可能会调用
+这样的方法。</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>程序文档有句格言：好的API文档应该描述一个给定的方法做了是什么工作，而不是描述它是如何做到的。</p>
+</div>
+<p>为了继承而进行的设计不仅仅涉及自用模式的文档设计。为了使程序员能够编写出更加有效的子类，而无须承受不必要的痛苦,**类必须以精心挑选的受保护的方法的形式
+，提供适当的钩子（hook）,以便进入其内部工作中。**</p>
+<p>为了允许继承，类还必须遵守其他一下约束。<strong>构造器决不能调用可被覆盖的方法</strong> 无论是直接调用还是接间调用。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>通过构造器调用私有的方法、final方法或静态方法是安全的，这些都不是可以被覆盖的方法。
+如果为了继承而设计的类中实现了Cloneable或者Serializable接口，就应该意识到，因为clone和readObject方法在行为上非常类似于构造器。
+所以类似的限制规则同样适用的。<strong>无论是clone还是readObject，都不可以调用可覆盖的方法，不管是以直接还是接间的方式。</strong></p>
+</div>
+<p>两种方式禁止子类化</p>
+<ul class="simple">
+<li><p>类声明为final</p></li>
+<li><p>所有构造器都变成私有的，或者包级私有的，并增加公有的静态工厂来替代构造器。</p></li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>20、接口优于继承<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>Java提供了两种机制，可以用来定义允许许多个实现的类型：<strong>接口和抽象类</strong></p>
+<p><strong>接口是定义mixin(混合类型)的理想选择</strong>。不严格的讲：类除了实现它的”基本类型“之外，还可以实现这个mixin类型，
+以表明它提供了某些可供选择的行为。例如，<code class="docutils literal notranslate"><span class="pre">Comparable</span></code> 是一个mixin接口，它允许类表明它的实例可以与其他的可相互比较的对象
+进行排序。这样的接口被称为ximin。</p>
+<p><strong>接口允许构造非层次结构的类型框架。</strong></p>
+</div>
+<div class="section" id="id7">
+<h2>21、为后代设计接口<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>尽管缺省方法现在已经是Java平台的组成部分，但谨慎设计接口仍然是至关重要的。</p>
+</div>
+<div class="section" id="id8">
+<h2>22、接口只用于定义类型<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>当类实现接口时，接口就充当可以引用这个类的实例的类型。</p>
+<p>有一种接口被称为**常量接口**。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>常量接口模式是对接口的不良使用。（不值得效仿）</p>
+</div>
+<p>使用不可实例化的工具类来导出常量</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PhysicalConstants</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="nf">PhysicalConstants</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">AVOGADROS_NUMBER</span> <span class="o">=</span> <span class="mf">6.022_140_857e23</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">BOLTZMANN_CONST</span> <span class="o">=</span> <span class="mf">1.380_648_52e-23</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">ELECTRON_MASS</span> <span class="o">=</span> <span class="mf">9.109_383_56e-31</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>23、类层次优于标签类<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<p>标签类示例：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Class</span> <span class="n">Figure</span> <span class="p">{</span>
+    <span class="kd">enum</span> <span class="n">Shape</span> <span class="p">{</span> <span class="n">RECTANGLE</span><span class="p">,</span> <span class="n">CIRCLE</span> <span class="p">};</span>
+
+    <span class="c1">// Tag field - shape of this figure</span>
+    <span class="kd">final</span> <span class="n">Shape</span> <span class="n">shape</span><span class="p">;</span>
+
+    <span class="c1">// fields are used only if shape is RECTANGLE</span>
+    <span class="kt">double</span> <span class="n">length</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">width</span><span class="p">;</span>
+
+    <span class="c1">// This field is used only if shape is CIRCLE</span>
+    <span class="kt">double</span> <span class="n">radius</span><span class="p">;</span>
+
+    <span class="n">Figure</span><span class="p">(</span><span class="kt">double</span> <span class="n">radius</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">Shape</span><span class="p">.</span><span class="na">CIRCLE</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">radius</span> <span class="o">=</span> <span class="n">radius</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">Figure</span><span class="p">(</span><span class="kt">double</span> <span class="n">length</span><span class="p">;</span> <span class="kt">double</span> <span class="n">width</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">Shape</span><span class="p">.</span><span class="na">RECTANGLE</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">length</span> <span class="o">=</span> <span class="n">length</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">double</span> <span class="nf">area</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">switch</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">RECTANGLE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">length</span> <span class="o">*</span> <span class="n">width</span><span class="p">;</span>
+            <span class="k">case</span> <span class="n">CIRCLE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">Math</span><span class="p">.</span><span class="na">PI</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span><span class="p">);</span>
+            <span class="k">default</span><span class="p">:</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">AssertionError</span><span class="p">(</span><span class="n">shape</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这种标签类充斥着样板代码，包括枚举声明、标签域以及条件语句。由于多个实现乱七八糟地挤在单个类中，破坏了可读性。</p>
+<p>将标签类转变成类层次。</p>
+<p>Figure类相对应的类层次</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Figure</span> <span class="p">{</span>
+    <span class="kd">abstract</span> <span class="kt">double</span> <span class="nf">area</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">Circle</span> <span class="kd">extends</span> <span class="n">Figure</span> <span class="p">{</span>
+    <span class="kd">final</span> <span class="kt">double</span> <span class="n">radius</span><span class="p">;</span>
+
+    <span class="n">Circle</span><span class="p">(</span><span class="kt">double</span> <span class="n">radius</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">radius</span> <span class="o">=</span> <span class="n">radius</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="nd">@Override</span> <span class="kt">double</span> <span class="nf">area</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">Math</span><span class="p">.</span><span class="na">PI</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">Rectangle</span> <span class="kd">extends</span> <span class="n">Figure</span> <span class="p">{</span>
+    <span class="kd">final</span> <span class="kt">double</span> <span class="n">length</span><span class="p">;</span>
+    <span class="kd">final</span> <span class="kt">double</span> <span class="n">width</span><span class="p">;</span>
+
+    <span class="n">Rectangle</span><span class="p">(</span><span class="kt">double</span> <span class="n">length</span><span class="p">;</span> <span class="kt">double</span> <span class="n">width</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">length</span> <span class="o">=</span> <span class="n">length</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span> <span class="kt">double</span> <span class="nf">area</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span> <span class="o">*</span> <span class="n">width</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id10">
+<h2>24、静态成员类优于非静态成员类<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p>嵌套类是指定义在另一个类的内部的类。嵌套类存在的目的应该只是为它的外围类提供服务。</p>
+<p>嵌套类：</p>
+<ul class="simple">
+<li><p>静态成员类</p></li>
+<li><p>非静态成员类</p></li>
+<li><p>匿名类</p></li>
+<li><p>局部类</p></li>
+</ul>
+<p>非静态成员类的每个实例都隐含地与外围类的一个外围实例相关联。在非静态成员类的实例方法内部，可以调用外围实例上的方法，或者利用修饰过的``this``
+构造获得外围实例的引用。</p>
+<p><strong>如果声明成员类不要求访问外围实例，就要始终把修饰符static放在它的声明中</strong>。如果省略了static修饰符，则每个实例都将包含一个额外的指向
+外围对象的引用，会消耗空间，增加时间开销，并且会导致外围实例在符合垃圾回收时却仍然得意保留。</p>
+</div>
+<div class="section" id="id11">
+<h2>25、限制源文件为单个顶级类<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+  <div class="section">
+  
+    
+
+
+<div class="section">
+  <span style="float: left;">
+  
+  Previous: 
+  <a href="../objects/">
+    
+    Effective Java 对于所有对象都通用的方法
+  </a>
+  
+  </span>
+  <span>&nbsp;</span>
+  <span style="float: right;">
+  
+  Next: 
+  <a href="../generic/">
+    Effective Java 泛型
+    
+  </a>
+  
+  </span>
+</div>
+
+  
+  
+  </div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">胖虎的技术栈</a></h1>
+
+
+
+
+
+
+
+
+
+  
+  
+  <h2>
+  
+  
+    06 三月 2021
+  
+  </h2>
+
+  <ul>
+    
+
+  
+  <li id="author"><span>Author:</span>
+    
+      
+      <a href="../../blog/author/胖虎/">胖虎</a>
+      
+    </li>
+  
+
+  
+
+  
+
+  
+  <li id="category"><span>Category:</span>
+    
+      
+      <a href="../../blog/category/java/">Java</a>,
+      
+    
+      
+      <a href="../../blog/category/java基础/">Java基础</a>,
+      
+    
+      
+      <a href="../../blog/category/effective-java/">Effective-java</a>
+      
+    </li>
+  
+
+  
+  <li id="tags"><span>Tags:
+      </span>
+    
+      
+      <a href="../../blog/tag/java/">Java</a>
+      
+    
+      
+      <a href="../../blog/tag/effective-java/">Effective-java</a>
+      
+    
+      
+      <a href="../../blog/tag/class/">class</a>
+      
+    
+      
+      <a href="../../blog/tag/interface/">interface</a>
+      
+    </li>
+  
+  
+  </ul>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">胖虎</a></li>
+</ul>
+
+
+  <h3><a href="../../blog/">Recent Posts</a></h3>
+  <ul>
+    
+    
+      <li><a href="../generic/">08 三月 - Effective Java 泛型</a></li>
+    
+      <li><a href="../objects/">05 三月 - Effective Java 对于所有对象都通用的方法</a></li>
+    
+      <li><a href="../createDestory/">21 二月 - Effective Java 创建和销毁对象</a></li>
+    
+      <li><a href="../../base/generic/">26 九月 - 泛型设计</a></li>
+    
+      <li><a href="../../language/javaScriptGoodParts/">18 九月 - javaScript 精辟</a></li>
+    
+  </ul>
+
+  <h3><a href="../../blog/tag/">Tags</a></h3>
+  <style type="text/css">
+    ul.ablog-cloud {list-style: none; overflow: auto;}
+    ul.ablog-cloud li {float: left; height: 20pt; line-height: 18pt; margin-right: 5px;}
+    ul.ablog-cloud a {text-decoration: none; vertical-align: middle;}
+    li.ablog-cloud-1{font-size: 80%;}
+    li.ablog-cloud-2{font-size: 95%;}
+    li.ablog-cloud-3{font-size: 110%;}
+    li.ablog-cloud-4{font-size: 125%;}
+    li.ablog-cloud-5{font-size: 140%;}
+  </style>
+  <ul class="ablog-cloud">
+    
+      
+      <li class="ablog-cloud ablog-cloud-2">
+        <a href="../../blog/tag/effective-java/">Effective-java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/exception/">Exception</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-2">
+        <a href="../../blog/tag/java/">Java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/base/">base</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/class/">class</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design/">design</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design-patterns/">design patterns</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/generic/">generic</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/interface/">interface</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-5">
+        <a href="../../blog/tag/java/">java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/javascript/">javaScript</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/oop/">oop</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/基础/">基础</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/泛型/">泛型</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/流程控制位运算/">流程控制，位运算</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/算法/">算法</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/类/">类</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计/">设计</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计模式/">设计模式</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/面向对象/">面向对象</a></li>
+      
+    
+  </ul>
+
+  <h3><a href="../../blog/category/">Categories</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/category/effective-java/">Effective-java (4)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">Java (4)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java基础/">Java基础 (4)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/base/">base (3)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/design/">design (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">java (7)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/javascript/">javaScript (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/oop/">oop (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/基础/">基础 (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/异常/">异常 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/泛型/">泛型 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/算法/">算法 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/类/">类 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/设计模式/">设计模式 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/面向对象/">面向对象 (2)</a></li>
+    
+  
+  </ul>
+
+  <h3><a href="../../blog/archive/">Archives</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/2021/">2021 (4)</a></li>
+    
+  
+    
+    <li><a href="../../blog/2020/">2020 (10)</a></li>
+    
+  
+  </ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, 胖虎.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/effective-java/classinterface.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

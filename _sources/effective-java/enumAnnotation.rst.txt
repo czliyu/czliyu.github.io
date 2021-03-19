@@ -1,0 +1,303 @@
+Effective Java 枚举和注释
+================================
+
+.. post:: 11 Mar 2021
+   :category: Java, Java基础, Effective-java
+   :tags: Java, Effective-java, enum, annotation 
+   :author: me
+
+34、用枚举代替int常量
+--------------------------
+
+枚举类型是指由一组固定的常量组成合法值的类型。
+
+Java枚举类型的基本想法非常简单：这些类通过公有的静态final域为这个枚举常量导出一个实例。枚举类型没有可访问的构造器，
+所有它是真正的final类，客户端不能创建枚举类型的实例，也不能对它进行扩展，因此不存在实例，而只存在声明过的枚举常量。
+枚举类型是实例受控的。它们是单例（Singleton）的泛型化，本质上是单元素的枚举。
+
+
+.. code-block:: java
+
+    public static final int APPLE_FUJI = 0;
+    public static final int APPLE_PIPPIN = 1;
+    public static final int APPLE_GRANNY_SMITH = 2;
+
+    public static final int ORANGE_NAVEL = 0;
+    public static final int ORANGE_TEMPLE = 1;
+    public static final int ORANGE_BLOOD = 2; 
+
+这种方法称作int枚举模式，int枚举模式不具有类型安全性，也几乎没有描述性可言。
+
+采用int枚举模式的程序是十分脆弱的。因为int枚举是编译时常量，它们的int值会被编译到使用它们的客户端。
+如果与int枚举常量关联的值发生改变，客户端必须重新编译。如果没有重新编译，客户端程序还是可以运行，不过其行为
+已经不再准确。
+
+枚举类型：
+
+.. code-block:: java
+
+    public enum Apple { FUJI, PIPPIN, GRANNY_SMITH }
+    public enum Orange { NAVEL, TEMPLE, BLOOD }
+
+向枚举类型中添加方法或域？
+
+.. code-block:: java
+
+    public enum Planet {
+        MERCURY(3.302e+23, 2.439e6);
+        VENUS(4.869e+24, 6.052e6);
+        EARTH(5.975e+24, 6.378e6);
+
+        private final double mass; // 质量
+        private final double radius; // 半径
+        private final double surfaceGravity; // 表面重力
+
+        private static final double G = 6.67300E-11;
+
+        // Constructor
+        Planet(double mass, double radius) {
+            this.mass = mass;
+            this.radius = radius;
+            surfaceGravity = G * mass / (radius * radius);
+        }
+
+        public double mass() { return this; }
+        public double radius() { return radius; }
+        public double surfaceGravity() { return surfaceGravity; }
+
+        public double surfaceWeight(double mass) {
+            return mass * surfaceGravity; // F = ma;
+        }
+    }
+
+**为了将数据与枚举常量关联起来，得声明实例域，并编写一个带有数据并将数据保存在域中的构造器**。枚举天生就是不可变的，因此
+所有的域都应该为``final``的。最好是将它们做成私有的。
+
+假设编写一个枚举类型，来表示计算器的四大基本操作（加减乘除），想要提供一个方法来执行每个常量所表示的算术运算。
+用一种方法通过启用枚举的值来实现：
+
+.. code-block:: java
+
+    public enum Operation {
+        PLUS, MINUS, TIMES, DIVIDE;
+
+        public double apply(double x, double y) {
+            switch(this) {
+                case PLUS: return x + y;
+                case MINUS: return x - y;
+                case TIMES: return x * y;
+                case DIVIDE: return x / y;
+            }
+            throw new AssertionError("Unknown op: " + this);
+        }
+    }
+
+有一种更好的方法可以将不同的行为与每个枚举常量关联起来：在枚举类型中声明一个抽象的apply方法，并在特定于常量的类主体中，
+用具体的方法覆盖每个常量的抽象apply方法。这种方法称作特定于常量的方法实现。
+
+.. code-block:: java
+
+    public enum Operation {
+        PLUS {public double apply(double x, double y) { return x + y; }},
+        MINUS {public double apply(double x, double y) { return x - y; }},
+        TIMES {public double apply(double x, double y) { return x * y; }},
+        DIVIDE {public double apply(double x, double y) { return x / y; }};
+    }
+
+    public abstract double apply(double x, double y);
+
+Operation覆盖了toString方法以返回通常与该操作关联的符号：
+
+.. code-block:: java
+
+    public enum Operation {
+        PLUS("+") {
+            public double apply(double x, double y) { return x + y; }
+        },
+        MINUS("-") {
+            public double apply(double x, double y) { return x - y; } 
+        },
+        TIMES("*") {
+            public double apply(double x, double y) { return x * y; }
+        },
+        DIVIDE("/") {
+            public double apply(double x, double y) { return x / y; }
+        };
+
+        private final String symbol;
+
+        Operation(String symbol) { this.symbol = symbol; }
+        @Override
+        public String toString() {
+            return symbol;
+        }
+
+        public abstract double apply(double x, double y);
+
+        public static void main(String[] args) {
+            double x = Double.parseDouble(args[0]);
+            double y = Double.parseDouble(args[1]);
+
+            for (Operation op : Operation.values())
+                System.out.printf("%f %s %f = %f%n", x, op, y, op.apply(x, y));
+        }
+    }
+
+什么时候考虑使用枚举？每当需要一组固定常量，并且在编译时就知道其成员的时候，就应该使用枚举。
+
+35、用实例域代替序数
+-----------------------
+
+许多枚举与一个单独的int值相关联。所有的枚举都有一个``ordinal``方法，它返回每个枚举常量在类型中的数字位置。
+
+Enum规范中谈及``ordinal``方法时写道： “大多数程序员都不需要这个方法。它是设计用于想EnumSet和EnumMap这种基于枚举的通用数据结构的。”
+
+36、用EnumSet代替位域
+-----------------------------
+
+.. code-block:: java
+
+    public class Text {
+        public static final int STYLE_BOLD = 1 << 0; // 1
+        public static final int STYLE_ITALIC = 1 << 1; // 2
+        public static final int STYLE_UNDERLINE = 1 << 2; // 4
+        public static final int STYLE_STRIKETHROUGH = 1 << 3; // 8
+
+        public void applyStyles(int styles) {}
+    }
+
+这种表示法让你用OR位运算将几个常量合并到一个集合中，被称为位域（bit field）。
+
+java.util包中提供了EnumSet类来有效地表示从单个枚举类中提取了多个值的多个集合。
+
+.. code-block:: java
+
+    public class Text {
+        public enum Style { BOLD, ITALIC, UNDERLINE, STRIKETHROUGH }
+
+        // 使用Set<Style>而非EnumSet<Style>。虽然看起来好像所有客户端都可以将EnumSet传到这个方法
+        // 但是最好还是接受接口类型而非实现类型
+        public void applyStyles(Set<Style> styles) { ... }
+    }
+
+    text.applyStyles(EnumSet.of(Style.BOLD, Style.ITALIC));
+
+总而言之，**正是因为枚举类型要用在集合中，所以没有理由用位域来表示它** 
+
+37、用EnumMap代替序数索引
+-----------------------------
+
+利用``ordinal``方法来索引数组或列表。
+
+用来表示烹饪用的香菜
+
+.. code-block:: java
+
+    class Plant {
+        enum LifeCycle { ANNUAL, PERENNIAL, BIENNIAL }
+
+        final String name;
+        final LifeCycle lifeCycle;
+
+        Plant(String name, LifeCycle lifeCycle) {
+            this.name = name;
+            this.lifeCycle = lifeCycle;
+        }
+
+        @Override public String toString() {
+            return name;
+        }
+    }
+
+用一个香草数组，表示一座花园中的植物，按照类型（一年生、多年生或者两年生植物）进行组织之后将这些植物列出来。
+
+.. code-block:: java
+
+    Set<Plant>[] plantByLifeCycle = (Set<Plant>[]) new Set[Plant.LifeCycle.values().length];
+    for (int i = 0; i < plantByLifeCycle.length; i++)
+        plantByLifeCycle[i] = new HashSet<>();
+
+    for (Plant p : garden)
+        plantByLifeCycle[p.lifeCycle.ordinal()].add(p);
+    
+    for (int i; i < plantByLifeCycle.length; i++) {
+        System.out.printf("%s: %s%n", Plant.LifeCycle.values()[i], plantByLifeCycle[i]);
+    }
+
+.. note::
+
+    这种方法可行，但是隐藏许多问题，因为数组不能与泛型兼容。程序需要未受检的转换。
+
+数组实际上充当着从枚举的值的映射，因此可能还要用到map。更具体地说，EnumMap专门用于枚举类。
+
+.. code-block:: java
+
+    // using an EnumMap to associate data with an enum
+    Map<Plant.LifeCycle, Set<Plant>> plantsByLifeCycle = new EnumMap<>(Plant.LifeCycle.class);
+
+    for (Plant.LifeCycle lc : Plant.LifeCycle.values()) {
+        plantsByLifeCycle.put(lc, new HashSet<>());
+    }
+
+    for (Plant p : garden)
+        plantsByLifeCycle.get(p.lifeCycle).add(p);
+    System.out.println(plantsByLifeCycle);
+
+示例： 使用一个数组将两个阶段映射到一个阶段的过渡中（从液体到固体称作凝固，从液体到气体称作沸腾）：
+
+.. code-block:: java
+
+    public enum Phase {
+        SOLID, LIQUID, GAS;
+
+        public enum Transition {
+            MELT, FREEZE, BOIL, CONDENSE, SUBLIME, DEPOSIT;
+
+            private static final Transition[][] TRANSITION = {
+                { null, MELT, SUBLIME },
+                { FREEZE, null, BOIL },
+                { DEPOSIT, CONDENSE, null }
+            };
+
+            public static Transition from(Phase from, Phase to) {
+                return TRANSITION[from.ordinal()][to.ordinal()];
+            }
+        }
+    }
+
+编译器无法知道序数和数组索引之间的关系。
+
+利用EnumMap可以做的更好，因为每个阶段过渡都是通过一对阶段枚举进行索引的，最好将这种关系表示为一个映射，这个映射
+的键是一个枚举，值为另一个映射，第二个映射的键为第二个枚举，
+
+.. code-block:: java
+
+    public enum Phase {
+        SOLID, LIQUID, GAS;
+
+        public enum Transition {
+            MELT(SOLID, LIQUID),
+            FREEZE(LIQUID, SOLID),
+            BOIL(LIQUID, GAS),
+            CONDENSE(GAS, LIQUID),
+            SUBLIME(SOLID, GAS),
+            DEPOSIT(GAS, SOLID);
+
+            private final Phase from;
+            private final Phase to;
+
+            Transition(Phase from, Phase to) {
+                this.from = from;
+                this.to = to;
+            }
+
+            private static final Map<Phase, Map<Phase, Transition>> m = Stream.of(values()
+                .collect(groupingBy(t -> t.from, () -> new EnumMap<>(Phase.class), toMap(t -> t.to, t -> t, (x, y) -> y, () -> new EnumMap<>(Phase.class))));
+
+            public static Transition from(Phase from, Phase to) {
+                return m.get(from).get(to);
+            }
+        }
+
+
+    }

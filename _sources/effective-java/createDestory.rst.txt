@@ -1,0 +1,246 @@
+Effective Java 创建和销毁对象
+==============================
+
+.. post:: 21 Feb 2021
+   :category: Java, Java基础, Effective-java
+   :tags: Java, Effective-java
+   :author: me
+
+第1条： 用静态工厂方法替代构造器
+--------------------------------
+
+.. code-block:: java
+ 
+   public static Boolean valueOf(Boolean b) {
+       return b ? Boolean.TRUE : Boolean.FALSE;
+   }
+
+静态工厂方法与构造器不同的优势在于：
+
+1、它们有名称
+2、不必每次调用它们的时候都创建一个新对象。 --- 如果程序经常请求创建相同的对象，并且创建对象的代价很高，可以极大地提升性能。
+3、它们可以返回原返回类型的任何子类型的对象
+4、所返回的对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值
+5、方法返回的对象所属的类，在编写包含该静态工厂方法的类时可以不存在
+
+缺点：
+1、类如果不含公有的或者受保护的构造器，就不能被子类化
+2、程序员很难发现他们
+
+第2条： 遇到多个构造器参数时要考虑使用构造器
+---------------------------------------------------
+
+当初始化对象，拥有多个参数时：
+
+第一种方式：重叠构造器模式:
+
+.. code-block:: java
+
+   public class NutritionFacts {
+      private final int servingSize;
+      private final int servings;
+      private final int calorizes;
+      private final int fat;
+      private final int sodium;
+      private final int carbohydrate;
+
+
+      public NutritionFacts(int servingSize, int servings) {
+         this(servingSize, servings, 0);
+      } 
+
+      public NutritionFacts(int servingSize, int servings, int calorizes) {
+         this(servingSize, servings, calorizes, 0);
+      }
+
+      public NutritionFacts(int servingSize, int servings, int calorizes, int fat) {
+         this(servingSize, servings, calorizes, fat, 0);
+      }
+
+      public NutritionFacts(int servingSize, int servings, int calorizes, int fat, int sodium) {
+         this(servingSize, servings, calorizes, fat, sodium, 0);
+      }
+
+      public NutritionFacts(int servingSize, int servings, int calorizes, int fat, int sodium, int carbohydrate) {
+         this.servingSize = servingSize;
+         this.servings = servings;
+         this.calorizes = calorizes;
+         this.fat = fat;
+         this.sodium = sodium;
+         this.carbohydrate = carbohydrate;
+      }
+   }
+   
+   NutritionFacts cocaCola = new NutritionFacts(240, 0, 100, 0, 35, 27); 
+
+重叠构造器模式可行，但是当有许多参数的时候，客户端代码会很难编写，并且仍然较难以阅读。
+
+第二种方式： JavaBeans模式:
+
+.. code-block:: java
+
+   public class NutritionFacts {
+      private final int servingSize;
+      private final int servings;
+      private final int calorizes;
+      private final int fat;
+      private final int sodium;
+      private final int carbohydrate;
+
+      public NutritionFacts(){ }
+
+      // Setter
+      public void setServingSize(int servingSize) { this.servingSize = servingSize; }
+      public void setServings(int servings) { this.servings = servings; }
+      public void setCalories(int calorizes) { this.calorizes = calorizes; }
+      public void setFat(int fat) { this.fat = fat; }
+      public void setSodium(int sodium) { this.sodium = sodium; }
+      public void setCarbohydrate(int carbohydrate) { this.carbohydrate = carbohydrate; }
+   }
+
+   NutritionFacts cocaCola = new NutritionFacts();
+   cocaCola.setServings(240);
+   cocaCola.setServings(8);
+   cocaCola.setCalories(100);
+   cocaCola.setSodium(35);
+   cocaCola.setCarbohydrate(27);
+
+JavaBeans模式自身有很严重的缺点。因为构造过程被分到了几个调用中，在构造过程中JavaBeans可能处于不一致的状态。
+JavaBeans模式使得把类做成不可变的可能性不复存在，需要程序员付出额外的努力来确保它的线程安全。
+
+第三种：建造者(Builder)模式:
+
+.. code-block:: java
+
+   public class NutritionFacts {
+      private final int servingSize;
+      private final int servings;
+      private final int calorizes;
+      private final int fat;
+      private final int sodium;
+      private final int carbohydrate;
+
+      public static class Builder {
+         private final int servingSize;  
+         private final int servings;
+
+         private int calorizes = 0;
+         private int fat = 0;
+         private int sodium = 0;
+         private int carbohydrate = 0; 
+
+         public Builder(int servingSize, servings) {
+            this.servingSize = servings;
+            this.servings = servings;
+         }
+
+         public Builder calorizes(int val) { calorizes = val; return this; }
+         public Builder fat(int val) { fat = val; return this; }
+         public Builder sodium(int val) { sodium = val; return this; }
+         public Builder carbohydrate(int val) { carbohydrate = val; return this; }
+
+         public NutritionFacts build() {
+            return new NutritionFacts(this);
+         }
+      }
+
+      private NutritionFacts(Builder builder) {
+         servingSize = builder.servingSize;
+         servings = builder.servings;
+         calorizes = builder.calorizes;
+         fat = builder.fat;
+         sodium = builder.sodium;
+         carbohydrate = builder.carbohydrate;
+      }
+   }
+
+   NutritionFacts cocaCola = new NutritionFacts.Builder(240,0)
+         .calorizes(100).sodium(35).carbohydrate(27).build();
+
+Builder模式也适用于类层次结构：
+
+用类层次根部的一个抽象类表示各式各样的比萨：
+
+.. code-block:: java
+
+   public abstract class Pizza {
+      public enum Topping { HAM, MUSHROOM, ONION, PEPPER, SAUSAGE }
+      final Set<Topping> toppings;
+
+      abstract static class Builder<T extends Builder<T>> {
+         EnumSet<Topping> toppings = EnumSet.noneOf(Topping.class);
+         public T addTopping(Topping topping) {
+            toppings.add(Objects.requireNonNull(topping));
+            return self();
+         }
+
+         abstract Pizza build();
+
+         protected abstract T self();
+      }
+
+      Pizza(Builder<?> builder) {
+         toppings = builder.toppings.clone();
+      }
+   }
+
+实现具体两个Pizza子类
+
+.. code-block:: java
+
+   public class MyPizza extends Pizza {
+      public enum Size { SMALL, MEDIUM, LARGE }
+      private final Size size;
+
+      public static class Builder extends Pizza.Builder<Builder> {
+         private final Size size;
+
+         public Builder(Szie size) {
+            this.size = Objects.requireNonNull(size);
+         }
+
+         @Override
+         public MyPizza build() {
+            return new MyPizza(this);
+         }
+
+         @Override
+         protected Builder self() {
+            return this;
+         }
+      }
+
+      private MyPizza(Builder builder) {
+         super(builder);
+         size = builder.size;
+      }
+   }
+
+   public class Calzone extends Pizza {
+      private final boolean sauceInside;
+
+      public static class Builder extends Pizza.Builder<Builder> {
+         private boolean sauceInside = false;
+
+         public Builder sauceInside() {
+            sauceInside = true;
+            return this;
+         }
+
+         @Override
+         public Calzone build() {
+            return new Calzone(this);
+         }
+
+         @Override
+         protected Builder self() { return this; }
+
+      }
+
+      private Calzone(Builder builder) {
+         super(builder);
+         sauceInside = builder.sauceInside;
+      }
+   }
+
+简而言之，如果类的构造器或者静态工厂中具有多个参数，设计这种类时，Builder模式就是不错的选择。

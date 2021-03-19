@@ -1,0 +1,322 @@
+Effective Java 类和接口
+============================
+
+.. post:: 6 Mar 2021
+   :category: Java, Java基础, Effective-java
+   :tags: Java, Effective-java, class, interface
+   :author: me
+
+15、使类和成员的可访问性最小化
+------------------------------
+
+设计良好的组件会隐藏所有的实现细节，把API与实现清晰地隔离开来。（封装）
+
+**公有类的实例域(field)不能是公有的**，将final域变成公有的，就等于放弃了对存储在这个域中的值
+进行限制的能力。这意味着，放弃了强制这个域不可变的能力。因此，包含公有可变域的类通常并不是
+线程安全的。
+
+也适用于静态域，只有一种情况例外。常量构成了类提供的整个抽象的一部分，可以通过公有的静态``final``域来暴露这些常量``public static final int CONST = 100``
+
+如果final域包含可变对象的引用，它便具有非final域的所有缺点。
+
+.. code-block:: java
+
+    public static final Ting[] VALUES = {};
+
+长度非零的数组总是可变的，所以让类具有公有的静态final数组域或者返回这个域的访问方法，是错误的。
+
+修正上面问题的方法：
+
+.. code-block:: java
+
+    private static final Thing[] PRIVATE_VALUES = {...};
+
+    // 添加一个公有的不可变列表。
+    public static final List<Thing> VALUES = Collections.unmodifiableList(Arrays.asList(PRIVATE_VALUES));
+    // 或者
+    public static final Thing[] values() {
+        return PRIVATE_VALUES.clone();
+    }
+
+16、要在公有类而非公有域中使用访问方法
+----------------------------------------
+
+如果类是包级私有的，或者是私有的嵌套类，直接暴露它的数据域并没有本质的错误。
+
+简而言之，公有类永远都不应该暴露可变的域。
+
+17、使可变性最小化
+------------------------
+
+**不可变类** 是指其实例不能被修改的类。每个实例中包含的所有信息都必须在创建该实例的时候就提供，并在对象的整个生命周期内固定不变。
+
+为了使类成为不可变，遵循下面规则：
+
+* 不要提供任何会修改对象状态的方法（setter方法）。
+* 保证类不会被扩展（可以防止粗心或者恶意子类假装对象的状态已经改变，从而破坏该类的不可变行为。为了防止被子类化，一般声明这个类成为final）。
+* 声明所有域都是final。
+* 声明所有的域都是私有的。
+* 确保对于任何可变组件的互斥访问。如果类具有指向可变对象的域，则必须确保该类的客户端无法获得指向这些对象的引用。并且，永远不要用客户端提供的对象引用来初始化这样的域，也不要从任何访问方法中返回该对象引用。在构造器、访问方法和readObject方法中使用保护性拷贝技术。
+
+不可变对象示例：
+
+.. code-block:: java
+
+    public final class Complex {
+        private final double re;
+        private final double im;
+
+        public Complex(double re, double im) {
+            this.re = re;
+            this.im = im;
+        }
+
+        public double realPart() { return re; }
+        public double imaginaryPart() { return im; }
+
+        public Complex plus(Complex c) {
+            return new Complex(re + c.re, im + c.im);
+        }
+
+        public Complex minus(Complex c) {
+            return new Complex(re - c.re, im - c.im);
+        }
+
+        public Complex times(Complex c) {
+            return new Complex(re * c.re - im * c.im, re * c.im + im.c.re);
+        }
+
+        public Complex dividedBy(Complex c) {
+            double tmp = c.re * c.re + c.im * c.im;
+
+            return new Complex((re * c.re + im * c.im) / tmp, (im * c.re - re * c.im) / tmp);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == this)
+                return true;
+            if (!(o instanceof Complex))
+                return false;
+            Complex c = (Complex) o;
+
+            return Double.compare(c.re, re) == 0 && Double.compare(c.im, im) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 * Double.hashCode(re) + Double.hashCode(im);
+        }
+
+        @Override
+        public String toString() {
+            return "(" + re + " + " + im + "i)";
+        }
+    }
+
+这些算术运算如何创建并返回新的Complex实例，而不是修改这个实例。大多数重要的不可变类都使用了这种模式，被称为函数的方法。
+
+**不可变对象本质上是线程安全的，它们不要求同步。**，没有任何线程会注意到其他线程对于不可变对象的影响。所以，**不可变对象可以被自由地共享。**
+
+对于频繁用到的值，为它们提供公有的静态final常量。
+
+.. code-block:: java
+
+    public static final Complex ZERO = new Complex(0, 0);
+    public static final Complex ONE = new Complex(1, 0);
+    public static fianl Complex I = new Complex(0, 1);
+
+不可变的类可以提供一个静态工厂，使用这样的静态工厂也使得客户端之间可以共享现有的实例，二不用创建新的实例， 从而降低内存占用和垃圾回收成本。
+
+**不可变变量的唯一缺点就是对于每个不同的值都需要一个单独的对象。**
+
+另一种做到不可变类的方法，让类的所有构造器都变成私有的或者包级私有的，并添加公有静态工厂来替代公有构造器。
+
+.. code-block:: java
+
+    public class Complex {
+        private final double re;
+        private final double im;
+
+        private Complex(double re, double im) {
+            this.re = re;
+            this.im = im;
+        } 
+
+        private static Complex valueOf(double re, double im) {
+            return new Complex(re, im);
+        }
+    }
+
+这种方法虽然不常用，但它通常是最好的替代方法。它最灵活，因为它允许实现多个包级私有实现类。
+
+18、复合（组合）优于继承
+-------------------------
+
+**与方法调用不同的是，继承打破了封装性。**
+
+在新的类中添加一个私有域，它引用现有类的一个实例，这种设计被称为“**复合（组合）**”。
+
+19、要么设计继承并提供文档说明，要么禁止继承
+----------------------------------------------------
+
+对于专门为了继承而设计并且具有良好的文档说明的类而言，这意味着？
+
+该类必须有文档说明它可覆盖的方法的自用性。即类必须在文档中说明，在哪些情况下它会调用可覆盖的方法。例如，后台的线程或者静态的初始化器可能会调用
+这样的方法。
+
+.. seealso::
+
+    程序文档有句格言：好的API文档应该描述一个给定的方法做了是什么工作，而不是描述它是如何做到的。
+
+为了继承而进行的设计不仅仅涉及自用模式的文档设计。为了使程序员能够编写出更加有效的子类，而无须承受不必要的痛苦,**类必须以精心挑选的受保护的方法的形式
+，提供适当的钩子（hook）,以便进入其内部工作中。**
+
+为了允许继承，类还必须遵守其他一下约束。**构造器决不能调用可被覆盖的方法** 无论是直接调用还是接间调用。
+
+.. note::
+    通过构造器调用私有的方法、final方法或静态方法是安全的，这些都不是可以被覆盖的方法。
+    如果为了继承而设计的类中实现了Cloneable或者Serializable接口，就应该意识到，因为clone和readObject方法在行为上非常类似于构造器。
+    所以类似的限制规则同样适用的。**无论是clone还是readObject，都不可以调用可覆盖的方法，不管是以直接还是接间的方式。**
+
+两种方式禁止子类化
+
+* 类声明为final
+* 所有构造器都变成私有的，或者包级私有的，并增加公有的静态工厂来替代构造器。
+
+20、接口优于继承
+-------------------
+
+Java提供了两种机制，可以用来定义允许许多个实现的类型：**接口和抽象类**
+
+**接口是定义mixin(混合类型)的理想选择**。不严格的讲：类除了实现它的”基本类型“之外，还可以实现这个mixin类型，
+以表明它提供了某些可供选择的行为。例如，``Comparable`` 是一个mixin接口，它允许类表明它的实例可以与其他的可相互比较的对象
+进行排序。这样的接口被称为ximin。
+
+**接口允许构造非层次结构的类型框架。**
+
+21、为后代设计接口
+---------------------
+
+尽管缺省方法现在已经是Java平台的组成部分，但谨慎设计接口仍然是至关重要的。
+
+22、接口只用于定义类型
+------------------------
+
+当类实现接口时，接口就充当可以引用这个类的实例的类型。
+
+有一种接口被称为**常量接口**。
+
+.. note::
+
+    常量接口模式是对接口的不良使用。（不值得效仿）
+
+使用不可实例化的工具类来导出常量
+
+.. code-block:: java
+
+    public class PhysicalConstants {
+        private PhysicalConstants() {}
+
+        public static final double AVOGADROS_NUMBER = 6.022_140_857e23;
+        public static final double BOLTZMANN_CONST = 1.380_648_52e-23;
+        public static final double ELECTRON_MASS = 9.109_383_56e-31;
+    }
+
+23、类层次优于标签类
+-----------------------
+
+标签类示例：
+
+.. code-block:: java
+
+    Class Figure {
+        enum Shape { RECTANGLE, CIRCLE };
+
+        // Tag field - shape of this figure
+        final Shape shape;
+
+        // fields are used only if shape is RECTANGLE
+        double length;
+        double width;
+
+        // This field is used only if shape is CIRCLE
+        double radius;
+
+        Figure(double radius) {
+            shape = Shape.CIRCLE;
+            this.radius = radius;
+        }
+
+        Figure(double length; double width) {
+            shape = Shape.RECTANGLE;
+            this.length = length;
+            this.width = width;
+        }
+
+        double area() {
+            switch(shape) {
+                case RECTANGLE:
+                    return length * width;
+                case CIRCLE:
+                    return Math.PI * (radius * radius);
+                default:
+                    throw new AssertionError(shape);
+            }
+        }
+    }
+
+这种标签类充斥着样板代码，包括枚举声明、标签域以及条件语句。由于多个实现乱七八糟地挤在单个类中，破坏了可读性。
+
+将标签类转变成类层次。
+
+Figure类相对应的类层次
+
+.. code-block:: java
+
+    abstract class Figure {
+        abstract double area();
+    }
+
+    class Circle extends Figure {
+        final double radius;
+
+        Circle(double radius) { this.radius = radius; }
+
+        @Override double area() { return Math.PI * (radius * radius); }
+    }
+
+    class Rectangle extends Figure {
+        final double length;
+        final double width;
+
+        Rectangle(double length; double width) {
+            this.length = length;
+            this.width = width;
+        }
+
+        @Override double area() { return length * width; }
+    }
+
+
+24、静态成员类优于非静态成员类
+--------------------------------
+
+嵌套类是指定义在另一个类的内部的类。嵌套类存在的目的应该只是为它的外围类提供服务。
+
+嵌套类：
+
+* 静态成员类
+* 非静态成员类
+* 匿名类
+* 局部类
+
+非静态成员类的每个实例都隐含地与外围类的一个外围实例相关联。在非静态成员类的实例方法内部，可以调用外围实例上的方法，或者利用修饰过的``this``
+构造获得外围实例的引用。
+
+**如果声明成员类不要求访问外围实例，就要始终把修饰符static放在它的声明中**。如果省略了static修饰符，则每个实例都将包含一个额外的指向
+外围对象的引用，会消耗空间，增加时间开销，并且会导致外围实例在符合垃圾回收时却仍然得意保留。
+
+25、限制源文件为单个顶级类
+----------------------------
+

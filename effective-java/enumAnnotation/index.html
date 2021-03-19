@@ -1,0 +1,673 @@
+
+<!DOCTYPE html>
+
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Effective Java 枚举和注释 &#8212; 胖虎的技术栈  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+  
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="effective-java">
+<h1>Effective Java 枚举和注释<a class="headerlink" href="#effective-java" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="int">
+<h2>34、用枚举代替int常量<a class="headerlink" href="#int" title="Permalink to this headline">¶</a></h2>
+<p>枚举类型是指由一组固定的常量组成合法值的类型。</p>
+<p>Java枚举类型的基本想法非常简单：这些类通过公有的静态final域为这个枚举常量导出一个实例。枚举类型没有可访问的构造器，
+所有它是真正的final类，客户端不能创建枚举类型的实例，也不能对它进行扩展，因此不存在实例，而只存在声明过的枚举常量。
+枚举类型是实例受控的。它们是单例（Singleton）的泛型化，本质上是单元素的枚举。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">APPLE_FUJI</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">APPLE_PIPPIN</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">APPLE_GRANNY_SMITH</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">ORANGE_NAVEL</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">ORANGE_TEMPLE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">ORANGE_BLOOD</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>这种方法称作int枚举模式，int枚举模式不具有类型安全性，也几乎没有描述性可言。</p>
+<p>采用int枚举模式的程序是十分脆弱的。因为int枚举是编译时常量，它们的int值会被编译到使用它们的客户端。
+如果与int枚举常量关联的值发生改变，客户端必须重新编译。如果没有重新编译，客户端程序还是可以运行，不过其行为
+已经不再准确。</p>
+<p>枚举类型：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">enum</span> <span class="n">Apple</span> <span class="p">{</span> <span class="n">FUJI</span><span class="p">,</span> <span class="n">PIPPIN</span><span class="p">,</span> <span class="n">GRANNY_SMITH</span> <span class="p">}</span>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="n">Orange</span> <span class="p">{</span> <span class="n">NAVEL</span><span class="p">,</span> <span class="n">TEMPLE</span><span class="p">,</span> <span class="n">BLOOD</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>向枚举类型中添加方法或域？</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">enum</span> <span class="n">Planet</span> <span class="p">{</span>
+    <span class="n">MERCURY</span><span class="p">(</span><span class="mf">3.302e+23</span><span class="p">,</span> <span class="mf">2.439e6</span><span class="p">);</span>
+    <span class="n">VENUS</span><span class="p">(</span><span class="mf">4.869e+24</span><span class="p">,</span> <span class="mf">6.052e6</span><span class="p">);</span>
+    <span class="n">EARTH</span><span class="p">(</span><span class="mf">5.975e+24</span><span class="p">,</span> <span class="mf">6.378e6</span><span class="p">);</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">mass</span><span class="p">;</span> <span class="c1">// 质量</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">radius</span><span class="p">;</span> <span class="c1">// 半径</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">surfaceGravity</span><span class="p">;</span> <span class="c1">// 表面重力</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">G</span> <span class="o">=</span> <span class="mf">6.67300E-11</span><span class="p">;</span>
+
+    <span class="c1">// Constructor</span>
+    <span class="n">Planet</span><span class="p">(</span><span class="kt">double</span> <span class="n">mass</span><span class="p">,</span> <span class="kt">double</span> <span class="n">radius</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">mass</span> <span class="o">=</span> <span class="n">mass</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">radius</span> <span class="o">=</span> <span class="n">radius</span><span class="p">;</span>
+        <span class="n">surfaceGravity</span> <span class="o">=</span> <span class="n">G</span> <span class="o">*</span> <span class="n">mass</span> <span class="o">/</span> <span class="p">(</span><span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">mass</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">radius</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">radius</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">surfaceGravity</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">surfaceGravity</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">surfaceWeight</span><span class="p">(</span><span class="kt">double</span> <span class="n">mass</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">mass</span> <span class="o">*</span> <span class="n">surfaceGravity</span><span class="p">;</span> <span class="c1">// F = ma;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>为了将数据与枚举常量关联起来，得声明实例域，并编写一个带有数据并将数据保存在域中的构造器</strong>。枚举天生就是不可变的，因此
+所有的域都应该为``final``的。最好是将它们做成私有的。</p>
+<p>假设编写一个枚举类型，来表示计算器的四大基本操作（加减乘除），想要提供一个方法来执行每个常量所表示的算术运算。
+用一种方法通过启用枚举的值来实现：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">enum</span> <span class="n">Operation</span> <span class="p">{</span>
+    <span class="n">PLUS</span><span class="p">,</span> <span class="n">MINUS</span><span class="p">,</span> <span class="n">TIMES</span><span class="p">,</span> <span class="n">DIVIDE</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span><span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">PLUS</span><span class="p">:</span> <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">;</span>
+            <span class="k">case</span> <span class="n">MINUS</span><span class="p">:</span> <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">;</span>
+            <span class="k">case</span> <span class="n">TIMES</span><span class="p">:</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+            <span class="k">case</span> <span class="n">DIVIDE</span><span class="p">:</span> <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">AssertionError</span><span class="p">(</span><span class="s">&quot;Unknown op: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>有一种更好的方法可以将不同的行为与每个枚举常量关联起来：在枚举类型中声明一个抽象的apply方法，并在特定于常量的类主体中，
+用具体的方法覆盖每个常量的抽象apply方法。这种方法称作特定于常量的方法实现。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">enum</span> <span class="n">Operation</span> <span class="p">{</span>
+    <span class="n">PLUS</span> <span class="p">{</span><span class="kd">public</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">;</span> <span class="p">}},</span>
+    <span class="n">MINUS</span> <span class="p">{</span><span class="kd">public</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">;</span> <span class="p">}},</span>
+    <span class="n">TIMES</span> <span class="p">{</span><span class="kd">public</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span> <span class="p">}},</span>
+    <span class="n">DIVIDE</span> <span class="p">{</span><span class="kd">public</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span><span class="p">;</span> <span class="p">}};</span>
+<span class="p">}</span>
+
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Operation覆盖了toString方法以返回通常与该操作关联的符号：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">enum</span> <span class="n">Operation</span> <span class="p">{</span>
+    <span class="n">PLUS</span><span class="p">(</span><span class="s">&quot;+&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="n">MINUS</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="n">TIMES</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="n">DIVIDE</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">symbol</span><span class="p">;</span>
+
+    <span class="n">Operation</span><span class="p">(</span><span class="n">String</span> <span class="n">symbol</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">symbol</span> <span class="o">=</span> <span class="n">symbol</span><span class="p">;</span> <span class="p">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">symbol</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">double</span> <span class="nf">apply</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">double</span> <span class="n">x</span> <span class="o">=</span> <span class="n">Double</span><span class="p">.</span><span class="na">parseDouble</span><span class="p">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">);</span>
+        <span class="kt">double</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Double</span><span class="p">.</span><span class="na">parseDouble</span><span class="p">(</span><span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">);</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">Operation</span> <span class="n">op</span> <span class="p">:</span> <span class="n">Operation</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+            <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">printf</span><span class="p">(</span><span class="s">&quot;%f %s %f = %f%n&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">op</span><span class="p">.</span><span class="na">apply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>什么时候考虑使用枚举？每当需要一组固定常量，并且在编译时就知道其成员的时候，就应该使用枚举。</p>
+</div>
+<div class="section" id="id1">
+<h2>35、用实例域代替序数<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>许多枚举与一个单独的int值相关联。所有的枚举都有一个``ordinal``方法，它返回每个枚举常量在类型中的数字位置。</p>
+<p>Enum规范中谈及``ordinal``方法时写道： “大多数程序员都不需要这个方法。它是设计用于想EnumSet和EnumMap这种基于枚举的通用数据结构的。”</p>
+</div>
+<div class="section" id="enumset">
+<h2>36、用EnumSet代替位域<a class="headerlink" href="#enumset" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Text</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">STYLE_BOLD</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// 1</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">STYLE_ITALIC</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// 2</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">STYLE_UNDERLINE</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">// 4</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">STYLE_STRIKETHROUGH</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">// 8</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">applyStyles</span><span class="p">(</span><span class="kt">int</span> <span class="n">styles</span><span class="p">)</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这种表示法让你用OR位运算将几个常量合并到一个集合中，被称为位域（bit field）。</p>
+<p>java.util包中提供了EnumSet类来有效地表示从单个枚举类中提取了多个值的多个集合。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Text</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Style</span> <span class="p">{</span> <span class="n">BOLD</span><span class="p">,</span> <span class="n">ITALIC</span><span class="p">,</span> <span class="n">UNDERLINE</span><span class="p">,</span> <span class="n">STRIKETHROUGH</span> <span class="p">}</span>
+
+    <span class="c1">// 使用Set&lt;Style&gt;而非EnumSet&lt;Style&gt;。虽然看起来好像所有客户端都可以将EnumSet传到这个方法</span>
+    <span class="c1">// 但是最好还是接受接口类型而非实现类型</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">applyStyles</span><span class="p">(</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Style</span><span class="o">&gt;</span> <span class="n">styles</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">text</span><span class="p">.</span><span class="na">applyStyles</span><span class="p">(</span><span class="n">EnumSet</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">Style</span><span class="p">.</span><span class="na">BOLD</span><span class="p">,</span> <span class="n">Style</span><span class="p">.</span><span class="na">ITALIC</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>总而言之，<strong>正是因为枚举类型要用在集合中，所以没有理由用位域来表示它</strong></p>
+</div>
+<div class="section" id="enummap">
+<h2>37、用EnumMap代替序数索引<a class="headerlink" href="#enummap" title="Permalink to this headline">¶</a></h2>
+<p>利用``ordinal``方法来索引数组或列表。</p>
+<p>用来表示烹饪用的香菜</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Plant</span> <span class="p">{</span>
+    <span class="kd">enum</span> <span class="n">LifeCycle</span> <span class="p">{</span> <span class="n">ANNUAL</span><span class="p">,</span> <span class="n">PERENNIAL</span><span class="p">,</span> <span class="n">BIENNIAL</span> <span class="p">}</span>
+
+    <span class="kd">final</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+    <span class="kd">final</span> <span class="n">LifeCycle</span> <span class="n">lifeCycle</span><span class="p">;</span>
+
+    <span class="n">Plant</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">LifeCycle</span> <span class="n">lifeCycle</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">lifeCycle</span> <span class="o">=</span> <span class="n">lifeCycle</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">name</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>用一个香草数组，表示一座花园中的植物，按照类型（一年生、多年生或者两年生植物）进行组织之后将这些植物列出来。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Plant</span><span class="o">&gt;[]</span> <span class="n">plantByLifeCycle</span> <span class="o">=</span> <span class="p">(</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Plant</span><span class="o">&gt;[]</span><span class="p">)</span> <span class="k">new</span> <span class="n">Set</span><span class="o">[</span><span class="n">Plant</span><span class="p">.</span><span class="na">LifeCycle</span><span class="p">.</span><span class="na">values</span><span class="p">().</span><span class="na">length</span><span class="o">]</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">plantByLifeCycle</span><span class="p">.</span><span class="na">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">plantByLifeCycle</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">Plant</span> <span class="n">p</span> <span class="p">:</span> <span class="n">garden</span><span class="p">)</span>
+    <span class="n">plantByLifeCycle</span><span class="o">[</span><span class="n">p</span><span class="p">.</span><span class="na">lifeCycle</span><span class="p">.</span><span class="na">ordinal</span><span class="p">()</span><span class="o">]</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">plantByLifeCycle</span><span class="p">.</span><span class="na">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">printf</span><span class="p">(</span><span class="s">&quot;%s: %s%n&quot;</span><span class="p">,</span> <span class="n">Plant</span><span class="p">.</span><span class="na">LifeCycle</span><span class="p">.</span><span class="na">values</span><span class="p">()</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span> <span class="n">plantByLifeCycle</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>这种方法可行，但是隐藏许多问题，因为数组不能与泛型兼容。程序需要未受检的转换。</p>
+</div>
+<p>数组实际上充当着从枚举的值的映射，因此可能还要用到map。更具体地说，EnumMap专门用于枚举类。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// using an EnumMap to associate data with an enum</span>
+<span class="n">Map</span><span class="o">&lt;</span><span class="n">Plant</span><span class="p">.</span><span class="na">LifeCycle</span><span class="p">,</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Plant</span><span class="o">&gt;&gt;</span> <span class="n">plantsByLifeCycle</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EnumMap</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">Plant</span><span class="p">.</span><span class="na">LifeCycle</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">Plant</span><span class="p">.</span><span class="na">LifeCycle</span> <span class="n">lc</span> <span class="p">:</span> <span class="n">Plant</span><span class="p">.</span><span class="na">LifeCycle</span><span class="p">.</span><span class="na">values</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">plantsByLifeCycle</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">lc</span><span class="p">,</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">Plant</span> <span class="n">p</span> <span class="p">:</span> <span class="n">garden</span><span class="p">)</span>
+    <span class="n">plantsByLifeCycle</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="na">lifeCycle</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">plantsByLifeCycle</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>示例： 使用一个数组将两个阶段映射到一个阶段的过渡中（从液体到固体称作凝固，从液体到气体称作沸腾）：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">enum</span> <span class="n">Phase</span> <span class="p">{</span>
+    <span class="n">SOLID</span><span class="p">,</span> <span class="n">LIQUID</span><span class="p">,</span> <span class="n">GAS</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Transition</span> <span class="p">{</span>
+        <span class="n">MELT</span><span class="p">,</span> <span class="n">FREEZE</span><span class="p">,</span> <span class="n">BOIL</span><span class="p">,</span> <span class="n">CONDENSE</span><span class="p">,</span> <span class="n">SUBLIME</span><span class="p">,</span> <span class="n">DEPOSIT</span><span class="p">;</span>
+
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Transition</span><span class="o">[][]</span> <span class="n">TRANSITION</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="p">{</span> <span class="kc">null</span><span class="p">,</span> <span class="n">MELT</span><span class="p">,</span> <span class="n">SUBLIME</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="n">FREEZE</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">BOIL</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="n">DEPOSIT</span><span class="p">,</span> <span class="n">CONDENSE</span><span class="p">,</span> <span class="kc">null</span> <span class="p">}</span>
+        <span class="p">};</span>
+
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Transition</span> <span class="nf">from</span><span class="p">(</span><span class="n">Phase</span> <span class="n">from</span><span class="p">,</span> <span class="n">Phase</span> <span class="n">to</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">TRANSITION</span><span class="o">[</span><span class="n">from</span><span class="p">.</span><span class="na">ordinal</span><span class="p">()</span><span class="o">][</span><span class="n">to</span><span class="p">.</span><span class="na">ordinal</span><span class="p">()</span><span class="o">]</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>编译器无法知道序数和数组索引之间的关系。</p>
+<p>利用EnumMap可以做的更好，因为每个阶段过渡都是通过一对阶段枚举进行索引的，最好将这种关系表示为一个映射，这个映射
+的键是一个枚举，值为另一个映射，第二个映射的键为第二个枚举，</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">enum</span> <span class="n">Phase</span> <span class="p">{</span>
+    <span class="n">SOLID</span><span class="p">,</span> <span class="n">LIQUID</span><span class="p">,</span> <span class="n">GAS</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Transition</span> <span class="p">{</span>
+        <span class="n">MELT</span><span class="p">(</span><span class="n">SOLID</span><span class="p">,</span> <span class="n">LIQUID</span><span class="p">),</span>
+        <span class="n">FREEZE</span><span class="p">(</span><span class="n">LIQUID</span><span class="p">,</span> <span class="n">SOLID</span><span class="p">),</span>
+        <span class="n">BOIL</span><span class="p">(</span><span class="n">LIQUID</span><span class="p">,</span> <span class="n">GAS</span><span class="p">),</span>
+        <span class="n">CONDENSE</span><span class="p">(</span><span class="n">GAS</span><span class="p">,</span> <span class="n">LIQUID</span><span class="p">),</span>
+        <span class="n">SUBLIME</span><span class="p">(</span><span class="n">SOLID</span><span class="p">,</span> <span class="n">GAS</span><span class="p">),</span>
+        <span class="n">DEPOSIT</span><span class="p">(</span><span class="n">GAS</span><span class="p">,</span> <span class="n">SOLID</span><span class="p">);</span>
+
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">Phase</span> <span class="n">from</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">Phase</span> <span class="n">to</span><span class="p">;</span>
+
+        <span class="n">Transition</span><span class="p">(</span><span class="n">Phase</span> <span class="n">from</span><span class="p">,</span> <span class="n">Phase</span> <span class="n">to</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">from</span> <span class="o">=</span> <span class="n">from</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">to</span> <span class="o">=</span> <span class="n">to</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Phase</span><span class="p">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Phase</span><span class="p">,</span> <span class="n">Transition</span><span class="o">&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">values</span><span class="p">()</span>
+            <span class="p">.</span><span class="na">collect</span><span class="p">(</span><span class="n">groupingBy</span><span class="p">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="p">.</span><span class="na">from</span><span class="p">,</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="n">EnumMap</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">Phase</span><span class="p">.</span><span class="na">class</span><span class="p">),</span> <span class="n">toMap</span><span class="p">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="p">.</span><span class="na">to</span><span class="p">,</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">y</span><span class="p">,</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="n">EnumMap</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">Phase</span><span class="p">.</span><span class="na">class</span><span class="p">))));</span>
+
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Transition</span> <span class="nf">from</span><span class="p">(</span><span class="n">Phase</span> <span class="n">from</span><span class="p">,</span> <span class="n">Phase</span> <span class="n">to</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">m</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">from</span><span class="p">).</span><span class="na">get</span><span class="p">(</span><span class="n">to</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+  <div class="section">
+  
+    
+
+
+<div class="section">
+  <span style="float: left;">
+  
+  Previous: 
+  <a href="../generic/">
+    
+    Effective Java 泛型
+  </a>
+  
+  </span>
+  <span>&nbsp;</span>
+  <span style="float: right;">
+  
+  </span>
+</div>
+
+  
+  
+  </div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">胖虎的技术栈</a></h1>
+
+
+
+
+
+
+
+
+
+  
+  
+  <h2>
+  
+  
+    11 三月 2021
+  
+  </h2>
+
+  <ul>
+    
+
+  
+  <li id="author"><span>Author:</span>
+    
+      
+      <a href="../../blog/author/胖虎/">胖虎</a>
+      
+    </li>
+  
+
+  
+
+  
+
+  
+  <li id="category"><span>Category:</span>
+    
+      
+      <a href="../../blog/category/java/">Java</a>,
+      
+    
+      
+      <a href="../../blog/category/java基础/">Java基础</a>,
+      
+    
+      
+      <a href="../../blog/category/effective-java/">Effective-java</a>
+      
+    </li>
+  
+
+  
+  <li id="tags"><span>Tags:
+      </span>
+    
+      
+      <a href="../../blog/tag/java/">Java</a>
+      
+    
+      
+      <a href="../../blog/tag/effective-java/">Effective-java</a>
+      
+    
+      
+      <a href="../../blog/tag/enum/">enum</a>
+      
+    
+      
+      <a href="../../blog/tag/annotation/">annotation</a>
+      
+    </li>
+  
+  
+  </ul>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">胖虎</a></li>
+</ul>
+
+
+  <h3><a href="../../blog/">Recent Posts</a></h3>
+  <ul>
+    
+    
+      <li><a href="../generic/">08 三月 - Effective Java 泛型</a></li>
+    
+      <li><a href="../classinterface/">06 三月 - Effective Java 类和接口</a></li>
+    
+      <li><a href="../objects/">05 三月 - Effective Java 对于所有对象都通用的方法</a></li>
+    
+      <li><a href="../createDestory/">21 二月 - Effective Java 创建和销毁对象</a></li>
+    
+      <li><a href="../../base/generic/">26 九月 - 泛型设计</a></li>
+    
+  </ul>
+
+  <h3><a href="../../blog/tag/">Tags</a></h3>
+  <style type="text/css">
+    ul.ablog-cloud {list-style: none; overflow: auto;}
+    ul.ablog-cloud li {float: left; height: 20pt; line-height: 18pt; margin-right: 5px;}
+    ul.ablog-cloud a {text-decoration: none; vertical-align: middle;}
+    li.ablog-cloud-1{font-size: 80%;}
+    li.ablog-cloud-2{font-size: 95%;}
+    li.ablog-cloud-3{font-size: 110%;}
+    li.ablog-cloud-4{font-size: 125%;}
+    li.ablog-cloud-5{font-size: 140%;}
+  </style>
+  <ul class="ablog-cloud">
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/effective-java/">Effective-java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/exception/">Exception</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/java/">Java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/annotation/">annotation</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/base/">base</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/class/">class</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design/">design</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design-patterns/">design patterns</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/enum/">enum</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/generic/">generic</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/interface/">interface</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-5">
+        <a href="../../blog/tag/java/">java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/javascript/">javaScript</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/oop/">oop</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/基础/">基础</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/泛型/">泛型</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/流程控制位运算/">流程控制，位运算</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/算法/">算法</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/类/">类</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计/">设计</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计模式/">设计模式</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/面向对象/">面向对象</a></li>
+      
+    
+  </ul>
+
+  <h3><a href="../../blog/category/">Categories</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/category/effective-java/">Effective-java (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">Java (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java基础/">Java基础 (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/base/">base (3)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/design/">design (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">java (7)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/javascript/">javaScript (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/oop/">oop (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/基础/">基础 (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/异常/">异常 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/泛型/">泛型 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/算法/">算法 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/类/">类 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/设计模式/">设计模式 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/面向对象/">面向对象 (2)</a></li>
+    
+  
+  </ul>
+
+  <h3><a href="../../blog/archive/">Archives</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/2021/">2021 (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/2020/">2020 (10)</a></li>
+    
+  
+  </ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, 胖虎.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/effective-java/enumAnnotation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

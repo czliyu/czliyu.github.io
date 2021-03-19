@@ -1,0 +1,583 @@
+
+<!DOCTYPE html>
+
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Effective Java 对于所有对象都通用的方法 &#8212; 胖虎的技术栈  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+  
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="effective-java">
+<h1>Effective Java 对于所有对象都通用的方法<a class="headerlink" href="#effective-java" title="Permalink to this headline">¶</a></h1>
+<p>Object所有的非final方法（equals、hashCode、toString、clone和finalize）都有明确的
+通用约束。</p>
+<div class="section" id="equals">
+<h2>10、覆盖equals时请遵守通用约定<a class="headerlink" href="#equals" title="Permalink to this headline">¶</a></h2>
+<p>下面情况，类不需要覆盖equals：</p>
+<p>1、类的每个实例本质上都是唯一的。
+2、类没有必要提供“逻辑相等”的测试功能。
+3、超类已经覆盖了equals，超类的行为对于这个类也是合适的。
+4、类时私有的，或者是包级别的，可以确定它的equals方法永远不会被调用。</p>
+<p>应该覆盖equals方法：</p>
+<p>类具有自己特有的“逻辑相等”，这通常属于 <em>值（value）</em> 相等的情形。</p>
+<p>在覆盖equals的方法，需要遵守的通用约定：</p>
+<ul class="simple">
+<li><p>自反性（reflexive）：对于任何非null的引用值x，x.equals(x)必须返回true</p></li>
+<li><p>对称性（symmetric）: 对于任何非null的引用值x和y，当且仅当y.equals(x)返回true，x.equals(y)也必须返回true</p></li>
+<li><p>传递性 (ransitive)：对于任何非null的引用值x，y和z，如果x.equals(y)返回true，并且y.equals(z)返回true,那么x.equals(z)必须返回true。</p></li>
+<li><p>一致性（consistent）: 对于任何非null的引用值x和y，只要equals的比较操作在对象中所用的没有被修改，多次调用x.equals(y)就会一致返回true，或者一致返回false。</p></li>
+<li><p>对于任何非null的引用值x，x.equals(null)必须返回false。</p></li>
+</ul>
+<p>根据通用约定构建equals方法的具体例子：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">PhoneNumber</span> <span class="p">{</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="kt">short</span> <span class="n">areaCode</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">lineNum</span><span class="p">;</span>
+
+   <span class="kd">public</span> <span class="nf">PhoneNumber</span><span class="p">(</span><span class="kt">int</span> <span class="n">areaCode</span><span class="p">,</span> <span class="kt">int</span> <span class="n">prefix</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lineNum</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="na">areaCode</span> <span class="o">=</span> <span class="n">rangeCheck</span><span class="p">(</span><span class="n">areaCode</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="s">&quot;area code&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="na">prefix</span> <span class="o">=</span> <span class="n">rangeCheck</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="s">&quot;prefix&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="na">lineNum</span> <span class="o">=</span> <span class="n">rangeCheck</span><span class="p">(</span><span class="n">lineNum</span><span class="p">,</span> <span class="mi">9999</span><span class="p">,</span> <span class="s">&quot;line num&quot;</span><span class="p">);</span>
+   <span class="p">}</span>
+
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kt">short</span> <span class="nf">rangeCheck</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max</span><span class="p">,</span> <span class="n">String</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">max</span><span class="p">)</span> <span class="p">{</span>
+         <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="p">(</span><span class="n">arg</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">val</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="p">(</span><span class="kt">short</span><span class="p">)</span> <span class="n">val</span><span class="p">;</span>
+   <span class="p">}</span>
+
+   <span class="nd">@Override</span>
+   <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="p">(</span><span class="n">Object</span> <span class="n">o</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">o</span> <span class="o">==</span> <span class="k">this</span><span class="p">)</span>
+         <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">o</span> <span class="k">instanceof</span> <span class="n">PhoneNumber</span><span class="p">))</span>
+         <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="n">PhoneNumber</span> <span class="n">pn</span> <span class="o">=</span> <span class="p">(</span><span class="n">PhoneNumber</span><span class="p">)</span> <span class="n">o</span><span class="p">;</span>
+      <span class="k">return</span> <span class="n">pn</span><span class="p">.</span><span class="na">lineNum</span> <span class="o">==</span> <span class="n">lineNum</span> <span class="o">&amp;&amp;</span> <span class="n">pn</span><span class="p">.</span><span class="na">prefix</span> <span class="o">==</span> <span class="n">prefix</span> <span class="o">&amp;&amp;</span> <span class="n">pn</span><span class="p">.</span><span class="na">areaCode</span> <span class="o">==</span> <span class="n">areacCode</span><span class="p">;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>编写equals的告诫：</p>
+<ul class="simple">
+<li><p>覆盖equals时总要覆盖hashCode</p></li>
+<li><p>不要企图让equals方法过于智能。</p></li>
+<li><p>不要将equals声明中的Object对象替换为其他的类型。</p></li>
+</ul>
+</div>
+<div class="section" id="equalshashcode">
+<h2>11、覆盖equals时总要覆盖hashCode<a class="headerlink" href="#equalshashcode" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>如果equals(Obejct) 是相等的，那么hashCode一定相等</p></li>
+<li><p>如果equals(Object) 不相等，那么hashCode可能会相等</p></li>
+</ul>
+<p>为PhoneNumber添加hashCode:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">Short</span><span class="p">.</span><span class="na">hashCode</span><span class="p">(</span><span class="n">areacCode</span><span class="p">);</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="mi">31</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="n">Short</span><span class="p">.</span><span class="na">hashCode</span><span class="p">(</span><span class="n">prefix</span><span class="p">);</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="mi">31</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="n">Short</span><span class="p">.</span><span class="na">hashCode</span><span class="p">(</span><span class="n">lineNum</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>&gt; 之所以选择31，因为它是一个奇素数。因为与2相乘等价于移位运算。31有个特性，即用移位和减法
+来代替乘法，可以得到很好的性能: 31 * i == (i &lt;&lt; 5) - i;</p>
+<p>Objects.hash可以使用任意数量的对象编写hashCode，遗憾的是运行速度慢一些，建议只将这类
+散列函数用于不太注重性能的情况。</p>
+</div>
+<div class="section" id="tostring">
+<h2>12、始终要覆盖toString<a class="headerlink" href="#tostring" title="Permalink to this headline">¶</a></h2>
+<p>所有的子类都覆盖这个方法</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;%03d-%03d-%04d&quot;</span><span class="p">,</span> <span class="n">areaCode</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">lineNum</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="clone">
+<h2>13、谨慎地覆盖clone<a class="headerlink" href="#clone" title="Permalink to this headline">¶</a></h2>
+<p>如果一个类实现了Cloneable，Object的clone方法就返回改对象的逐域拷贝，否则就会抛出
+CloneNotSupportedException异常。</p>
+<p>clone方法的通用约定：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">.</span><span class="na">clone</span><span class="p">()</span> <span class="o">!=</span> <span class="n">x</span><span class="p">;</span><span class="c1">// true</span>
+<span class="n">x</span><span class="p">.</span><span class="na">clone</span><span class="p">().</span><span class="na">getClass</span><span class="p">()</span> <span class="o">==</span> <span class="n">x</span><span class="p">.</span><span class="na">getClass</span><span class="p">();</span> <span class="c1">// true</span>
+<span class="n">x</span><span class="p">.</span><span class="na">clone</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// true</span>
+</pre></div>
+</div>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Stack</span> <span class="p">{</span>
+   <span class="kd">private</span> <span class="n">Object</span><span class="o">[]</span> <span class="n">elements</span><span class="p">;</span>
+   <span class="kd">private</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">DEFAULT_INITIAL_CAPACITY</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+
+   <span class="kd">public</span> <span class="nf">Stack</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="na">elements</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">DEFAULT_INITIAL_CAPACITY</span><span class="o">]</span><span class="p">;</span>
+   <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">Object</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">ensureCapacity</span><span class="p">();</span>
+      <span class="n">elements</span><span class="o">[</span><span class="n">size</span><span class="o">++]</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+   <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="n">Object</span> <span class="nf">pop</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+         <span class="k">throw</span> <span class="k">new</span> <span class="n">EmptyStackException</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="n">Object</span> <span class="n">result</span> <span class="o">=</span> <span class="n">elements</span><span class="o">[--</span><span class="n">size</span><span class="o">]</span><span class="p">;</span>
+      <span class="n">elements</span><span class="o">[</span><span class="n">size</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// 不怎么做 垃圾回收器不会回收</span>
+      <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+   <span class="p">}</span>
+
+   <span class="kd">private</span> <span class="kt">void</span> <span class="nf">ensureCapacity</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">elements</span><span class="p">.</span><span class="na">length</span> <span class="o">==</span> <span class="n">size</span><span class="p">)</span>
+         <span class="n">elements</span> <span class="o">=</span> <span class="n">Arrays</span><span class="p">.</span><span class="na">copyOf</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>实际上，clone方法就是另一个构造器；必须确保它不会伤害到原始对象，并确保正确地创建被克隆
+对象中的约定条件。</p>
+<p>为Stack实现clone：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="n">Stack</span> <span class="nf">clone</span><span class="p">()</span> <span class="p">{</span>
+   <span class="k">try</span> <span class="p">{</span>
+      <span class="n">Stack</span> <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">Stack</span><span class="p">)</span> <span class="kd">super</span><span class="p">.</span><span class="na">clone</span><span class="p">();</span>
+      <span class="n">result</span><span class="p">.</span><span class="na">elements</span> <span class="o">=</span> <span class="n">elements</span><span class="p">.</span><span class="na">clone</span><span class="p">();</span>
+      <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+   <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">CloneNotSupportedException</span> <span class="n">e</span><span class="p">){</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="n">AssertionError</span><span class="p">();</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>&gt; 如果每个域包含一个基本类型的值，或者包含一个指向不可变对象的引用，那么被返回的对象则可能
+正是你所需要的对象`return (PhoneNumber) super.clone();`，在这种情况下不需要进一步处理。</p>
+<p><em>对象拷贝最好的办法是提供一个拷贝构造器或拷贝工厂</em> (这条规则最绝对的例外是数组，数组最好利用clone方法)</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// 拷贝构造器</span>
+<span class="kd">public</span> <span class="nf">Yum</span><span class="p">(</span><span class="n">Yum</span> <span class="n">yum</span><span class="p">)</span> <span class="p">{}</span>
+
+<span class="c1">// 拷贝工厂</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">Yum</span> <span class="nf">newInstance</span><span class="p">(</span><span class="n">Yum</span> <span class="n">yum</span><span class="p">)</span> <span class="p">{}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="comparable">
+<h2>14、实现Comparable接口<a class="headerlink" href="#comparable" title="Permalink to this headline">¶</a></h2>
+<p>compareTo方法的通用约定：</p>
+<ul class="simple">
+<li><p>实现者必须确保所有的x和y都满足sgn(x.compareTo(y)) == -sgn(y.compareTo(x))。</p></li>
+<li><p>实现者必须确保这个比较关系是可传递的：<cite>x.compareTo(y) &gt; 0 &amp;&amp; y.compareTo(z) &gt; 0; x.compareTo(z) &gt; 0</cite></p></li>
+<li><p>实现者必须确保x.compareTo(y) == 0，暗示所有的`sgn(x.compareTo(z)) == sgn(y.compareTo(z))`</p></li>
+</ul>
+<p>在compareTo方法中使用关系操作符`&lt;<cite>或</cite>&gt;`是非常烦琐的，并且容易出错，因此建议使用
+<cite>Double.compare(a, b) / Float.compare(a, b)</cite>;</p>
+<p>按最关键的域开始，逐步进行到所有的重要域的顺序来比较</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="p">(</span><span class="n">PhoneNumber</span> <span class="n">pn</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">Short</span><span class="p">.</span><span class="na">compare</span><span class="p">(</span><span class="n">areaCode</span><span class="p">,</span> <span class="n">pn</span><span class="p">.</span><span class="na">areacCode</span><span class="p">);</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">Short</span><span class="p">.</span><span class="na">compare</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">pn</span><span class="p">.</span><span class="na">prefix</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+         <span class="n">result</span> <span class="o">=</span> <span class="n">Short</span><span class="p">.</span><span class="na">compare</span><span class="p">(</span><span class="n">lineNum</span><span class="p">,</span> <span class="n">pn</span><span class="p">.</span><span class="na">lineNum</span><span class="p">);</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+   <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Comparator接口配置了一组比较器构造器方法，使得比较器的构造工作变得非常流畅。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Comparator</span><span class="o">&lt;</span><span class="n">PhoneNumber</span><span class="o">&gt;</span> <span class="n">COMPARATOR</span> <span class="o">=</span> <span class="n">comparingInt</span><span class="p">((</span><span class="n">PhoneNumber</span> <span class="n">pn</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pn</span><span class="p">.</span><span class="na">areacCode</span><span class="p">)</span>
+      <span class="p">.</span><span class="na">thenComparingInt</span><span class="p">(</span><span class="n">pn</span> <span class="o">-&gt;</span> <span class="n">pn</span><span class="p">.</span><span class="na">prefix</span><span class="p">)</span>
+      <span class="p">.</span><span class="na">thenComparingInt</span><span class="p">(</span><span class="n">pn</span> <span class="o">-&gt;</span> <span class="n">pn</span><span class="p">.</span><span class="na">lineNum</span><span class="p">);</span>
+
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="p">(</span><span class="n">PhoneNumber</span> <span class="n">pn</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">return</span> <span class="n">COMPARATOR</span><span class="p">.</span><span class="na">compareTo</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">pn</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+  <div class="section">
+  
+    
+
+
+<div class="section">
+  <span style="float: left;">
+  
+  Previous: 
+  <a href="../createDestory/">
+    
+    Effective Java 创建和销毁对象
+  </a>
+  
+  </span>
+  <span>&nbsp;</span>
+  <span style="float: right;">
+  
+  Next: 
+  <a href="../classinterface/">
+    Effective Java 类和接口
+    
+  </a>
+  
+  </span>
+</div>
+
+  
+  
+  </div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">胖虎的技术栈</a></h1>
+
+
+
+
+
+
+
+
+
+  
+  
+  <h2>
+  
+  
+    05 三月 2021
+  
+  </h2>
+
+  <ul>
+    
+
+  
+  <li id="author"><span>Author:</span>
+    
+      
+      <a href="../../blog/author/胖虎/">胖虎</a>
+      
+    </li>
+  
+
+  
+
+  
+
+  
+  <li id="category"><span>Category:</span>
+    
+      
+      <a href="../../blog/category/java/">Java</a>,
+      
+    
+      
+      <a href="../../blog/category/java基础/">Java基础</a>,
+      
+    
+      
+      <a href="../../blog/category/effective-java/">Effective-java</a>
+      
+    </li>
+  
+
+  
+  <li id="tags"><span>Tags:
+      </span>
+    
+      
+      <a href="../../blog/tag/java/">Java</a>
+      
+    
+      
+      <a href="../../blog/tag/effective-java/">Effective-java</a>
+      
+    </li>
+  
+  
+  </ul>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">胖虎</a></li>
+</ul>
+
+
+  <h3><a href="../../blog/">Recent Posts</a></h3>
+  <ul>
+    
+    
+      <li><a href="../classinterface/">06 三月 - Effective Java 类和接口</a></li>
+    
+      <li><a href="../createDestory/">21 二月 - Effective Java 创建和销毁对象</a></li>
+    
+      <li><a href="../../base/generic/">26 九月 - 泛型设计</a></li>
+    
+      <li><a href="../../language/javaScriptGoodParts/">18 九月 - javaScript 精辟</a></li>
+    
+      <li><a href="../../design/design_pattern/">07 九月 - 设计模式</a></li>
+    
+  </ul>
+
+  <h3><a href="../../blog/tag/">Tags</a></h3>
+  <style type="text/css">
+    ul.ablog-cloud {list-style: none; overflow: auto;}
+    ul.ablog-cloud li {float: left; height: 20pt; line-height: 18pt; margin-right: 5px;}
+    ul.ablog-cloud a {text-decoration: none; vertical-align: middle;}
+    li.ablog-cloud-1{font-size: 80%;}
+    li.ablog-cloud-2{font-size: 95%;}
+    li.ablog-cloud-3{font-size: 110%;}
+    li.ablog-cloud-4{font-size: 125%;}
+    li.ablog-cloud-5{font-size: 140%;}
+  </style>
+  <ul class="ablog-cloud">
+    
+      
+      <li class="ablog-cloud ablog-cloud-2">
+        <a href="../../blog/tag/effective-java/">Effective-java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/exception/">Exception</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-2">
+        <a href="../../blog/tag/java/">Java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/base/">base</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/class/">class</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design/">design</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design-patterns/">design patterns</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/interface/">interface</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-5">
+        <a href="../../blog/tag/java/">java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/javascript/">javaScript</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/oop/">oop</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/基础/">基础</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/泛型/">泛型</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/流程控制位运算/">流程控制，位运算</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/算法/">算法</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/类/">类</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计/">设计</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计模式/">设计模式</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/面向对象/">面向对象</a></li>
+      
+    
+  </ul>
+
+  <h3><a href="../../blog/category/">Categories</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/category/effective-java/">Effective-java (3)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">Java (3)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java基础/">Java基础 (3)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/base/">base (3)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/design/">design (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">java (7)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/javascript/">javaScript (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/oop/">oop (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/基础/">基础 (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/异常/">异常 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/泛型/">泛型 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/算法/">算法 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/类/">类 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/设计模式/">设计模式 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/面向对象/">面向对象 (2)</a></li>
+    
+  
+  </ul>
+
+  <h3><a href="../../blog/archive/">Archives</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/2021/">2021 (3)</a></li>
+    
+  
+    
+    <li><a href="../../blog/2020/">2020 (10)</a></li>
+    
+  
+  </ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, 胖虎.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/effective-java/objects.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
