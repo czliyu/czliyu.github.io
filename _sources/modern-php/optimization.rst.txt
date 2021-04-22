@@ -1,0 +1,90 @@
+PHP NGINX 调优
+===========================
+
+.. post:: 22 Apr 2021
+   :tags: PHP, Nginx, 性能, 调优
+   :category: php, 服务器, Server 
+   :author: me
+
+
+php.ini   
+----------------
+
+PHP解析器在php.ini文件中的配置和调优。
+
+.. note::
+
+   我们应该使用克里斯.科耐特开发的`PHP Iniscan`工具(https://github.com/psecio/iniscan)
+   扫描`php.ini`文件，检查是否使用了安全方面的最佳实践。
+
+内存
+---------------
+
+运行PHP最关心的是每个PHP进程要使用多少内存。
+
+`memory_limit`:设定单个PHP进程可以使用的系统内存最大值
+
+决定给PHP分配多少内存，以及能负担得起多少个PHP-FPM进程时，取决于::
+
+   Q 一共能分配给PHP多少内存？
+   首先，确定能分配给PHP多少系统内存。例如：这个设备有2GB内存，这台设备中可能还有其他进程(nginx、MySql或memcache),
+   而这些进程也要消耗内存，我觉得留512MB给PHP就足够了。
+
+   Q 单个PHP进程平均消耗多少内存？
+   然后，确定单个PHP进程平均消耗多少内存。监控进程的内存使用量，使用命令行，可以执行`top`命令，查看运行中的进程的实时统计数据，。
+   除此之外，还可以在PHP脚本的最后调用`memory_get_peak_usage()`,输出当前脚本消耗的最大内存量。不管哪种方式，都需要多次运行同一个脚本。
+   然后取出内存消耗量的平均值。
+
+   Q 能负担起多少个PHP-FPM进程？
+   假设给PHP分配了512MB内存，每个PHP进程平均消耗15MB内存，512/15 = 34
+
+   Q 有足够的系统资源吗？
+   有足够的系统资源运行PHP应用并处理预期的流量？否定的话，那还是升级服务器，添加更多的内存。
+
+Zend OPcache
+----------------------
+
+确定要分配的内存后，配置PHP的Zend OPcache 扩展，这个扩展用于缓存操作码。
+
+为什么怎么做？
+
+分析每次HTTP请求时通常是如何处理PHP脚本的::
+
+   首先，nginx把HTTP请求转发给PHP-FPM，PHP-FPM再把请求交给莫个PHP子进程处理。
+   
+   PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操作码格式，然后执行编译后得到的操作码，生成响应。
+   
+   最后，把HTTP响应发给Nginx，nginx再把响应发给HTTP客户端。
+
+在`php.ini`文件中配置和优化Zend OPcache 扩展所用的设置
+
+.. code-block:: java
+
+      opcache.memory_consumption = 64
+      opcache.interned_strings_buffer = 16
+      opcache.max_accelerated_files = 4000
+      opcache.validate_timestamps = 1
+      opcache.revalidate_freq = 0
+      opcache.fast_shutdown = 1
+
+**opcache.memory_consumption = 64**
+
+为操作码缓存分配的内存量（MB）。分配的内存量应该够保存应用中所有PHP脚本编译得到的操作码。
+小型项目，脚本数少，可以设置为16MB，大型应用，脚本多，使用较大的值，例如64MB
+
+**opcache.interned_strings_buffer = 16**
+
+用来存储驻留字符串（interned_string）的内存量。
+
+什么是**驻留字符串**? PHP解析器在背后会找到相同字符串的多个实例，把这个字符串保存在内存中，如果再次使用相同的
+字符串，PHP解析器会使用指针。这么做能节省内存。
+
+**opcache.max_accelerated_files = 4000**
+
+操作码缓存中最多能存储多少个PHP脚本。这个设置的值可以是200到100000之间的任何数。这个值一定要比PHP应用的文件数量大
+
+**opcache.validate_timestamps = 1**
+
+设置值为1时， 经过一段时间后PHP会检查PHP脚本的内容是否有变化。检查的时间间隔由<opcache class="revalidate_freq"></opcache>
+
+   

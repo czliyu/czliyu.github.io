@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PHP NGINX 调优 &#8212; 胖虎的技术栈  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+  
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="php-nginx">
+<h1>PHP NGINX 调优<a class="headerlink" href="#php-nginx" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="php-ini">
+<h2>php.ini<a class="headerlink" href="#php-ini" title="Permalink to this headline">¶</a></h2>
+<p>PHP解析器在php.ini文件中的配置和调优。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>我们应该使用克里斯.科耐特开发的`PHP Iniscan`工具(<a class="reference external" href="https://github.com/psecio/iniscan">https://github.com/psecio/iniscan</a>)
+扫描`php.ini`文件，检查是否使用了安全方面的最佳实践。</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>内存<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>运行PHP最关心的是每个PHP进程要使用多少内存。</p>
+<p><cite>memory_limit</cite>:设定单个PHP进程可以使用的系统内存最大值</p>
+<p>决定给PHP分配多少内存，以及能负担得起多少个PHP-FPM进程时，取决于:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Q 一共能分配给PHP多少内存？
+首先，确定能分配给PHP多少系统内存。例如：这个设备有2GB内存，这台设备中可能还有其他进程(nginx、MySql或memcache),
+而这些进程也要消耗内存，我觉得留512MB给PHP就足够了。
+
+Q 单个PHP进程平均消耗多少内存？
+然后，确定单个PHP进程平均消耗多少内存。监控进程的内存使用量，使用命令行，可以执行`top`命令，查看运行中的进程的实时统计数据，。
+除此之外，还可以在PHP脚本的最后调用`memory_get_peak_usage()`,输出当前脚本消耗的最大内存量。不管哪种方式，都需要多次运行同一个脚本。
+然后取出内存消耗量的平均值。
+
+Q 能负担起多少个PHP-FPM进程？
+假设给PHP分配了512MB内存，每个PHP进程平均消耗15MB内存，512/15 = 34
+
+Q 有足够的系统资源吗？
+有足够的系统资源运行PHP应用并处理预期的流量？否定的话，那还是升级服务器，添加更多的内存。
+</pre></div>
+</div>
+</div>
+<div class="section" id="zend-opcache">
+<h2>Zend OPcache<a class="headerlink" href="#zend-opcache" title="Permalink to this headline">¶</a></h2>
+<p>确定要分配的内存后，配置PHP的Zend OPcache 扩展，这个扩展用于缓存操作码。</p>
+<p>为什么怎么做？</p>
+<p>分析每次HTTP请求时通常是如何处理PHP脚本的:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>首先，nginx把HTTP请求转发给PHP-FPM，PHP-FPM再把请求交给莫个PHP子进程处理。
+
+PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操作码格式，然后执行编译后得到的操作码，生成响应。
+
+最后，把HTTP响应发给Nginx，nginx再把响应发给HTTP客户端。
+</pre></div>
+</div>
+<p>在`php.ini`文件中配置和优化Zend OPcache 扩展所用的设置</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">opcache</span><span class="p">.</span><span class="na">memory_consumption</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">opcache</span><span class="p">.</span><span class="na">interned_strings_buffer</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">opcache</span><span class="p">.</span><span class="na">max_accelerated_files</span> <span class="o">=</span> <span class="mi">4000</span>
+<span class="n">opcache</span><span class="p">.</span><span class="na">validate_timestamps</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">opcache</span><span class="p">.</span><span class="na">revalidate_freq</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">opcache</span><span class="p">.</span><span class="na">fast_shutdown</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p><strong>opcache.memory_consumption = 64</strong></p>
+<p>为操作码缓存分配的内存量（MB）。分配的内存量应该够保存应用中所有PHP脚本编译得到的操作码。
+小型项目，脚本数少，可以设置为16MB，大型应用，脚本多，使用较大的值，例如64MB</p>
+<p><strong>opcache.interned_strings_buffer = 16</strong></p>
+<p>用来存储驻留字符串（interned_string）的内存量。</p>
+<p>什么是**驻留字符串**? PHP解析器在背后会找到相同字符串的多个实例，把这个字符串保存在内存中，如果再次使用相同的
+字符串，PHP解析器会使用指针。这么做能节省内存。</p>
+<p><strong>opcache.max_accelerated_files = 4000</strong></p>
+<p>操作码缓存中最多能存储多少个PHP脚本。这个设置的值可以是200到100000之间的任何数。这个值一定要比PHP应用的文件数量大</p>
+<p><strong>opcache.validate_timestamps = 1</strong></p>
+<p>设置值为1时， 经过一段时间后PHP会检查PHP脚本的内容是否有变化。检查的时间间隔由&lt;opcache class=”revalidate_freq”&gt;&lt;/opcache&gt;</p>
+</div>
+</div>
+
+  <div class="section">
+  
+    
+
+
+<div class="section">
+  <span style="float: left;">
+  
+  Previous: 
+  <a href="../../concurrency/basic_knowledge/">
+    
+    并发编程实践 基础知识
+  </a>
+  
+  </span>
+  <span>&nbsp;</span>
+  <span style="float: right;">
+  
+  </span>
+</div>
+
+  
+  
+  </div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">胖虎的技术栈</a></h1>
+
+
+
+
+
+
+
+
+
+  
+  
+  <h2>
+  
+  
+    22 四月 2021
+  
+  </h2>
+
+  <ul>
+    
+
+  
+  <li id="author"><span>Author:</span>
+    
+      
+      <a href="../../blog/author/胖虎/">胖虎</a>
+      
+    </li>
+  
+
+  
+
+  
+
+  
+  <li id="category"><span>Category:</span>
+    
+      
+      <a href="../../blog/category/php/">php</a>,
+      
+    
+      
+      <a href="../../blog/category/服务器/">服务器</a>,
+      
+    
+      
+      <a href="../../blog/category/server/">Server</a>
+      
+    </li>
+  
+
+  
+  <li id="tags"><span>Tags:
+      </span>
+    
+      
+      <a href="../../blog/tag/php/">PHP</a>
+      
+    
+      
+      <a href="../../blog/tag/nginx/">Nginx</a>
+      
+    
+      
+      <a href="../../blog/tag/性能/">性能</a>
+      
+    
+      
+      <a href="../../blog/tag/调优/">调优</a>
+      
+    </li>
+  
+  
+  </ul>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">胖虎</a></li>
+</ul>
+
+
+  <h3><a href="../../blog/">Recent Posts</a></h3>
+  <ul>
+    
+    
+      <li><a href="../../concurrency/basic_knowledge/">19 三月 - 并发编程实践 基础知识</a></li>
+    
+      <li><a href="../../effective-java/enumAnnotation/">11 三月 - Effective Java 枚举和注释</a></li>
+    
+      <li><a href="../../effective-java/generic/">08 三月 - Effective Java 泛型</a></li>
+    
+      <li><a href="../../effective-java/classinterface/">06 三月 - Effective Java 类和接口</a></li>
+    
+      <li><a href="../../effective-java/objects/">05 三月 - Effective Java 对于所有对象都通用的方法</a></li>
+    
+  </ul>
+
+  <h3><a href="../../blog/tag/">Tags</a></h3>
+  <style type="text/css">
+    ul.ablog-cloud {list-style: none; overflow: auto;}
+    ul.ablog-cloud li {float: left; height: 20pt; line-height: 18pt; margin-right: 5px;}
+    ul.ablog-cloud a {text-decoration: none; vertical-align: middle;}
+    li.ablog-cloud-1{font-size: 80%;}
+    li.ablog-cloud-2{font-size: 95%;}
+    li.ablog-cloud-3{font-size: 110%;}
+    li.ablog-cloud-4{font-size: 125%;}
+    li.ablog-cloud-5{font-size: 140%;}
+  </style>
+  <ul class="ablog-cloud">
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/effective-java/">Effective-java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/exception/">Exception</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/java/">Java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/nginx/">Nginx</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/php/">PHP</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/annotation/">annotation</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/base/">base</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/class/">class</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design/">design</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/design-patterns/">design patterns</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/enum/">enum</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/generic/">generic</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/interface/">interface</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-5">
+        <a href="../../blog/tag/java/">java</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/javascript/">javaScript</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/oop/">oop</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-3">
+        <a href="../../blog/tag/基础/">基础</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/并发/">并发</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/性能/">性能</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/泛型/">泛型</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/流程控制位运算/">流程控制，位运算</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/算法/">算法</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/类/">类</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计/">设计</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/设计模式/">设计模式</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/调优/">调优</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/面向对象/">面向对象</a></li>
+      
+    
+  </ul>
+
+  <h3><a href="../../blog/category/">Categories</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/category/effective-java/">Effective-java (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">Java (6)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java基础/">Java基础 (6)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/server/">Server (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/base/">base (3)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/design/">design (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/java/">java (7)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/javascript/">javaScript (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/oop/">oop (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/php/">php (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/基础/">基础 (5)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/并发/">并发 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/异常/">异常 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/服务器/">服务器 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/泛型/">泛型 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/算法/">算法 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/类/">类 (1)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/设计模式/">设计模式 (2)</a></li>
+    
+  
+    
+    <li><a href="../../blog/category/面向对象/">面向对象 (2)</a></li>
+    
+  
+  </ul>
+
+  <h3><a href="../../blog/archive/">Archives</a></h3>
+  <ul>
+  
+    
+    <li><a href="../../blog/2021/">2021 (7)</a></li>
+    
+  
+    
+    <li><a href="../../blog/2020/">2020 (10)</a></li>
+    
+  
+  </ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, 胖虎.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/modern-php/optimization.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
