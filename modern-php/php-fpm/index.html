@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>使用异常的技巧 &#8212; 胖虎的技术栈  documentation</title>
+    <title>PHP-FPM 配置 &#8212; 胖虎的技术栈  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -44,43 +44,79 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="id1">
-<h1>使用异常的技巧<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>如何适当使用异常有很大的争议，有些程序员认为所有的检查型异常都令人厌烦，有些程序员认为抛出的异常还不够多。</p>
-<p>使用异常的一些技巧</p>
-<p>1、异常处理不能代替简单的测试</p>
-<p>作为一个示例，试着讲一个空栈弹出10000000次，首先，在弹栈之前先查看栈是否为空。</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="na">empty</span><span class="p">())</span> <span class="n">s</span><span class="p">.</span><span class="na">pop</span><span class="p">();</span>
+  <div class="section" id="php-fpm">
+<h1>PHP-FPM 配置<a class="headerlink" href="#php-fpm" title="Permalink to this headline">¶</a></h1>
+<p>PHP-FPM（PHP FastCGI Process Manager）意思：“PHP FastCGI进程管理器”是用于管理PHP
+进程池的软件，用于接收和处理来自Web服务器的请求。PHP-FPM软件会创建一个主进程（通常以系统中根用户的身份运行），
+控制何时以及如何把HTTP请求转发给一个或多个子进程处理。PHP-FPM主进程还控制着什么时候创建（处理web应用的更多的流量）
+和销毁（子进程运行时间太久或不再需要了）PHP进程。PHP-FPM进程池中的每个进程存在的时间都比单个HTTP请求长，
+可以处理10、50、100、500或更多的HTTP请求。</p>
+<div class="section" id="id1">
+<h2>全局配置<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>如果在指定的一段时间内有指定个子进程失效了，让PHP-FPM主进程重启。这是PHP-FPM进程的基本安全
+保障，能解决简单的我难题，但是不能解决由拙劣的PHP代码引起的重大问题。</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">emergency_restart_threshold</span> <span class="o">=</span> <span class="s">10</span>
+<span class="na">在指定的一段时间内，如果失效的PHP-FPM子进程数超过这个值。PHP-FPM主进程就优雅重启</span>
 
-<span class="k">try</span>
-<span class="p">{</span>
-     <span class="n">s</span><span class="p">.</span><span class="na">pop</span><span class="p">();</span>
-<span class="p">}</span>
-<span class="k">catch</span> <span class="p">(</span><span class="n">EmptyStackException</span> <span class="n">e</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="p">}</span>
+<span class="na">emergency_restart_interval</span> <span class="o">=</span> <span class="s">1m</span>
+<span class="na">设定emergency_restart_threshold设置采用的时间跨度</span>
 </pre></div>
 </div>
-<p>调用isEmpty的版本运行时间为646ms，捕获EmptyStackException的版本运行时间为21739ms</p>
-<p>因此使用异常的基本原则: <em>只在异常情况下使用异常</em></p>
-<p>2、不要过分细化异常</p>
-<p>很多程序员习惯将每一条语句都分装在一个独立的try语句块中</p>
-<p>异常处理的一个承诺: <em>将正常处理与错误处理分开</em></p>
-<ol class="arabic simple" start="3">
-<li><p>充分利用异常层次结构</p></li>
-</ol>
-<p>不要只抛出RuntimeException异常，应该寻找一个适合的子类或创建自己的异常类</p>
-<p>不要只捕获Throwable异常，否则会使你的代码难读、更难维护。</p>
-<p>考虑检查型异常和非检查型异常的区别，检查型异常本来就很庞大，不要为逻辑错误抛出这些异常。</p>
-<p>如果能够将一种异常转换成另一种更加适合的异常，例如，在解析某个文件中的一个整数时，可以捕获NumberFormatException异常，然后转换成IOException的一个子类或MySubSystemException</p>
-<p>4、不要压制异常</p>
-<p>在java中，往往非常希望关闭异常，如果编写了一个方法要调用另外一个方法，而那个方法可能100年才抛出一个异常，但是，如果没有在你的方法的throws列表中声明这个异常，编译器就会报错。不想把它放在throws列表中，因为这样一来，编译器会对调用了你的方法的所有方法报错，因此，你会将这个异常关闭</p>
-<p>5、在检测错误时，“苛刻”要比放任更好</p>
-<p>当检测到错误的时候，程序员对抛出的异常很担心。在用无效的参数调用一个方法时，返回一个虚拟值是否比抛出一个异常更好？例如，当栈为空时，Stack.pop()是该返回一个null，还是要抛出一个异常？</p>
-<p>最好在出错地方抛出一个EmptyStackException异常。</p>
-<p>6、不要羞于传递异常</p>
-<p>程序员都感觉应该捕获抛出的全部异常，如果调用了一个抛出异常的方法，例如，FileInputStream构造器或readline方法，它们会本能地捕获这些可能产生的异常。最好继续传递这个异常，而不是自己捕获。</p>
-<p>&gt; 5、6 可以归纳为“早抛出，晚捕获”</p>
+</div>
+<div class="section" id="id2">
+<h2>配置进程池<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>PHP-FPM配置文件其余的内容是一个名为Pool Definitions区域。配置用于设置每个PHP-FPM进程池中的每个进程存在的时间都比单个HTTP请求长。
+PHP-FPM进程池中是一系列相关的PHP子进程。</p>
+<p>Ubuntu中。Pool Definitions区域 <code class="docutils literal notranslate"><span class="pre">include=/etc/php5/fpm/pool.d/*.conf</span></code> .</p>
+<p>CentOS中，PHP-FPM主配置文件的顶部使用进入 <code class="docutils literal notranslate"><span class="pre">include=/etc/php-fpm.d/*.conf</span></code> 进程池定义文件。</p>
+<p>各个PHP-FPM进程池都以指定的操作系统用户和用户组的身份运行。我喜欢以单独的非根用户身份运行
+各个PHP-FPM进程池，这样 <code class="docutils literal notranslate"><span class="pre">top</span></code> 、 <code class="docutils literal notranslate"><span class="pre">ps</span></code> 和 <code class="docutils literal notranslate"><span class="pre">aux</span></code> 命令时便于识别每个PHP应用的PHP-FPM进程池中是一系列相关的PHP子进程。
+这是一个好习惯，因为每个PHP-FPM进程池中的进程都受响应的操作系统用户和用户组的权限限制在沙盒中。</p>
+<p>配置默认的 <code class="docutils literal notranslate"><span class="pre">www</span></code> PHP-FPM进程池，让它以 <code class="docutils literal notranslate"><span class="pre">deploy</span></code> 用户和用户组的身份运行。
+打开``www.conf``建议把以下设置的默认值改为</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">user</span> <span class="o">=</span> <span class="s">deploy</span>
+<span class="na">拥有这个PHP-FPM进程池中子进程的系统用户。把这个值设置为运行PHP应用的非根用户的用户名</span>
+
+<span class="na">group</span> <span class="o">=</span> <span class="s">deploy</span>
+<span class="na">拥有这个PHP-FPM进程池中子进程的系统用户组。把这个值设置为运行PHP应用的非根用户所属的用户组名</span>
+
+<span class="na">listen</span> <span class="o">=</span> <span class="s">127.0.0.1:9000</span>
+<span class="na">PHP-FPM进程池监听的IP地址和端口号，让PHP-FPM只接受nginx从这里传入的请求。</span>
+
+<span class="na">listen.allowed_clients</span> <span class="o">=</span> <span class="s">127.0.0.1</span>
+<span class="na">可以向这个PHP-FPM进程池发送请求的IP地址（一个或多个），为了安全，把这个设置设为127.0.0.1,</span>
+<span class="na">即只有当前设备能把请求转发给这个PHP-FPM进程池中子进程的系统用户。把这个值设置为运行PHP应用的非根用户的用户名</span>
+
+<span class="na">pm.max_children</span> <span class="o">=</span> <span class="s">51</span>
+<span class="na">设定任何时间点PHP-FPM进程池中最多能有多少个进程。确定每个PHP进程需要使用多少内存，然后把这个</span>
+<span class="na">设置设为设备可用内存能容纳的PHP进程总数。对大多数中小型PHP应用来说，每个PHP进程要使用5-15MB内存。</span>
+<span class="na">假设我们使用的设备为这个PHP-FPM进程池分配了512MB内存可用，可以设置为（512MB）/ 10MB</span> <span class="o">=</span> <span class="s">51进程</span>
+
+<span class="na">pm.start_servers</span> <span class="o">=</span> <span class="s">3</span>
+<span class="na">PHP-FPM启动时PHP-FPM进程池中立即可用的进程数。对大多数中小型引用来说，我建议设为2或3。</span>
+<span class="na">这么做为了准备两到三个进程，等待请求进入。不让PHP应用的头几个HTTP请求等待PHP-FPM初始化进程池中的进程。</span>
+
+<span class="na">pm.min_spare_servers</span> <span class="o">=</span> <span class="s">2</span>
+<span class="na">PHP应用空闲时PHP-FPM进程池中可以存在的进程数量最小值。一般设置的与pm.start_servers的值一样，用于</span>
+<span class="na">确保新进入的HTTP请求无需等待PHP-FPM在进程池中重新初始化进程。</span>
+
+<span class="na">pm.max_spare_servers</span> <span class="o">=</span> <span class="s">4</span>
+<span class="na">PHP应用空闲时PHP-FPM进程池中可以存在的进程数量最大值。这个设置的值一般比pm.start_servers设置的值要</span>
+<span class="na">大一点，用于确保新进入的HTTP请求无需等待PHP-FPM在进程池中重新初始化进程。</span>
+
+<span class="na">pm.max_requests</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="na">PHP-FPM进程池中各个进程最多能处理的HTTP请求数量。这个设置有助于避免PHP扩展或库因编写拙劣而导致泄露内存。</span>
+<span class="na">建议设置为1000</span>
+
+<span class="na">showlog</span> <span class="o">=</span> <span class="s">/path/to/slowlog.log</span>
+<span class="na">设置的值是一个日志文件在文件系统中的绝对路径。这个日志文件用于记录处理时间超时n秒的HTTP请求信息，以偏找出PHP应用的瓶颈。</span>
+<span class="na">PHP-FPM进程池所属的用户和用户组必须有这个文件的写权限。</span>
+
+<span class="na">request_slowlog_timeout</span> <span class="o">=</span> <span class="s">5s</span>
+<span class="na">如果当前HTTP请求的处理时间超过指定的值，就把请求的回溯信息写入slowlog设置指定的日志文件。</span>
+</pre></div>
+</div>
+</div>
 </div>
 
   <div class="section">
@@ -92,20 +128,14 @@
   <span style="float: left;">
   
   Previous: 
-  <a href="../oop/">
+  <a href="../optimization/">
     
-    oop设计技巧
+    PHP NGINX 调优
   </a>
   
   </span>
   <span>&nbsp;</span>
   <span style="float: right;">
-  
-  Next: 
-  <a href="../../algorithms/algoSort/">
-    初级排序算法
-    
-  </a>
   
   </span>
 </div>
@@ -135,7 +165,7 @@
   <h2>
   
   
-    14 四月 2020
+    23 四月 2021
   
   </h2>
 
@@ -159,15 +189,15 @@
   <li id="category"><span>Category:</span>
     
       
-      <a href="../../blog/category/base/">base</a>,
+      <a href="../../blog/category/php/">PHP</a>,
       
     
       
-      <a href="../../blog/category/异常/">异常</a>,
+      <a href="../../blog/category/调优/">调优</a>,
       
     
       
-      <a href="../../blog/category/面向对象/">面向对象</a>
+      <a href="../../blog/category/服务器/">服务器</a>
       
     </li>
   
@@ -177,15 +207,15 @@
       </span>
     
       
-      <a href="../../blog/tag/base/">base</a>
+      <a href="../../blog/tag/php/">PHP</a>
       
     
       
-      <a href="../../blog/tag/exception/">Exception</a>
+      <a href="../../blog/tag/php-fpm/">PHP-FPM</a>
       
     
       
-      <a href="../../blog/tag/java/">java</a>
+      <a href="../../blog/tag/server/">Server</a>
       
     </li>
   
@@ -203,15 +233,15 @@
   <ul>
     
     
-      <li><a href="../../modern-php/php-fpm/">23 四月 - PHP-FPM 配置</a></li>
-    
-      <li><a href="../../modern-php/optimization/">22 四月 - PHP NGINX 调优</a></li>
+      <li><a href="../optimization/">22 四月 - PHP NGINX 调优</a></li>
     
       <li><a href="../../concurrency/basic_knowledge/">19 三月 - 并发编程实践 基础知识</a></li>
     
       <li><a href="../../effective-java/enumAnnotation/">11 三月 - Effective Java 枚举和注释</a></li>
     
       <li><a href="../../effective-java/generic/">08 三月 - Effective Java 泛型</a></li>
+    
+      <li><a href="../../effective-java/classinterface/">06 三月 - Effective Java 类和接口</a></li>
     
   </ul>
 
@@ -499,7 +529,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/base/throws.rst.txt"
+      <a href="../../_sources/modern-php/php-fpm.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

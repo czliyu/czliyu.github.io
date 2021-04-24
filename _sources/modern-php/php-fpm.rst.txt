@@ -1,0 +1,88 @@
+PHP-FPM 配置
+=====================
+
+.. post:: 23 Apr 2021
+   :tags: PHP, PHP-FPM, Server
+   :category: PHP, 调优, 服务器
+   :author: me
+
+PHP-FPM（PHP FastCGI Process Manager）意思：“PHP FastCGI进程管理器”是用于管理PHP
+进程池的软件，用于接收和处理来自Web服务器的请求。PHP-FPM软件会创建一个主进程（通常以系统中根用户的身份运行），
+控制何时以及如何把HTTP请求转发给一个或多个子进程处理。PHP-FPM主进程还控制着什么时候创建（处理web应用的更多的流量）
+和销毁（子进程运行时间太久或不再需要了）PHP进程。PHP-FPM进程池中的每个进程存在的时间都比单个HTTP请求长，
+可以处理10、50、100、500或更多的HTTP请求。
+
+全局配置
+-----------------
+
+如果在指定的一段时间内有指定个子进程失效了，让PHP-FPM主进程重启。这是PHP-FPM进程的基本安全
+保障，能解决简单的我难题，但是不能解决由拙劣的PHP代码引起的重大问题。
+
+.. code-block:: ini
+
+    emergency_restart_threshold = 10
+    在指定的一段时间内，如果失效的PHP-FPM子进程数超过这个值。PHP-FPM主进程就优雅重启
+
+    emergency_restart_interval = 1m
+    设定emergency_restart_threshold设置采用的时间跨度
+
+
+配置进程池
+-------------------
+
+PHP-FPM配置文件其余的内容是一个名为Pool Definitions区域。配置用于设置每个PHP-FPM进程池中的每个进程存在的时间都比单个HTTP请求长。
+PHP-FPM进程池中是一系列相关的PHP子进程。
+
+Ubuntu中。Pool Definitions区域 ``include=/etc/php5/fpm/pool.d/*.conf`` .
+
+CentOS中，PHP-FPM主配置文件的顶部使用进入 ``include=/etc/php-fpm.d/*.conf`` 进程池定义文件。
+
+各个PHP-FPM进程池都以指定的操作系统用户和用户组的身份运行。我喜欢以单独的非根用户身份运行
+各个PHP-FPM进程池，这样 ``top`` 、 ``ps`` 和 ``aux`` 命令时便于识别每个PHP应用的PHP-FPM进程池中是一系列相关的PHP子进程。
+这是一个好习惯，因为每个PHP-FPM进程池中的进程都受响应的操作系统用户和用户组的权限限制在沙盒中。
+
+配置默认的 ``www`` PHP-FPM进程池，让它以 ``deploy`` 用户和用户组的身份运行。
+打开``www.conf``建议把以下设置的默认值改为
+
+.. code-block:: ini
+
+   user = deploy
+   拥有这个PHP-FPM进程池中子进程的系统用户。把这个值设置为运行PHP应用的非根用户的用户名
+
+   group = deploy
+   拥有这个PHP-FPM进程池中子进程的系统用户组。把这个值设置为运行PHP应用的非根用户所属的用户组名
+
+   listen = 127.0.0.1:9000
+   PHP-FPM进程池监听的IP地址和端口号，让PHP-FPM只接受nginx从这里传入的请求。
+
+   listen.allowed_clients = 127.0.0.1
+   可以向这个PHP-FPM进程池发送请求的IP地址（一个或多个），为了安全，把这个设置设为127.0.0.1,
+   即只有当前设备能把请求转发给这个PHP-FPM进程池中子进程的系统用户。把这个值设置为运行PHP应用的非根用户的用户名
+
+   pm.max_children = 51
+   设定任何时间点PHP-FPM进程池中最多能有多少个进程。确定每个PHP进程需要使用多少内存，然后把这个
+   设置设为设备可用内存能容纳的PHP进程总数。对大多数中小型PHP应用来说，每个PHP进程要使用5-15MB内存。
+   假设我们使用的设备为这个PHP-FPM进程池分配了512MB内存可用，可以设置为（512MB）/ 10MB = 51进程
+
+   pm.start_servers = 3
+   PHP-FPM启动时PHP-FPM进程池中立即可用的进程数。对大多数中小型引用来说，我建议设为2或3。
+   这么做为了准备两到三个进程，等待请求进入。不让PHP应用的头几个HTTP请求等待PHP-FPM初始化进程池中的进程。
+
+   pm.min_spare_servers = 2
+   PHP应用空闲时PHP-FPM进程池中可以存在的进程数量最小值。一般设置的与pm.start_servers的值一样，用于
+   确保新进入的HTTP请求无需等待PHP-FPM在进程池中重新初始化进程。
+
+   pm.max_spare_servers = 4
+   PHP应用空闲时PHP-FPM进程池中可以存在的进程数量最大值。这个设置的值一般比pm.start_servers设置的值要
+   大一点，用于确保新进入的HTTP请求无需等待PHP-FPM在进程池中重新初始化进程。
+
+   pm.max_requests = 1000
+   PHP-FPM进程池中各个进程最多能处理的HTTP请求数量。这个设置有助于避免PHP扩展或库因编写拙劣而导致泄露内存。
+   建议设置为1000
+
+   showlog = /path/to/slowlog.log
+   设置的值是一个日志文件在文件系统中的绝对路径。这个日志文件用于记录处理时间超时n秒的HTTP请求信息，以偏找出PHP应用的瓶颈。
+   PHP-FPM进程池所属的用户和用户组必须有这个文件的写权限。
+
+   request_slowlog_timeout = 5s
+   如果当前HTTP请求的处理时间超过指定的值，就把请求的回溯信息写入slowlog设置指定的日志文件。

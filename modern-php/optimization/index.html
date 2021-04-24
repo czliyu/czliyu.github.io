@@ -108,7 +108,76 @@ PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操�
 <p><strong>opcache.max_accelerated_files = 4000</strong></p>
 <p>操作码缓存中最多能存储多少个PHP脚本。这个设置的值可以是200到100000之间的任何数。这个值一定要比PHP应用的文件数量大</p>
 <p><strong>opcache.validate_timestamps = 1</strong></p>
-<p>设置值为1时， 经过一段时间后PHP会检查PHP脚本的内容是否有变化。检查的时间间隔由&lt;opcache class=”revalidate_freq”&gt;&lt;/opcache&gt;</p>
+<p>设置值为1时， 经过一段时间后PHP会检查PHP脚本的内容是否有变化。检查的时间间隔由``opcache.revalidate_freq``设置指定。
+如果为0，PHP不会检查PHP脚本的内容是否有变化，在开发环境设置为1， 在生产环境设为0。</p>
+<p><strong>opcache.revalidate_freq = 0</strong></p>
+<p>设置PHP多久（s）检查一次PHP脚本的内容是否有变化。缓存的好处是，不用每次请求都重新编译PHP脚本。这个设置用于多长时间内认为
+操作码缓存是新的。仅当设置为1时，这么设置会在每次请求时都重新验证PHP文件。因此，在开发环境中，每次请求都会重新验证PHP文件（这是好事）。</p>
+<p><strong>opcache.fast_shutdown = 1</strong></p>
+<p>这么设置能让操作码使用更快的停机步骤,把对象析构和内存释放交给Zend Engine的内存管理器完成。只要把它设为1</p>
+</div>
+<div class="section" id="id2">
+<h2>文件上传<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>如果应用允许上传文件，最好设置最大能上传的文件大小。除此之外，最好还要设置最后能同时上传多少个文件。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">file_uploads</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">upload_max_filesize</span> <span class="o">=</span><span class="mi">10</span><span class="n">M</span>
+<span class="n">max_file_uploads</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>默认情况下，PHP允许在单次请求中上传20个文件，上传的每个文件最大为2MB。</p>
+<p>把upload_max_filesize设置的值增加到了10MB，要根据应用的需求设为更高的值。
+但是别设的太大的值，如果值太大，Web服务器会抱怨HTTP请求的主体太大了。或者请求会超时。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果需要上传非常大的文件，Web服务器的配置需要做相应的调整。除了在php.ini中设置之外，
+可能还要调整nginx虚拟主机配置中client_max_body_size设置</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>最长执行时间<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>max_execution_time设置用于设定单个PHP进程在终止之前最长可以运行多长时间。默认值是30秒。
+因为想让应用运行得特别快（以毫秒记）。建议设置为5秒。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">max_execution_time</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>处理会话<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>PHP默认的会话处理程序会拖慢大型应用，因为这个处理程序把会话数据存储在硬盘中，需要创建不必要的文件I/O,浪费时间。
+把会话数据保存在内存中，例如使用memcached或Redis</p>
+<p>把PHP默认的会话存储方式改为Memcached:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="p">.</span><span class="na">save_handler</span> <span class="o">=</span> <span class="s">&quot;memcached&quot;</span>
+<span class="n">session</span><span class="p">.</span><span class="na">save_path</span> <span class="o">=</span> <span class="s">&quot;127.0.0.2:11211&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>缓存输出<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>如果在较少的块中发送更多的数据，而不是在较多的块中发送较少的数据，那么网络的效率会更高。也就是说，
+在较少的片段中把内容传递给访问者的浏览器，能减少HTTP请求总数。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">output_buffering</span> <span class="o">=</span> <span class="mi">4096</span>
+<span class="n">implicit_flush</span> <span class="o">=</span> <span class="kc">false</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果想修改输出缓存区的的大小，确保使用的值是4（32位系统）或8（64位系统）的倍数。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>真实路径缓存<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>PHP会缓存应用使用的文件路径，这样每次包含或导入文件时就无需不断搜索包含路径了。这个缓存叫真实路径缓存。
+如果使用大量文件，增加PHP真实路径缓存的大小能得到更好的性能。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">realpath_cache_size</span> <span class="o">=</span> <span class="mi">64</span><span class="n">k</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>真实路径缓存的默认大小是16k。这个缓存所需的准确大小不容易确定，不过可以使用小技巧。
+首先，增加真实路径缓存的大小，设为特别大的值，例如256K。然后，在一个PHP脚本的末尾加上
+print_r(realpath_cache_size()); 输出真实路径缓存的真正大小。
+最后，把真实路径缓存的大小改为这个真正的值。</p>
+</div>
 </div>
 </div>
 
@@ -129,6 +198,12 @@ PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操�
   </span>
   <span>&nbsp;</span>
   <span style="float: right;">
+  
+  Next: 
+  <a href="../php-fpm/">
+    PHP-FPM 配置
+    
+  </a>
   
   </span>
 </div>
@@ -230,6 +305,8 @@ PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操�
   <ul>
     
     
+      <li><a href="../php-fpm/">23 四月 - PHP-FPM 配置</a></li>
+    
       <li><a href="../../concurrency/basic_knowledge/">19 三月 - 并发编程实践 基础知识</a></li>
     
       <li><a href="../../effective-java/enumAnnotation/">11 三月 - Effective Java 枚举和注释</a></li>
@@ -237,8 +314,6 @@ PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操�
       <li><a href="../../effective-java/generic/">08 三月 - Effective Java 泛型</a></li>
     
       <li><a href="../../effective-java/classinterface/">06 三月 - Effective Java 类和接口</a></li>
-    
-      <li><a href="../../effective-java/objects/">05 三月 - Effective Java 对于所有对象都通用的方法</a></li>
     
   </ul>
 
@@ -278,6 +353,16 @@ PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操�
       
       <li class="ablog-cloud ablog-cloud-1">
         <a href="../../blog/tag/php/">PHP</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/php-fpm/">PHP-FPM</a></li>
+      
+    
+      
+      <li class="ablog-cloud ablog-cloud-1">
+        <a href="../../blog/tag/server/">Server</a></li>
       
     
       
@@ -408,6 +493,10 @@ PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操�
     
   
     
+    <li><a href="../../blog/category/php/">PHP (1)</a></li>
+    
+  
+    
     <li><a href="../../blog/category/server/">Server (1)</a></li>
     
   
@@ -448,7 +537,7 @@ PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操�
     
   
     
-    <li><a href="../../blog/category/服务器/">服务器 (1)</a></li>
+    <li><a href="../../blog/category/服务器/">服务器 (2)</a></li>
     
   
     
@@ -468,6 +557,10 @@ PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操�
     
   
     
+    <li><a href="../../blog/category/调优/">调优 (1)</a></li>
+    
+  
+    
     <li><a href="../../blog/category/面向对象/">面向对象 (2)</a></li>
     
   
@@ -477,7 +570,7 @@ PHP进程找到相应的PHP脚本后，读取脚本，吧PHP脚本编译成操�
   <ul>
   
     
-    <li><a href="../../blog/2021/">2021 (7)</a></li>
+    <li><a href="../../blog/2021/">2021 (8)</a></li>
     
   
     
